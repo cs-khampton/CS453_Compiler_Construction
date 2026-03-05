@@ -7,3 +7,4 @@ Your main file should be called Typecheck.java, and if P.java contains a program
 `java Typecheck < P.java`
 
 should print either "Program type checked successfully" or "Type error".
+
