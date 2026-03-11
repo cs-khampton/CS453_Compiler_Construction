@@ -11,7 +11,7 @@ public class Typecheck {
             root = new MiniJavaParser(System.in).Goal();
             // TODO: Pretty-print the tree. PPrinter inherits from
             // GJDepthFirst<R,A>. R=Void, A=String.
-            PPrint pp = new PPrint();
+            PPrinter pp = new PPrinter();
             root.accept(pp, "");
 
             // // TODO: Build the symbol table. Top-down visitor, inherits from
