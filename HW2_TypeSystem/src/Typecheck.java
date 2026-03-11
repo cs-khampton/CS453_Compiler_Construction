@@ -1,6 +1,8 @@
 // Files are stored in the picojava directory/package.
 // import picojava.*;
 
+import java.util.HashMap;
+
 import syntaxtree.Node;
 
 public class Typecheck {
@@ -16,9 +18,9 @@ public class Typecheck {
 
             // // TODO: Build the symbol table. Top-down visitor, inherits from
             // // GJDepthFirst<R,A>. R=Void, A=Integer.
-            // SymTableVis<Void, Integer> pv = new SymTableVis<Void, Integer>();
-            // root.accept(pv, 0);
-            // HashMap<String, String> symt = pv.symt;
+            SymbolTable<Void, Integer> pv = new SymbolTable()<Void, Integer>();
+            root.accept(pv, 0);
+            HashMap<String, String> symt = pv.symt;
 
             // // TODO: Do type checking. Bottom-up visitor, also inherits from
             // // GJDepthFirst. Visit functions return MyTpe (=R), and

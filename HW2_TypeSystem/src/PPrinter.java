@@ -91,8 +91,9 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         printClassName(mc.f10); // ]
         visit(mc.f11, arg); // Identifier()
         printClassName(mc.f12); // )
-        indent++;
         printClassName(mc.f13); // {
+        indent++;
+
         visit(mc.f14, arg); // VarDeclaration()
         visit(mc.f15, arg); // Statement()
         indent--;
