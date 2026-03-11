@@ -1,21 +1,17 @@
-
-// Helper for HW2/CS453.
-import java.text.ParseException;
-
-import org.w3c.dom.Node;
-
 // Files are stored in the picojava directory/package.
 // import picojava.*;
 
+import syntaxtree.Node;
+
 public class Typecheck {
+    @SuppressWarnings("unchecked")
     public static <R, A> void main(String[] args) {
         Node root = null;
         try {
-            root = (Node) new MiniJavaParser(System.in).Goal();
-
+            root = new MiniJavaParser(System.in).Goal();
             // TODO: Pretty-print the tree. PPrinter inherits from
             // GJDepthFirst<R,A>. R=Void, A=String.
-            PPrinter pp = new PPrinter();
+            PPrint pp = new PPrint();
             root.accept(pp, "");
 
             // // TODO: Build the symbol table. Top-down visitor, inherits from
