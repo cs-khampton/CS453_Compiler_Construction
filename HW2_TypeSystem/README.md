@@ -15,9 +15,7 @@ java -jar jtb132.jar minijava.jj
 java -cp javacc-6.0/bin/lib/javacc.jar javacc jtb.out.jj
 ```
 
-## BNF For MiniJava
-<iframe src="https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html" width="100%" height="500px" title="MiniJava BNF"></iframe>
-
+## [BNF for MiniJava](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html)
 
 ## Pretty Printing
 ```
