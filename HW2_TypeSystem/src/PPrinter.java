@@ -64,18 +64,16 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
 
     // G => MainClass() TypeDeclaration()* <EOF>
     public R visit(Goal n, A arg) {
-        R ret = null;
         printClassName(n);
         visit(n.f0, arg); // MainClass()
         visit(n.f1, arg); // TypeDeclaration()
         printClassName(n.f2); // EOF
-        return ret;
+        return null;
     }
 
     // mc => "class" Identifier() "{" "public" "static" "void" "main" "(" "String"
     // "[" "]" Identifier() ")" " {" VarDeclaration()* Statement()* "}" "}"
     public R visit(MainClass mc, A arg) {
-        R ret = null;
         indent++;
         printClassName(mc);
         printClassName(mc.f0); // class
@@ -98,48 +96,45 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         printClassName(mc.f13); // {
         indent++;
         visit(mc.f14, arg); // VarDeclaration()
-        indent--;
         visit(mc.f15, arg); // Statement()
         indent--;
         printClassName(mc.f16); // }
-        indent--;
         printClassName(mc.f17); // }
-        return ret;
+        return null;
     }
 
     // TypeDeclaration => ClassDeclaration() | ClassExtendsDeclaration()
     public R visit(TypeDeclaration d, A arg) {
-        R ret = null;
         Node n = d.f0.choice;
+        indent++;
         printClassName(d);
         if (n instanceof ClassDeclaration cd) {
             visit(cd, arg); // ClassDeclaration()
         } else if (n instanceof ClassExtendsDeclaration ced) {
             visit(ced, arg); // ClassExtendsDeclaration()
         }
-        return ret;
+        indent--;
+        return null;
     }
 
     // ClassDeclaration => "class" Identifier() "{" VarDeclaration()*
     // MethodDeclaration()* "}"
     public R visit(ClassDeclaration cd, A arg) {
-        R ret = null;
-        printClassName(cd);
         indent++;
+        printClassName(cd);
         printClassName(cd.f0); // class
         visit(cd.f1, arg); // Identifier()
         printClassName(cd.f2); // {
         visit(cd.f3, arg); // VarDeclaration()
         visit(cd.f4, arg); // MethodDeclaration()
-        indent--;
         printClassName(cd.f5); // }
-        return ret;
+        indent--;
+        return null;
     }
 
     // ClassExtendsDeclaration => "class" Identifier() "extends" Identifier() "{"
     // VarDeclaration()* MethodDeclaration()* "}"
     public R visit(ClassExtendsDeclaration ced, A arg) {
-        R ret = null;
         printClassName(ced);
         indent++;
         printClassName(ced.f0); // class
@@ -152,23 +147,24 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         visit(ced.f6, arg); // MethodDeclaration()
         indent--;
         printClassName(ced.f7); // }
-        return ret;
+        return null;
     }
 
     // VarDeclaration => Type() Identifier() ";"
     public R visit(VarDeclaration vd, A arg) {
-        R ret = null;
+        indent++;
         printClassName(vd);
         visit(vd.f0, arg); // Type()
         visit(vd.f1, arg); // Identifier()
+        indent--;
         printClassName(vd.f2); // ;
-        return ret;
+        indent--;
+        return null;
     }
 
     // MethodDeclaration => "public" Type() Identifier() "(" FormalParameterList()?
     // ")" "{" VarDeclaration()* Statement()* "return" Expression() ";" "}"
     public R visit(MethodDeclaration md, A arg) {
-        R ret = null;
         printClassName(md);
         printClassName(md.f0); // public
         visit(md.f1, arg); // Type()
@@ -184,42 +180,43 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         printClassName(md.f11); // ;
         indent--;
         printClassName(md.f12); // }
-        return ret;
+        return null;
     }
 
     // FormalParameterList => FormalParameter() FormalParameterRest()*
     public R visit(FormalParameterList fpl, A arg) {
-        R ret = null;
+        indent++;
         printClassName(fpl);
         visit(fpl.f0, arg); // FormalParameter()
+        indent--;
         visit(fpl.f1, arg); // FormalParameterRest()
-        return ret;
+        indent--;
+        return null;
     }
 
     // FormalParameter => Type() Identifier()
     public R visit(FormalParameter fp, A arg) {
-        R ret = null;
+        indent++;
         printClassName(fp);
         visit(fp.f0, arg); // Type()
         visit(fp.f1, arg); // Identifier()
-        return ret;
+        indent--;
+        return null;
     }
 
     // FormalParameterRest => "," FormalParameter()
     public R visit(FormalParameterRest fpr, A arg) {
-        R ret = null;
         printClassName(fpr);
         printClassName(fpr.f0); // ,
         visit(fpr.f1, arg); // FormalParameter()
-        return ret;
+        return null;
     }
 
     // Type => ArrayType() | BooleanType() | Identifier()
     public R visit(Type t, A arg) {
-        R ret = null;
         Node n = t.f0.choice;
-        printClassName(t);
         indent++;
+        printClassName(t);
         if (n instanceof ArrayType at) {
             visit(at.f0, arg); // ArrayType()
         } else if (n instanceof BooleanType bt) {
@@ -229,42 +226,37 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         } else if (n instanceof Identifier bt) {
             visit(bt.f0, arg); // Identifier()
         }
-        return ret;
+        return null;
     }
 
     // ArrayType => "int" "[" "]"
     public R visit(ArrayType at, A arg) {
-        R ret = null;
         printClassName(at);
         printClassName(at.f0); // int
         printClassName(at.f1); // [
         printClassName(at.f2); // ]
-        return ret;
+        return null;
     }
 
     // BooleanType => "boolean"
     public R visit(BooleanType bt, A arg) {
-        R ret = null;
         printClassName(bt);
         printClassName(bt.f0); // boolean
-        return ret;
+        return null;
     }
 
     // IntegerType => "int"
     public R visit(IntegerType it, A arg) {
-        R ret = null;
         printClassName(it);
         printClassName(it.f0); // int
-        return ret;
+        return null;
     }
 
     // Statement => Block() | AssignmentStatement() | ArrayAssignmentStatement() |
     // IfStatement() | WhileStatement() | PrintStatement()
     public R visit(Statement s, A arg) {
-        R ret = null;
         Node n = s.f0.choice;
         printClassName(s);
-        indent++;
         if (n instanceof Block b) {
             indent++;
             visit(b, arg); // Block()
@@ -285,37 +277,34 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
             visit(ps, arg); // PrintStatement()
         }
         indent--;
-        return ret;
+        return null;
     }
 
     // Block => "{" Statement()* "}"
     public R visit(Block b, A arg) {
-        R ret = null;
         printClassName(b);
         printClassName(b.f0); // {
         visit(b.f1, arg); // Statement()
         printClassName(b.f2); // }
-        return ret;
+        return null;
     }
 
     // AssignmentStatement => Identifier() "=" Expression() ";"
     public R visit(AssignmentStatement as, A arg) {
-        R ret = null;
         printClassName(as);
-        indent++;
+        // indent++;
         visit(as.f0, arg); // Identifier()
-        indent--;
+        // indent--;
         printClassName(as.f1); // =
         visit(as.f2, arg); // Expression()
-        indent--;
+        // indent--;
         printClassName(as.f3); // ;
-        return ret;
+        return null;
     }
 
     // ArrayAssignmentStatement => Identifier() "[" Expression() "]" "="
     // Expression() ";"
     public R visit(ArrayAssignmentStatement aas, A arg) {
-        R ret = null;
         printClassName(aas);
         visit(aas.f0, arg); // Identifier()
         printClassName(aas.f1); // [
@@ -324,12 +313,11 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         printClassName(aas.f4); // =
         visit(aas.f5, arg); // Expression()
         printClassName(aas.f6); // ;
-        return ret;
+        return null;
     }
 
     // IfStatement => "if" "(" Expression() ")" Statement() "else" Statement()
     public R visit(IfStatement is, A arg) {
-        R ret = null;
         printClassName(is);
         printClassName(is.f0); // if
         printClassName(is.f1); // (
@@ -338,38 +326,35 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         visit(is.f4, arg); // Statement()
         printClassName(is.f5); // else
         visit(is.f6, arg); // Statement()
-        return ret;
+        return null;
     }
 
     // WhileStatement => "while" "(" Expression() ")" Statement()
     public R visit(WhileStatement ws, A arg) {
-        R ret = null;
         printClassName(ws);
         printClassName(ws.f0); // while
         printClassName(ws.f1); // (
         visit(ws.f2, arg); // Expression()
         printClassName(ws.f3); // )
         visit(ws.f4, arg); // Statement()
-        return ret;
+        return null;
     }
 
     // PrintStatement => "System.out.println" "(" Expression() ")" ";"
     public R visit(PrintStatement ps, A arg) {
-        R ret = null;
         printClassName(ps);
         printClassName(ps.f0); // System.out.println
         printClassName(ps.f1); // (
         visit(ps.f2, arg); // Expression()
         printClassName(ps.f3); // )
         printClassName(ps.f4); // ;
-        return ret;
+        return null;
     }
 
     // Expression => AndExpression() | CompareExpression() | PlusExpression() |
     // MinusExpression() | TimesExpression() | ArrayLookup() | ArrayLength() |
     // MessageSend() | PrimaryExpression()
     public R visit(Expression e, A arg) {
-        R ret = null;
         printClassName(e);
         Node n = e.f0.choice;
         if (n instanceof AndExpression ae) {
@@ -401,83 +386,75 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
             visit(primexp, arg); // CompareExpression()
         }
         indent--;
-        return ret;
+        return null;
     }
 
     // AndExpression => PrimaryExpression() "&&" PrimaryExpression()
     public R visit(AndExpression ae, A arg) {
-        R ret = null;
         printClassName(ae);
         visit(ae.f0, arg); // PrimaryExpression()
         printClassName(ae.f1); // &&
         visit(ae.f2, arg); // PrimaryExpression()
-        return ret;
+        return null;
     }
 
     // ComapreExpression => PrimaryExpression() "<" PrimaryExpression()
     public R visit(CompareExpression ce, A arg) {
-        R ret = null;
         printClassName(ce);
         visit(ce.f0, arg); // PrimaryExpression()
         printClassName(ce.f1); // <
         visit(ce.f2, arg); // PrimaryExpression()
-        return ret;
+        return null;
     }
 
     // PlusExpression => PrimaryExpression() "+" PrimaryExpression()
     public R visit(PlusExpression pe, A arg) {
-        R ret = null;
         printClassName(pe);
         visit(pe.f0, arg); // PrimaryExpression()
         printClassName(pe.f1); // +
         visit(pe.f2, arg); // PrimaryExpression()
-        return ret;
+        return null;
     }
 
     // MinusExpression => PrimaryExpression() "-" PrimaryExpression()
     public R visit(MinusExpression me, A arg) {
-        R ret = null;
         printClassName(me);
         visit(me.f0, arg); // PrimaryExpression()
         printClassName(me.f1); // -
         visit(me.f2, arg); // PrimaryExpression()
-        return ret;
+        return null;
     }
 
     // TimesExpression => PrimaryExpression() "*" PrimaryExpression()
     public R visit(TimesExpression te, A arg) {
-        R ret = null;
         printClassName(te);
         visit(te.f0, arg); // PrimaryExpression()
         printClassName(te.f1); // *
         visit(te.f2, arg); // PrimaryExpression()
-        return ret;
+        return null;
     }
 
     // ArrayLookup => PrimaryExpression() "[" PrimaryExpression() "]"
     public R visit(ArrayLookup al, A arg) {
-        R ret = null;
         printClassName(al);
         visit(al.f0, arg); // PrimaryExpression()
         printClassName(al.f1); // [
         visit(al.f2, arg); // PrimaryExpression()
         printClassName(al.f3); // ]
-        return ret;
+        return null;
     }
 
     // ArrayLength => PrimaryExpression() "." "length"
     public R visit(ArrayLength al, A arg) {
-        R ret = null;
         printClassName(al);
         visit(al.f0, arg); // PrimaryExpression()
         printClassName(al.f1); // .
         printClassName(al.f2); // length
-        return ret;
+        return null;
     }
 
     // MessageSend => PrimaryExpression() "." Identifier() "(" ExpresionList()? ")"
     public R visit(MessageSend ms, A arg) {
-        R ret = null;
         printClassName(ms);
         visit(ms.f0, arg); // PrimaryExpression
         printClassName(ms.f1); // .
@@ -485,32 +462,29 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         printClassName(ms.f3); // (
         visit(ms.f4, arg); // ExpressionList()?
         printClassName(ms.f5); // )
-        return ret;
+        return null;
     }
 
     // ExpressionList => Expression() ExpressionRest()
     public R visit(ExpressionList el, A arg) {
-        R ret = null;
         printClassName(el);
         visit(el.f0, arg); // Expression()
         visit(el.f1, arg); // ExpressionRest()
-        return ret;
+        return null;
     }
 
     // ExpressionRest => "," Expression()
     public R visit(ExpressionRest er, A arg) {
-        R ret = null;
         printClassName(er);
         printClassName(er.f0); // ,
         visit(er.f1, arg); // Expression()
-        return ret;
+        return null;
     }
 
     // PrimaryExpression => IntegerLiteral() | TrueLiteral() | FalseLiteral() |
     // Identifier() | ThisExpression() | ArrayAllocationExpression() |
     // AllocationExpression() | NotExpression() | BracketExpression()
     public R visit(PrimaryExpression pe, A arg) {
-        R ret = null;
         Node n = pe.f0.choice;
         if (n instanceof IntegerLiteral il) {
             visit(il, arg); // IntegerLiteral()
@@ -531,52 +505,48 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         } else if (n instanceof BracketExpression be) {
             visit(be, arg); // CompareExpression()
         }
-        return ret;
+        return null;
     }
 
     // IntegerLiteral => <INTEGER_LITERAL>
     public R visit(IntegerLiteral il, A arg) {
-        R ret = null;
         printClassName(il);
         printClassName(il.f0);
-        return ret;
+        return null;
     }
 
     // TrueLiteral => "true"
     public R visit(TrueLiteral tl, A arg) {
-        R ret = null;
         printClassName(tl);
         printClassName(tl.f0); // true
-        return ret;
+        return null;
     }
 
     // FalseLiteral => "false"
     public R visit(FalseLiteral fl, A arg) {
-        R ret = null;
         printClassName(fl);
         printClassName(fl.f0);
-        return ret;
+        return null;
     }
 
     // Identifier => <IDENTIFIER>
     public R visit(Identifier id, A arg) {
-        R ret = null;
+        indent++;
         printClassName(id);
         printClassName(id.f0);
-        return ret;
+        indent--;
+        return null;
     }
 
     // ThisExpression => "this"
     public R visit(ThisExpression te, A arg) {
-        R ret = null;
         printClassName(te);
         printClassName(te.f0);
-        return ret;
+        return null;
     }
 
     // ArrayAllocationExpression => "new" "int" "[" Expression() "]"
     public R visit(ArrayAllocationExpression aae, A arg) {
-        R ret = null;
         printClassName(aae);
         printClassName(aae.f0); // new
         printClassName(aae.f1); // int
@@ -584,37 +554,34 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
         visit(aae.f3, arg); // Expression()
         indent--;
         printClassName(aae.f4); // ]
-        return ret;
+        return null;
     }
 
     // AllocationExpression => "new" Identifier() "(" ")"
     public R visit(AllocationExpression ae, A arg) {
-        R ret = null;
         printClassName(ae);
         printClassName(ae.f0); // new
         visit(ae.f1, arg); // Identifier()
         indent--;
         printClassName(ae.f2); // (
         printClassName(ae.f3); // )
-        return ret;
+        return null;
     }
 
     // NotExpression => "!" Expression()
     public R visit(NotExpression ne, A arg) {
-        R ret = null;
         printClassName(ne);
         printClassName(ne.f0); // !
         visit(ne.f1, arg); // Expression()
-        return ret;
+        return null;
     }
 
     // BracketExpression => "(" Expression() ")"
     public R visit(BracketExpression be, A arg) {
-        R ret = null;
         printClassName(be);
         printClassName(be.f0); // (
         visit(be.f1, arg); // Expression()
         printClassName(be.f2); // )
-        return ret;
+        return null;
     }
 }
