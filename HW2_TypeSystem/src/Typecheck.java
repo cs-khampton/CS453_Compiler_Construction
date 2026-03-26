@@ -1,39 +1,27 @@
 
-import java.util.HashMap;
-
 import syntaxtree.Node;
 
 public class Typecheck {
-    @SuppressWarnings("unchecked")
     public static <R, A> void main(String[] args) {
         Node root = null;
         try {
             root = new MiniJavaParser(System.in).Goal();
-            /*
-             * FIXME: Indentation not fully correct
-             */
-            // PPrinter pp = new PPrinter();
-            // root.accept(pp, "");
+            // FIXME: PPrinter finished - Need indentation
+            PPrinter pp = new PPrinter();
+            root.accept(pp, "");
 
-            /*
-             * TODO: Build the symbol table. Top-down visitor, inherits from
-             * GJDepthFirst<R,A>. R=Void, A=Integer.
-             */
+            // TODO: Build the symbol table. Top-down visitor, inherits from
+            // GJDepthFirst<R,A>. R=Void, A=Integer.
+
             SymbolTable<Void, Integer> pv = new SymbolTable<Void, Integer>();
             root.accept(pv, 0);
-            HashMap<String, String> st = pv.st;
+            // HashMap<String, Class> symt = pv.classes;
 
-            // TODO: REMOVE THIS PRINT TEST WHEN FINISHED
-            System.out.println("Keys: " + st.keySet());
-            System.out.println("Values: " + st.values());
-
-            /*
-             * TODO: Do type checking. Bottom-up visitor, also inherits from
-             * GJDepthFirst. Visit functions return MyTpe (=R), and
-             * take a symbol table (HashMap<String,String>) as
-             * argument (=A). You may implement things differently of
-             * course!
-             */
+            // TODO: Do type checking. Bottom-up visitor, also inherits from
+            // GJDepthFirst. Visit functions return MyTpe (=R), and
+            // take a symbol table (HashMap<String,String>) as
+            // argument (=A). You may implement things differently of
+            // course!
 
             // TypeCheckSimp ts = new TypeCheckSimp();
             // MyType res = root.accept(ts, symt);

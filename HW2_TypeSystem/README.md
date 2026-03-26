@@ -17,7 +17,9 @@ java -cp javacc-6.0/bin/lib/javacc.jar javacc jtb.out.jj
 
 ## [BNF for MiniJava](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html)
 
-## Pretty Printing
+## [MiniJava TypeSystem](https://cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/doc/miniJava-typesystem.pdf)
+
+### Pretty Printing
 ```
 class Factorial{
     public static void main(String[] a){
@@ -26,6 +28,8 @@ class Factorial{
     }
 }
 ```
+
+<!-- shown in SP26 CS453 lecture 2/17/26 -->
 ### Output
 ```
 Goal
@@ -71,5 +75,4 @@ Goal
         NodeToken => }
         NodeToken => }
     NodeToken => 
-
 ```

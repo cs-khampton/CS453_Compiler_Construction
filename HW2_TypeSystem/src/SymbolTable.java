@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import syntaxtree.AllocationExpression;
@@ -48,7 +47,9 @@ import visitor.GJDepthFirst;
 
 public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
 
-    HashMap<String, String> st = new HashMap<>();
+    Map<String, STClass> classes = new HashMap<>();
+    private STClass currClass = null;
+    private STMethod currMethod = null;
 
     /*
      * Goal
@@ -59,7 +60,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
     public R visit(Goal n, A arg) {
         n.f0.accept(this, arg); // MainClass()
         n.f1.accept(this, arg); // TypeDeclaration()*
-        st.put(n.f2.toString(), "<EOF>");
+        // <EOF> -- doesn't need to be added to symbol table
         return null;
     }
 
@@ -85,300 +86,466 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f17: "}"
      */
     public R visit(MainClass mc, A arg) {
-        String className = mc.f0.toString();
-        st.put(mc.f0.toString(), "class");
-        mc.f1.accept(this, arg); // Identifier()
-        st.put(mc.f2.toString(), "{");
-        st.put(mc.f3.toString(), "public");
-        st.put(mc.f4.toString(), "static");
-        st.put(mc.f5.toString(), "void");
-        st.put(mc.f6.toString(), "main");
-        st.put(mc.f7.toString(), "(");
-        st.put(mc.f8.toString(), "String");
-        st.put(mc.f9.toString(), "[");
-        st.put(mc.f10.toString(), "]");
-        mc.f11.accept(this, arg); // Identifier()
-        st.put(mc.f12.toString(), ")");
-        st.put(mc.f3.toString(), "{");
-        mc.f14.accept(this, arg); // Vardeclaration()*
-        mc.f15.accept(this, arg); // Statement()*
-        st.put(mc.f16.toString(), "}");
-        st.put(mc.f17.toString(), "}");
+        String className = mc.f1.f0.toString();
+        STClass c = new STClass(className, null);
+        classes.put(className, c);
+        currClass = c;
+
+        String returnType = mc.f5.toString();
+        String name = mc.f6.toString();
+        STMethod m = new STMethod(name, returnType);
         return null;
     }
 
-    // TypeDeclaration => ClassDeclaration() | ClassExtendsDeclaration()
+    /*
+     * TypeDeclaration
+     * f0: ClassDeclaration() | ClassExtendsDeclaration()
+     */
     public R visit(TypeDeclaration d, A arg) {
-
         return null;
     }
 
-    // ClassDeclaration => "class" Identifier() "{" VarDeclaration()*
-    // MethodDeclaration()* "}"
+    /*
+     * ClassDeclaration
+     * f0: "class"
+     * f1: Identifier()
+     * f2: "{"
+     * f3: VarDeclaration()*
+     * f4: MethodDeclaration()*
+     * f5: "}"
+     */
     public R visit(ClassDeclaration cd, A arg) {
 
         return null;
     }
 
-    // ClassExtendsDeclaration => "class" Identifier() "extends" Identifier() "{"
-    // VarDeclaration()* MethodDeclaration()* "}"
+    /*
+     * ClassExtendsDeclaration
+     * f0: "class"
+     * f1: Identifier()
+     * f2: "extends"
+     * f3: Identifier()
+     * f4: "{"
+     * f5: VarDeclarataion()*
+     * f6: MethodDeclaration()*
+     * f7: "}"
+     */
     public R visit(ClassExtendsDeclaration ced, A arg) {
 
         return null;
     }
 
-    // VarDeclaration => Type() Identifier() ";"
+    /*
+     * VarDeclaration
+     * f0: Type()
+     * f1: Identifier()
+     * f2: ";"
+     */
     public R visit(VarDeclaration vd, A arg) {
 
         return null;
     }
 
-    // MethodDeclaration => "public" Type() Identifier() "(" FormalParameterList()?
-    // ")" "{" VarDeclaration()* Statement()* "return" Expression() ";" "}"
+    /*
+     * MethodDeclaration
+     * f0: "public"
+     * f1: Type()
+     * f2: Identifier()
+     * f3: "("
+     * f4: FormalParameterList()?
+     * f5: ")"
+     * f6: "{"
+     * f7: VarDeclaration()*
+     * f8: Statement()*
+     * f9: "return"
+     * f10: Expression()
+     * f11: ";"
+     * f12: "}"
+     */
     public R visit(MethodDeclaration md, A arg) {
 
         return null;
     }
 
-    // FormalParameterList => FormalParameter() FormalParameterRest()*
+    /*
+     * FormalParameterList
+     * f0: FormalParameter()
+     * f1: FormalParameterRest()*
+     */
     public R visit(FormalParameterList fpl, A arg) {
 
         return null;
     }
 
-    // FormalParameter => Type() Identifier()
+    /*
+     * FormalParameter
+     * f0: Type()
+     * f1: Identifier()
+     */
     public R visit(FormalParameter fp, A arg) {
 
         return null;
     }
 
-    // FormalParameterRest => "," FormalParameter()
+    /*
+     * FormalParameterRest
+     * f0: ","
+     * f1: FormalParameter()
+     */
     public R visit(FormalParameterRest fpr, A arg) {
 
         return null;
     }
 
-    // Type => ArrayType() | BooleanType() | Identifier()
+    /*
+     * Type
+     * f0: ArrayType() | BooleanType() | Identifier()
+     */
     public R visit(Type t, A arg) {
 
         return null;
     }
 
-    // ArrayType => "int" "[" "]"
+    /*
+     * ArrayType
+     * f0: "int"
+     * f1: "["
+     * f2: "]"
+     */
     public R visit(ArrayType at, A arg) {
 
         return null;
     }
 
-    // BooleanType => "boolean"
+    /*
+     * BooleanType
+     * f0: "boolean"
+     */
     public R visit(BooleanType bt, A arg) {
 
         return null;
     }
 
-    // IntegerType => "int"
+    /*
+     * IntegerType
+     * f0: "int"
+     */
     public R visit(IntegerType it, A arg) {
 
         return null;
     }
 
-    // Statement => Block() | AssignmentStatement() | ArrayAssignmentStatement() |
-    // IfStatement() | WhileStatement() | PrintStatement()
+    /*
+     * Statement
+     * f0: Block() | AssignmentStatement() | ArrayAssignmentStatement() |
+     * IfStatement() | WhileStatement() | PrintStatement()
+     */
     public R visit(Statement s, A arg) {
 
         return null;
     }
 
-    // Block => "{" Statement()* "}"
+    /*
+     * Block
+     * f0: "{"
+     * f1: Statement()*
+     * f2: "}"
+     */
     public R visit(Block b, A arg) {
 
         return null;
     }
 
-    // AssignmentStatement => Identifier() "=" Expression() ";"
+    /*
+     * AssignmentStatement
+     * f0: Identifier()
+     * f1: "="
+     * f2: Expression()
+     * f3: ";"
+     */
     public R visit(AssignmentStatement as, A arg) {
 
         return null;
     }
 
-    // ArrayAssignmentStatement => Identifier() "[" Expression() "]" "="
-    // Expression() ";"
+    /*
+     * ArrayAssignmentStatement
+     * f0: Idenfiier()
+     * f1: "["
+     * f2: Expression()
+     * f3: "]"
+     * f4: "="
+     * f5: Expression()
+     * f6: ";"
+     */
     public R visit(ArrayAssignmentStatement aas, A arg) {
 
         return null;
     }
 
-    // IfStatement => "if" "(" Expression() ")" Statement() "else" Statement()
+    /*
+     * IfStatement
+     * f0: "if"
+     * f1: "("
+     * f2: Expression()
+     * f3: ")"
+     * f4: Statement()
+     * f5: "else"
+     * f6: Statement()
+     */
     public R visit(IfStatement is, A arg) {
 
         return null;
     }
 
-    // WhileStatement => "while" "(" Expression() ")" Statement()
+    /*
+     * WhileStatement
+     * f0: "while"
+     * f1: "("
+     * f2: Expression()
+     * f3: ")"
+     * f4: Statement()
+     */
     public R visit(WhileStatement ws, A arg) {
 
         return null;
     }
 
-    // PrintStatement => "System.out.println" "(" Expression() ")" ";"
+    /*
+     * PrintStatement
+     * f0: "System.out.println"
+     * f1: "("
+     * f2: Expression()
+     * f3: ")"
+     * f4: ";"
+     */
     public R visit(PrintStatement ps, A arg) {
 
         return null;
     }
 
-    // Expression => AndExpression() | CompareExpression() | PlusExpression() |
-    // MinusExpression() | TimesExpression() | ArrayLookup() | ArrayLength() |
-    // MessageSend() | PrimaryExpression()
+    /*
+     * Expression
+     * f0: AndExpression() | CompareExpression() | PlusExpression() |
+     * MinusExpression() | TimesExpression() | ArrayLookup() | ArrayLength() |
+     * MessageSend() | PrimaryExpression()
+     */
     public R visit(Expression e, A arg) {
 
         return null;
     }
 
-    // AndExpression => PrimaryExpression() "&&" PrimaryExpression()
+    /*
+     * AndExpression
+     * f0: PrimaryExpression()
+     * f1: "&&"
+     * f2: PrimaryExpression()
+     */
     public R visit(AndExpression ae, A arg) {
 
         return null;
     }
 
-    // ComapreExpression => PrimaryExpression() "<" PrimaryExpression()
+    /*
+     * CompareExpression
+     * f0: PrimaryExpression()
+     * f1: "<"
+     * f2: PrimaryExpression()
+     */
     public R visit(CompareExpression ce, A arg) {
 
         return null;
     }
 
-    // PlusExpression => PrimaryExpression() "+" PrimaryExpression()
+    /*
+     * PlusExpression
+     * f0: PrimaryExpression()
+     * f1: "+"
+     * f2: PrimaryExpression()
+     */
     public R visit(PlusExpression pe, A arg) {
 
         return null;
     }
 
-    // MinusExpression => PrimaryExpression() "-" PrimaryExpression()
+    /*
+     * MinusExpression
+     * f0: PrimaryExpression()
+     * f1: "-"
+     * f2: PrimaryExpression()
+     */
     public R visit(MinusExpression me, A arg) {
 
         return null;
     }
 
-    // TimesExpression => PrimaryExpression() "*" PrimaryExpression()
+    /*
+     * TimesExpression
+     * f0: PrimaryExpression()
+     * f1: "*"
+     * f2: PrimaryExpression()
+     */
     public R visit(TimesExpression te, A arg) {
 
         return null;
     }
 
-    // ArrayLookup => PrimaryExpression() "[" PrimaryExpression() "]"
+    /*
+     * ArrayLookup
+     * f0: PrimaryExpression()
+     * f1: "["
+     * f2: PrimaryExpression()
+     * f3: "]"
+     */
     public R visit(ArrayLookup al, A arg) {
 
         return null;
     }
 
-    // ArrayLength => PrimaryExpression() "." "length"
+    /*
+     * ArrayLength
+     * f0: PrimaryExpression()
+     * f1: "."
+     * f2: "length"
+     */
     public R visit(ArrayLength al, A arg) {
 
         return null;
     }
 
-    // MessageSend => PrimaryExpression() "." Identifier() "(" ExpresionList()? ")"
+    /*
+     * MessageSend
+     * f0: PrimaryExpression()
+     * f1: "."
+     * f2: Identifier()
+     * f3: "("
+     * f4: ExpressionList()?
+     * f5: ")"
+     */
     public R visit(MessageSend ms, A arg) {
 
         return null;
     }
 
-    // ExpressionList => Expression() ExpressionRest()
+    /*
+     * ExpressionList
+     * f0: Expression()
+     * f1: ExpressionRest()
+     */
     public R visit(ExpressionList el, A arg) {
 
         return null;
     }
 
-    // ExpressionRest => "," Expression()
+    /*
+     * ExpressionRest
+     * f0: ","
+     * f1: Expression()
+     */
     public R visit(ExpressionRest er, A arg) {
 
         return null;
     }
 
-    // PrimaryExpression => IntegerLiteral() | TrueLiteral() | FalseLiteral() |
-    // Identifier() | ThisExpression() | ArrayAllocationExpression() |
-    // AllocationExpression() | NotExpression() | BracketExpression()
+    /*
+     * PrimaryExpression()
+     * f0: IntegerLiteral() | TrueLiteral() | FalseLiteral() | Identifier() |
+     * ThisExpression() | ArrayAllocationExpression() | AllocationExpression() |
+     * NotExpression() | BracketExpression()
+     */
     public R visit(PrimaryExpression pe, A arg) {
 
         return null;
     }
 
-    // IntegerLiteral => <INTEGER_LITERAL>
+    /*
+     * IntegerLiteral
+     * f0: <INTEGER_LITERAL>
+     */
     public R visit(IntegerLiteral il, A arg) {
 
         return null;
     }
 
-    // TrueLiteral => "true"
+    /*
+     * TrueLiteral
+     * f0: "true"
+     */
     public R visit(TrueLiteral tl, A arg) {
 
         return null;
     }
 
-    // FalseLiteral => "false"
-    public R visit(FalseLiteral fl, A arg) {
+    /*
+     * FalseLiteral
+     * f0: "false"
+     */ public R visit(FalseLiteral fl, A arg) {
 
         return null;
     }
 
-    // Identifier => <IDENTIFIER>
+    /*
+     * Identifier
+     * f0: <IDENTIFIER>
+     */
     public R visit(Identifier id, A arg) {
 
         return null;
     }
 
-    // ThisExpression => "this"
+    /*
+     * ThisExpression
+     * f0: "this"
+     */
     public R visit(ThisExpression te, A arg) {
 
         return null;
     }
 
-    // ArrayAllocationExpression => "new" "int" "[" Expression() "]"
+    /*
+     * ArrayAllocationExpression
+     * f0: "new"
+     * f1: "int"
+     * f2: "["
+     * f3: Expression()
+     * f4: "]"
+     */
     public R visit(ArrayAllocationExpression aae, A arg) {
 
         return null;
     }
 
-    // AllocationExpression => "new" Identifier() "(" ")"
+    /*
+     * AllocationExpression
+     * f0: "new"
+     * f1: Identifier()
+     * f2: "("
+     * f3: ")"
+     */
     public R visit(AllocationExpression ae, A arg) {
 
         return null;
     }
 
-    // NotExpression => "!" Expression()
+    /*
+     * NotExpression
+     * f0: "!"
+     * f1: Expression()
+     */
     public R visit(NotExpression ne, A arg) {
 
         return null;
     }
 
-    // BracketExpression => "(" Expression() ")"
+    /*
+     * BracketExpression
+     * f0: "("
+     * f1: Expression()
+     * f2: ")"
+     */
     public R visit(BracketExpression be, A arg) {
 
         return null;
-    }
-
-    // Keep track of global vs. local variables
-    class Class {
-        String parent;
-        String name;
-        Map<String, Class> instvars = new LinkedHashMap<>();
-        Map<String, Method> methods = new LinkedHashMap<>();
-
-        Class(String name, String parent) {
-            this.name = name;
-            this.parent = parent;
-        }
-    }
-
-    class Method {
-        String name;
-        String retType;
-        HashMap<String, String> params = new LinkedHashMap<>();
-        HashMap<String, String> locals = new LinkedHashMap<>();
-
-        Method(String name, String retType) {
-            this.name = name;
-            this.retType = retType;
-        }
     }
 
 }
