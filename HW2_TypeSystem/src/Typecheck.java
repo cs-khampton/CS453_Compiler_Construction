@@ -22,15 +22,13 @@ public class Typecheck {
             Map<String, STClass> symt = pv.classes;
             printSymbolTable(symt);
 
-            /*
-             * TODO: Do type checking. Bottom-up visitor, also inherits from
-             * GJDepthFirst. Visit functions return MyTpe (=R), and
-             * take a symbol table (HashMap<String,String>) as
-             * argument (=A). You may implement things differently of
-             * course!
-             */
+            // TODO: Do type checking. Bottom-up visitor, also inherits from
+            // GJDepthFirst. Visit functions return MyTpe (=R), and
+            // take a symbol table (HashMap<String,String>) as
+            // argument (=A). You may implement things differently of
+            // course!
 
-            // CheckType ts = new CheckType();
+            // CheckType ts = new ChecType();
             // MyType res = root.accept(ts, symt);
 
             // Ugly code not to be inspired from: "my" way of storing
