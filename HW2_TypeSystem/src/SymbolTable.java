@@ -88,14 +88,11 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      */
     public R visit(MainClass mc, A arg) {
         String className = mc.f1.f0.toString();
-        // TODO: Add check for className already in classes keys
-
         STClass c = new STClass(className, null);
         classes.put(className, c);
         currClass = c;
 
         String methodName = mc.f6.toString();
-        // TODO: Add check for methodName already in classes.methods keys
 
         STMethod m = new STMethod(methodName, "void");
         currClass.methods.put(methodName, m);
@@ -106,6 +103,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         m.params.put(paramName, paramType);
         mc.f14.accept(this, arg); // VarDeclaration()*
         mc.f15.accept(this, arg); // Statement()*
+        currMethod = null;
         return null;
     }
 
@@ -134,7 +132,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         classes.put(className, c);
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
-        currClass.name = "";
+        currClass = null;
         return null;
     }
 
@@ -157,7 +155,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         classes.put(className, cl);
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
-        currClass.name = "";
+        currClass = null;
+        currMethod = null;
         return null;
     }
 
@@ -170,7 +169,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
     public R visit(VarDeclaration vd, A arg) {
         String name = vd.f1.f0.toString(); // Identifier()
         String type = getTypeChoice(vd.f0); // Type();
-        if (currMethod.name != "") {
+        if (currMethod != null) {
             currMethod.locals.put(name, type);
         } else {
             currClass.instvars.put(name, type);
@@ -205,6 +204,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         md.f7.accept(this, arg); // VarDeclaration()*
         md.f8.accept(this, arg); // Statement()*
         md.f10.f0.choice.accept(this, arg); // Expression()
+        currMethod = null;
         return null;
     }
 
@@ -612,29 +612,5 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
             return i.f0.toString();
         }
         return "invalid type choice";
-    }
-
-    public String getExpressionChoice(Expression e) {
-        Node choice = e.f0.choice;
-        if (choice instanceof AndExpression a) {
-            return "AndExpression";
-        } else if (choice instanceof CompareExpression c) {
-            return "CompareExpression";
-        } else if (choice instanceof PlusExpression p) {
-            return "PlusExpression";
-        } else if (choice instanceof MinusExpression m) {
-            return "MinusExpression";
-        } else if (choice instanceof TimesExpression t) {
-            return "TimesExpression";
-        } else if (choice instanceof ArrayLookup a) {
-            return "ArrayLookkup";
-        } else if (choice instanceof ArrayLength a) {
-            return "ArrayLength";
-        } else if (choice instanceof MessageSend m) {
-            return "MessageSend";
-        } else if (choice instanceof PrimaryExpression p) {
-            return "PrimaryExpression";
-        }
-        return "invalid expression choice";
     }
 }

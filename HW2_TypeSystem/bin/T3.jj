@@ -1,0 +1,14 @@
+class T3 {
+    public static void main(String[] args) {
+        int[] arr;
+        int x;
+        int i;
+
+        arr = new int[10];
+        i = 3;
+        arr[0] = 7;
+        x = arr[0];
+        x = arr[i];
+        System.out.println(x);
+    }
+}

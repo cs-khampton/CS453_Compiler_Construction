@@ -1,0 +1,8 @@
+// Given during lecture
+class Fac {
+    public static void main(String[] args) {
+        int x;
+        int[] y;
+        x = 1 + 3;
+    }
+}

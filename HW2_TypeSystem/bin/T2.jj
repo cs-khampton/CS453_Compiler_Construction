@@ -1,0 +1,39 @@
+class T2 {
+    public static void main(String[] args) {
+        B b;
+        int result;
+        b = new B();
+        result = b.sumTo(5);
+        System.out.println(result);
+    }
+}
+
+class A {
+    int base;
+
+    public int setBase(int x) {
+        base = x;
+        return base;
+    }
+}
+
+class B extends A {
+    int extra;
+
+    public int sumTo(int n) {
+        int i;
+        int total;
+        i = 0;
+        total = 0;
+        while (i < n) {
+            total = total + i;
+            i = i + 1;
+        }
+        return total;
+    }
+
+    public int setExtra(int e) {
+        extra = e;
+        return extra;
+    }
+}

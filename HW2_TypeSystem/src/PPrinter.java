@@ -48,7 +48,7 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
     private int indent = 0;
 
     public void printClassName(Node n) {
-        if (n instanceof NodeToken nt) {
+        if (n instanceof NodeToken) {
             indent++;
         }
         for (int i = 0; i < indent; i++) {
