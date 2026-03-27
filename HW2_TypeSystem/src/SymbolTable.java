@@ -31,6 +31,7 @@ import syntaxtree.MainClass;
 import syntaxtree.MessageSend;
 import syntaxtree.MethodDeclaration;
 import syntaxtree.MinusExpression;
+import syntaxtree.Node;
 import syntaxtree.NotExpression;
 import syntaxtree.PlusExpression;
 import syntaxtree.PrimaryExpression;
@@ -60,7 +61,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
     public R visit(Goal n, A arg) {
         n.f0.accept(this, arg); // MainClass()
         n.f1.accept(this, arg); // TypeDeclaration()*
-        // <EOF> -- doesn't need to be added to symbol table
+        // <EOF>
         return null;
     }
 
@@ -87,13 +88,24 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      */
     public R visit(MainClass mc, A arg) {
         String className = mc.f1.f0.toString();
+        // TODO: Add check for className already in classes keys
+
         STClass c = new STClass(className, null);
         classes.put(className, c);
         currClass = c;
 
-        String returnType = mc.f5.toString();
-        String name = mc.f6.toString();
-        STMethod m = new STMethod(name, returnType);
+        String methodName = mc.f6.toString();
+        // TODO: Add check for methodName already in classes.methods keys
+
+        STMethod m = new STMethod(methodName, "void");
+        currClass.methods.put(methodName, m);
+        currMethod = m;
+
+        String paramName = mc.f11.f0.toString();
+        String paramType = "String[]";
+        m.params.put(paramName, paramType);
+        mc.f14.accept(this, arg); // VarDeclaration()*
+        mc.f15.accept(this, arg); // Statement()*
         return null;
     }
 
@@ -102,6 +114,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: ClassDeclaration() | ClassExtendsDeclaration()
      */
     public R visit(TypeDeclaration d, A arg) {
+        d.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -115,7 +128,13 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f5: "}"
      */
     public R visit(ClassDeclaration cd, A arg) {
-
+        String className = cd.f1.f0.toString();
+        STClass c = new STClass(className, currClass.name);
+        currClass = c;
+        classes.put(className, c);
+        cd.f3.accept(this, arg);
+        cd.f4.accept(this, arg);
+        currClass.name = "";
         return null;
     }
 
@@ -131,7 +150,14 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f7: "}"
      */
     public R visit(ClassExtendsDeclaration ced, A arg) {
-
+        String className = ced.f1.f0.toString();
+        String extendName = ced.f3.f0.toString();
+        STClass cl = new STClass(className, extendName);
+        currClass = cl;
+        classes.put(className, cl);
+        ced.f5.accept(this, arg);
+        ced.f6.accept(this, arg);
+        currClass.name = "";
         return null;
     }
 
@@ -142,7 +168,13 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: ";"
      */
     public R visit(VarDeclaration vd, A arg) {
-
+        String name = vd.f1.f0.toString(); // Identifier()
+        String type = getTypeChoice(vd.f0); // Type();
+        if (currMethod.name != "") {
+            currMethod.locals.put(name, type);
+        } else {
+            currClass.instvars.put(name, type);
+        }
         return null;
     }
 
@@ -163,7 +195,16 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f12: "}"
      */
     public R visit(MethodDeclaration md, A arg) {
+        String methodName = md.f2.f0.toString();
+        String returnType = getTypeChoice(md.f1);
+        STMethod m = new STMethod(methodName, returnType);
+        currMethod = m;
 
+        currClass.methods.put(methodName, m);
+        md.f4.accept(this, arg); // FormalParameterList()?
+        md.f7.accept(this, arg); // VarDeclaration()*
+        md.f8.accept(this, arg); // Statement()*
+        md.f10.f0.choice.accept(this, arg); // Expression()
         return null;
     }
 
@@ -173,7 +214,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f1: FormalParameterRest()*
      */
     public R visit(FormalParameterList fpl, A arg) {
-
+        fpl.f0.accept(this, arg);
+        fpl.f1.accept(this, arg);
         return null;
     }
 
@@ -183,7 +225,9 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f1: Identifier()
      */
     public R visit(FormalParameter fp, A arg) {
-
+        String fpName = fp.f1.f0.toString();
+        String fpType = getTypeChoice(fp.f0);
+        currMethod.params.put(fpName, fpType);
         return null;
     }
 
@@ -193,7 +237,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f1: FormalParameter()
      */
     public R visit(FormalParameterRest fpr, A arg) {
-
+        fpr.f1.accept(this, arg);
         return null;
     }
 
@@ -202,7 +246,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: ArrayType() | BooleanType() | Identifier()
      */
     public R visit(Type t, A arg) {
-
+        t.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -213,7 +257,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: "]"
      */
     public R visit(ArrayType at, A arg) {
-
         return null;
     }
 
@@ -222,7 +265,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: "boolean"
      */
     public R visit(BooleanType bt, A arg) {
-
         return null;
     }
 
@@ -231,7 +273,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: "int"
      */
     public R visit(IntegerType it, A arg) {
-
         return null;
     }
 
@@ -241,7 +282,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * IfStatement() | WhileStatement() | PrintStatement()
      */
     public R visit(Statement s, A arg) {
-
+        s.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -252,7 +293,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: "}"
      */
     public R visit(Block b, A arg) {
-
+        b.f1.accept(this, arg);
         return null;
     }
 
@@ -264,13 +305,14 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f3: ";"
      */
     public R visit(AssignmentStatement as, A arg) {
-
+        as.f0.f0.accept(this, arg);
+        as.f2.f0.choice.accept(this, arg);
         return null;
     }
 
     /*
      * ArrayAssignmentStatement
-     * f0: Idenfiier()
+     * f0: Identifier()
      * f1: "["
      * f2: Expression()
      * f3: "]"
@@ -279,7 +321,9 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f6: ";"
      */
     public R visit(ArrayAssignmentStatement aas, A arg) {
-
+        aas.f0.f0.accept(this, arg);
+        aas.f2.f0.choice.accept(this, arg);
+        aas.f5.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -294,7 +338,9 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f6: Statement()
      */
     public R visit(IfStatement is, A arg) {
-
+        is.f2.f0.choice.accept(this, arg);
+        is.f4.f0.choice.accept(this, arg);
+        is.f6.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -307,7 +353,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f4: Statement()
      */
     public R visit(WhileStatement ws, A arg) {
-
+        ws.f2.f0.choice.accept(this, arg);
+        ws.f4.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -320,7 +367,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f4: ";"
      */
     public R visit(PrintStatement ps, A arg) {
-
+        ps.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -331,7 +378,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * MessageSend() | PrimaryExpression()
      */
     public R visit(Expression e, A arg) {
-
+        e.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -342,7 +389,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: PrimaryExpression()
      */
     public R visit(AndExpression ae, A arg) {
-
+        ae.f0.f0.choice.accept(this, arg);
+        ae.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -353,7 +401,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: PrimaryExpression()
      */
     public R visit(CompareExpression ce, A arg) {
-
+        ce.f0.f0.choice.accept(this, arg);
+        ce.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -364,7 +413,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: PrimaryExpression()
      */
     public R visit(PlusExpression pe, A arg) {
-
+        pe.f0.f0.choice.accept(this, arg);
+        pe.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -375,7 +425,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: PrimaryExpression()
      */
     public R visit(MinusExpression me, A arg) {
-
+        me.f0.f0.choice.accept(this, arg);
+        me.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -386,7 +437,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: PrimaryExpression()
      */
     public R visit(TimesExpression te, A arg) {
-
+        te.f0.f0.choice.accept(this, arg);
+        te.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -398,7 +450,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f3: "]"
      */
     public R visit(ArrayLookup al, A arg) {
-
+        al.f0.f0.choice.accept(this, arg);
+        al.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -409,7 +462,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: "length"
      */
     public R visit(ArrayLength al, A arg) {
-
+        al.f0.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -423,7 +476,9 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f5: ")"
      */
     public R visit(MessageSend ms, A arg) {
-
+        ms.f0.f0.choice.accept(this, arg);
+        ms.f2.f0.toString();
+        ms.f4.accept(this, arg);
         return null;
     }
 
@@ -433,7 +488,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f1: ExpressionRest()
      */
     public R visit(ExpressionList el, A arg) {
-
+        el.f0.f0.choice.accept(this, arg);
+        el.f1.accept(this, arg);
         return null;
     }
 
@@ -443,7 +499,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f1: Expression()
      */
     public R visit(ExpressionRest er, A arg) {
-
+        er.f1.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -454,7 +510,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * NotExpression() | BracketExpression()
      */
     public R visit(PrimaryExpression pe, A arg) {
-
+        pe.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -463,7 +519,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: <INTEGER_LITERAL>
      */
     public R visit(IntegerLiteral il, A arg) {
-
         return null;
     }
 
@@ -472,7 +527,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: "true"
      */
     public R visit(TrueLiteral tl, A arg) {
-
         return null;
     }
 
@@ -480,7 +534,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * FalseLiteral
      * f0: "false"
      */ public R visit(FalseLiteral fl, A arg) {
-
         return null;
     }
 
@@ -489,7 +542,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: <IDENTIFIER>
      */
     public R visit(Identifier id, A arg) {
-
         return null;
     }
 
@@ -498,7 +550,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f0: "this"
      */
     public R visit(ThisExpression te, A arg) {
-
         return null;
     }
 
@@ -511,7 +562,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f4: "]"
      */
     public R visit(ArrayAllocationExpression aae, A arg) {
-
+        aae.f3.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -523,7 +574,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f3: ")"
      */
     public R visit(AllocationExpression ae, A arg) {
-
+        ae.f1.f0.accept(this, arg);
         return null;
     }
 
@@ -533,7 +584,6 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f1: Expression()
      */
     public R visit(NotExpression ne, A arg) {
-
         return null;
     }
 
@@ -544,8 +594,47 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      * f2: ")"
      */
     public R visit(BracketExpression be, A arg) {
-
+        be.f1.f0.choice.accept(this, arg);
         return null;
     }
 
+    /************ Helper Methods **********/
+
+    public String getTypeChoice(Type t) {
+        Node choice = t.f0.choice;
+        if (choice instanceof ArrayType) {
+            return "int[]";
+        } else if (choice instanceof BooleanType) {
+            return "boolean";
+        } else if (choice instanceof IntegerType) {
+            return "int";
+        } else if (choice instanceof Identifier i) {
+            return i.f0.toString();
+        }
+        return "invalid type choice";
+    }
+
+    public String getExpressionChoice(Expression e) {
+        Node choice = e.f0.choice;
+        if (choice instanceof AndExpression a) {
+            return "AndExpression";
+        } else if (choice instanceof CompareExpression c) {
+            return "CompareExpression";
+        } else if (choice instanceof PlusExpression p) {
+            return "PlusExpression";
+        } else if (choice instanceof MinusExpression m) {
+            return "MinusExpression";
+        } else if (choice instanceof TimesExpression t) {
+            return "TimesExpression";
+        } else if (choice instanceof ArrayLookup a) {
+            return "ArrayLookkup";
+        } else if (choice instanceof ArrayLength a) {
+            return "ArrayLength";
+        } else if (choice instanceof MessageSend m) {
+            return "MessageSend";
+        } else if (choice instanceof PrimaryExpression p) {
+            return "PrimaryExpression";
+        }
+        return "invalid expression choice";
+    }
 }

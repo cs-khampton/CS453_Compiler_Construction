@@ -152,7 +152,6 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
 
     // VarDeclaration => Type() Identifier() ";"
     public R visit(VarDeclaration vd, A arg) {
-        indent++;
         printClassName(vd);
         visit(vd.f0, arg); // Type()
         visit(vd.f1, arg); // Identifier()
@@ -255,6 +254,7 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
     // Statement => Block() | AssignmentStatement() | ArrayAssignmentStatement() |
     // IfStatement() | WhileStatement() | PrintStatement()
     public R visit(Statement s, A arg) {
+        indent++;
         Node n = s.f0.choice;
         printClassName(s);
         if (n instanceof Block b) {
@@ -292,12 +292,13 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
     // AssignmentStatement => Identifier() "=" Expression() ";"
     public R visit(AssignmentStatement as, A arg) {
         printClassName(as);
-        // indent++;
+        indent++;
         visit(as.f0, arg); // Identifier()
-        // indent--;
+        indent--;
         printClassName(as.f1); // =
+        indent++;
         visit(as.f2, arg); // Expression()
-        // indent--;
+        indent--;
         printClassName(as.f3); // ;
         return null;
     }
@@ -410,9 +411,11 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
     // PlusExpression => PrimaryExpression() "+" PrimaryExpression()
     public R visit(PlusExpression pe, A arg) {
         printClassName(pe);
+        indent++;
         visit(pe.f0, arg); // PrimaryExpression()
         printClassName(pe.f1); // +
         visit(pe.f2, arg); // PrimaryExpression()
+        indent--;
         return null;
     }
 
@@ -531,10 +534,8 @@ public class PPrinter<R, A> extends GJDepthFirst<R, A> {
 
     // Identifier => <IDENTIFIER>
     public R visit(Identifier id, A arg) {
-        indent++;
         printClassName(id);
         printClassName(id.f0);
-        indent--;
         return null;
     }
 
