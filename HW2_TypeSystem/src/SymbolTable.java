@@ -62,6 +62,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         n.f0.accept(this, arg); // MainClass()
         n.f1.accept(this, arg); // TypeDeclaration()*
         // <EOF>
+        
         return null;
     }
 
@@ -612,5 +613,52 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
             return i.f0.toString();
         }
         return "invalid type choice";
+    }
+
+    
+    public static HashMap<String, String> flatten(Map<String, STClass> classes) {
+        HashMap<String, String> flat = new HashMap<>();
+
+        for (Map.Entry<String, STClass> classEntry : classes.entrySet()) {
+            String className = classEntry.getKey();
+            STClass c = classEntry.getValue();
+
+            flat.put("class:" + className, "class");
+
+            if (c.parent != null) {
+                flat.put("class:" + className + ":parent", c.parent);
+            }
+
+            for (Map.Entry<String, String> fieldEntry : c.instvars.entrySet()) {
+                flat.put(
+                    "class:" + className + ":field:" + fieldEntry.getKey(),
+                    fieldEntry.getValue()
+                );
+            }
+
+            for (Map.Entry<String, STMethod> methodEntry : c.methods.entrySet()) {
+                String methodName = methodEntry.getKey();
+                STMethod m = methodEntry.getValue();
+
+                flat.put("class:" + className + ":method:" + methodName, "method");
+                flat.put("class:" + className + ":method:" + methodName + ":return", m.returnType);
+
+                for (Map.Entry<String, String> paramEntry : m.params.entrySet()) {
+                    flat.put(
+                        "class:" + className + ":method:" + methodName + ":param:" + paramEntry.getKey(),
+                        paramEntry.getValue()
+                    );
+                }
+
+                for (Map.Entry<String, String> localEntry : m.locals.entrySet()) {
+                    flat.put(
+                        "class:" + className + ":method:" + methodName + ":local:" + localEntry.getKey(),
+                        localEntry.getValue()
+                    );
+                }
+            }
+        }
+
+        return flat;
     }
 }
