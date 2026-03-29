@@ -1,5 +1,5 @@
 
-import java.util.Map;
+import java.util.HashMap;
 
 import syntaxtree.Node;
 
@@ -19,20 +19,19 @@ public class Typecheck {
 
             SymbolTable<Void, Integer> pv = new SymbolTable<Void, Integer>();
             root.accept(pv, 0);
-            Map<String, String> symt = SymbolTable.flatten(pv.classes);
+            HashMap<String, String> symt = pv.classes;
             for (String key : symt.keySet()) {
-                System.out.println(key + " = " + symt.get(key));
+                System.out.println(key + " ==== " + symt.get(key));
             }
-            // printSymbolTable(symt);
 
             // TODO: Do type checking. Bottom-up visitor, also inherits from
-            // GJDepthFirst. Visit functions return MyTpe (=R), and
+            // GJDepthFirst. Visit functions return MyType (=R), and
             // take a symbol table (HashMap<String,String>) as
             // argument (=A). You may implement things differently of
             // course!
 
-            // CheckType ts = new CheckType();
-            // MyType res = root.accept(ts, symt);
+            CheckType tc = new CheckType();
+            MyType res = (MyType) root.accept(tc, symt);
 
             // Ugly code not to be inspired from: "my" way of storing
             // type info / typecheck property: if some of my internal
@@ -48,6 +47,6 @@ public class Typecheck {
         }
     }
 
-    /*********** THESE ARE HELPER METHODS FOR PRINTING THE SYMBOL TABLE *********/
+    /*********** THESE ARE HELPER METHODS ***********/
 
 }

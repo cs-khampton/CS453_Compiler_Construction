@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Map;
 
 import syntaxtree.AllocationExpression;
 import syntaxtree.AndExpression;
@@ -48,9 +47,9 @@ import visitor.GJDepthFirst;
 
 public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
 
-    Map<String, STClass> classes = new HashMap<>();
-    private STClass currClass = null;
-    private STMethod currMethod = null;
+    HashMap<String, String> classes = new HashMap<>();
+    private String currClass = null;
+    private String currMethod = null;
 
     /*
      * Goal
@@ -90,14 +89,15 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
     public R visit(MainClass mc, A arg) {
         String className = mc.f1.f0.toString();
         STClass c = new STClass(className, null);
-        classes.put(className, c);
-        currClass = c;
+        currClass = c.name;
 
         String methodName = mc.f6.toString();
 
         STMethod m = new STMethod(methodName, "void");
-        currClass.methods.put(methodName, m);
-        currMethod = m;
+        currMethod = m.name;
+        // set class and method in symbol table
+        classes.put("class:[" + className + "]", "class");
+        classes.put("class:[" + className + "]:method:[main]", m.returnType);
 
         String paramName = mc.f11.f0.toString();
         String paramType = "String[]";
@@ -128,9 +128,15 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      */
     public R visit(ClassDeclaration cd, A arg) {
         String className = cd.f1.f0.toString();
-        STClass c = new STClass(className, currClass.name);
-        currClass = c;
-        classes.put(className, c);
+        STClass c = new STClass(className, currClass);
+        currClass = c.name;
+        classes.put("class:[" + className + "]", "class");
+        
+        if (c.parent != null) {
+            classes.put("class:[" + className + "]:parent", c.parent);
+        } else {
+            classes.put("class:[" + className + "]:parent", "none");
+        }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
         currClass = null;
@@ -152,8 +158,9 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String className = ced.f1.f0.toString();
         String extendName = ced.f3.f0.toString();
         STClass cl = new STClass(className, extendName);
-        currClass = cl;
-        classes.put(className, cl);
+        currClass = cl.name;
+        classes.put("class:[" + className + "]", "class");
+        classes.put("class:[" + className + "]:parent", extendName);
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
         currClass = null;
@@ -171,9 +178,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String name = vd.f1.f0.toString(); // Identifier()
         String type = getTypeChoice(vd.f0); // Type();
         if (currMethod != null) {
-            currMethod.locals.put(name, type);
-        } else {
-            currClass.instvars.put(name, type);
+            classes.put("class:[" + currClass + "]:method:[" + currMethod + "]", "method");
+            classes.put("class:[" + currClass + "]:method:[" + currMethod + "]:params:[" + name + "]", type);
         }
         return null;
     }
@@ -198,9 +204,10 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String methodName = md.f2.f0.toString();
         String returnType = getTypeChoice(md.f1);
         STMethod m = new STMethod(methodName, returnType);
-        currMethod = m;
+        classes.put("class:[" + currClass + "]:method:[" + methodName + "]", "method");
+        classes.put("class:[" + currClass + "]:method:[" + methodName + "]:returnType", returnType);
+        currMethod = m.name;
 
-        currClass.methods.put(methodName, m);
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
         md.f8.accept(this, arg); // Statement()*
@@ -228,7 +235,9 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
     public R visit(FormalParameter fp, A arg) {
         String fpName = fp.f1.f0.toString();
         String fpType = getTypeChoice(fp.f0);
-        currMethod.params.put(fpName, fpType);
+        if (currClass != null && currMethod != null){
+            classes.put("class:[" + currClass + "]:method:[" + currMethod + "]:param:[" + fpName + "]", fpType);
+        }
         return null;
     }
 
@@ -613,52 +622,5 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
             return i.f0.toString();
         }
         return "invalid type choice";
-    }
-
-    
-    public static HashMap<String, String> flatten(Map<String, STClass> classes) {
-        HashMap<String, String> flat = new HashMap<>();
-
-        for (Map.Entry<String, STClass> classEntry : classes.entrySet()) {
-            String className = classEntry.getKey();
-            STClass c = classEntry.getValue();
-
-            flat.put("class:" + className, "class");
-
-            if (c.parent != null) {
-                flat.put("class:" + className + ":parent", c.parent);
-            }
-
-            for (Map.Entry<String, String> fieldEntry : c.instvars.entrySet()) {
-                flat.put(
-                    "class:" + className + ":field:" + fieldEntry.getKey(),
-                    fieldEntry.getValue()
-                );
-            }
-
-            for (Map.Entry<String, STMethod> methodEntry : c.methods.entrySet()) {
-                String methodName = methodEntry.getKey();
-                STMethod m = methodEntry.getValue();
-
-                flat.put("class:" + className + ":method:" + methodName, "method");
-                flat.put("class:" + className + ":method:" + methodName + ":return", m.returnType);
-
-                for (Map.Entry<String, String> paramEntry : m.params.entrySet()) {
-                    flat.put(
-                        "class:" + className + ":method:" + methodName + ":param:" + paramEntry.getKey(),
-                        paramEntry.getValue()
-                    );
-                }
-
-                for (Map.Entry<String, String> localEntry : m.locals.entrySet()) {
-                    flat.put(
-                        "class:" + className + ":method:" + methodName + ":local:" + localEntry.getKey(),
-                        localEntry.getValue()
-                    );
-                }
-            }
-        }
-
-        return flat;
     }
 }
