@@ -49,6 +49,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
 
     private String currClass = null;
     private String currMethod = null;
+    boolean typeError = false;
 
     /*
      * Goal
@@ -86,23 +87,16 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(MainClass mc, HashMap<String, String> arg) {
         String className = mc.f1.f0.toString();
-        STClass c = new STClass(className, null);
-        currClass = c.name;
-
         String methodName = mc.f6.toString();
+        currClass = className;
+        currMethod = methodName;
+        if (!arg.get("class:[" + className + "]").equals("class")
+                || !arg.get("class:[" + className + "]:method:[" + methodName + "]").equals("method")) {
+            typeError = true;
+        }
 
-        STMethod m = new STMethod(methodName, "void");
-        currMethod = m.name;
-        // set class and method in symbol table
-        // classes.put("class:[" + className + "]", "class");
-        // classes.put("class:[" + className + "]:method:[main]", m.returnType);
-
-        String paramName = mc.f11.f0.toString();
-        String paramType = "String[]";
-        // m.params.put(paramName, paramType);
-        mc.f14.accept(this, arg); // VarDeclaration()*
-        mc.f15.accept(this, arg); // Statement()*
-        currMethod = null;
+        mc.f14.accept(this, arg);
+        mc.f15.accept(this, arg);
         return null;
     }
 
@@ -126,15 +120,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(ClassDeclaration cd, HashMap<String, String> arg) {
         String className = cd.f1.f0.toString();
-        STClass c = new STClass(className, currClass);
-        currClass = c.name;
-        // classes.put("class:[" + className + "]", "class");
+        currClass = className;
+        if (!(arg.get("class:[" + className + "]").equals("class"))) {
+            typeError = true;
+        }
 
-        // if (c.parent != null) {
-        // classes.put("class:[" + className + "]:parent", c.parent);
-        // } else {
-        // classes.put("class:[" + className + "]:parent", "none");
-        // }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
         currClass = null;
@@ -155,9 +145,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(ClassExtendsDeclaration ced, HashMap<String, String> arg) {
         String className = ced.f1.f0.toString();
         String extendName = ced.f3.f0.toString();
-        STClass cl = new STClass(className, extendName);
-        currClass = cl.name;
-        // classes.put("class:[" + className + "]", "class");
+        currClass = className;
+        System.out.println(arg.get("class:[" + className + "]"));
         // classes.put("class:[" + className + "]:parent", extendName);
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
