@@ -9,7 +9,7 @@ public class Typecheck {
         Node root = null;
         try {
             root = new MiniJavaParser(System.in).Goal();
-            // XXX: Review indentation further
+            // FIXME: Review indentation further
             // PPrinter<R, A> pp = new PPrinter<R, A>();
             // root.accept(pp, null);
 
@@ -20,6 +20,8 @@ public class Typecheck {
             SymbolTable<Void, Integer> pv = new SymbolTable<Void, Integer>();
             root.accept(pv, 0);
             HashMap<String, String> symt = pv.classes;
+
+            // XXX: To be removed before submission
             for (String key : symt.keySet()) {
                 System.out.println(key + " ==== " + symt.get(key));
             }
