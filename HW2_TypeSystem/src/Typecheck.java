@@ -34,6 +34,11 @@ public class Typecheck {
 
             CheckType tc = new CheckType();
             MyType res = (MyType) root.accept(tc, symt);
+            if (tc.typeError) {
+                System.out.println("Type error");
+            } else {
+                System.out.println("Program type checked successfully");
+            }
 
             // Ugly code not to be inspired from: "my" way of storing
             // type info / typecheck property: if some of my internal

@@ -19,6 +19,10 @@ class A {
         return value;
     }
 
+    public int setA(A a){
+        B my_var;
+        return 12;
+    }
     public int add(int a, int b) {
         int c;
         c = a + b;

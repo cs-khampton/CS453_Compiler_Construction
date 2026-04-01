@@ -134,7 +134,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!(arg.get("class:[" + className + "]").equals("class")) || className.equals("")) {
             typeError = true;
         }
-
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
         currClass = null;
@@ -175,7 +174,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(VarDeclaration vd, HashMap<String, String> arg) {
         String name = vd.f1.f0.toString(); // Identifier()
-        String type = getTypeChoice(vd.f0); // Type();
+        String type = getTypeChoice(vd.f0); // Type()
         if (name.equals("") || type.equals("invalid type choice")) {
             typeError = true;
         }
@@ -201,12 +200,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(MethodDeclaration md, HashMap<String, String> arg) {
         String methodName = md.f2.f0.toString();
         String returnType = getTypeChoice(md.f1);
-        STMethod m = new STMethod(methodName, returnType);
-        // classes.put("class:[" + currClass + "]:method:[" + methodName + "]",
-        // "method");
-        // classes.put("class:[" + currClass + "]:method:[" + methodName +
-        // "]:returnType", returnType);
-        currMethod = m.name;
+        if (methodName.equals("") || returnType.equals("invalid type choice")) {
+            typeError = true;
+        }
 
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
@@ -234,11 +230,13 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(FormalParameter fp, HashMap<String, String> arg) {
         String fpName = fp.f1.f0.toString();
+        if (fpName.equals("")) {
+            return null;
+        }
         String fpType = getTypeChoice(fp.f0);
-        // if (currClass != null && currMethod != null) {
-        // classes.put("class:[" + currClass + "]:method:[" + currMethod + "]:param:[" +
-        // fpName + "]", fpType);
-        // }
+        if (fpType.equals("invalid type choice")) {
+            typeError = true;
+        }
         return null;
     }
 
