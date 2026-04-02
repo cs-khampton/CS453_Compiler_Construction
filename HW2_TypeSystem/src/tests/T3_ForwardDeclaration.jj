@@ -8,15 +8,6 @@ class T3 {
     }
 }
 
-class A {
-    int base;
-
-    public int setBase(int x) {
-        base = x;
-        return base;
-    }
-}
-
 class B extends A {
     int extra;
 
@@ -35,5 +26,13 @@ class B extends A {
     public int setExtra(int e) {
         extra = e;
         return extra;
+    }
+}
+class A {
+    int base;
+
+    public int setBase(int x) {
+        base = x;
+        return base;
     }
 }

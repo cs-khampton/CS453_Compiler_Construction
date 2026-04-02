@@ -1,6 +1,6 @@
-//Program Typechecks
+// Subtype check
 
-class ReturnSubtype {
+class Subtype {
     public static void main(String[] args) {
         A a;
         A a2;
@@ -20,6 +20,6 @@ class A {
     }
 }
 
-class B extends A{
+class B extends A {
     boolean second;
 }
