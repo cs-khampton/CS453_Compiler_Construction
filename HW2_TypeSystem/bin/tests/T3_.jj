@@ -1,4 +1,4 @@
-class T2 {
+class T3 {
     public static void main(String[] args) {
         B b;
         int result;
