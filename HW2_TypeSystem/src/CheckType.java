@@ -88,11 +88,15 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(MainClass mc, HashMap<String, String> arg) {
         String className = mc.f1.f0.toString();
         String methodName = mc.f6.toString();
+        String retType = mc.f5.toString();
 
         currClass = className;
         currMethod = methodName;
         // Check class name in symbol table
-        if (!arg.containsKey("class:[" + className + "]")) {
+        String key = retTypeKey(className, methodName, retType);
+        if (!arg.containsKey(key)) {
+            System.out.println("HELLO FROM MAINCLASS");
+            System.out.println("Type Error: " + "Key: " + key);
             typeError = true;
         }
 
@@ -124,11 +128,16 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(ClassDeclaration cd, HashMap<String, String> arg) {
         String className = cd.f1.f0.toString();
         currClass = className;
-        if (!(arg.get("class:[" + className + "]").equals("class")) || className.equals("")) {
+        String key;
+        key = classKey(className);
+        if (!arg.containsKey(key)) {
+            System.out.println("HELLO FROM CLASSDECLARATION");
+            System.out.println("Type Error: " + "Key: " + key);
             typeError = true;
         }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
+        currMethod = null;
         currClass = null;
         return null;
     }
@@ -148,8 +157,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String className = ced.f1.f0.toString();
         String extendName = ced.f3.f0.toString();
         currClass = className;
-        if (!(arg.get("class:[" + className + "]").equals("class")) || className.equals("")
-                || !(arg.get("class:[" + extendName + "]").equals("class")) || extendName.equals("")) {
+
+        String key = classKey(className) + parentClassKey(extendName);
+        if (!(arg.containsKey(key)) || className.equals(extendName)) {
+            System.out.println("HELLO FROM CLASSEXTENDSDECLARATION");
+            System.out.println("Type Error: " + "Key: " + key);
             typeError = true;
         }
         ced.f5.accept(this, arg);
@@ -166,9 +178,19 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: ";"
      */
     public MyType visit(VarDeclaration vd, HashMap<String, String> arg) {
-        String name = vd.f1.f0.toString(); // Identifier()
-        String type = getTypeChoice(vd.f0); // Type()
-        if (name.equals("") || type.equals("invalid type choice")) {
+        String idName = vd.f1.f0.toString(); // Identifier()
+        String c = currClass;
+        String m = currMethod;
+        String key = "";
+        if (m == null && c != null) {
+            key = instVarKey(c, idName);
+        } else if (m != null && c != null) {
+            key = localKey(c, m, idName);
+        }
+
+        if (!arg.containsKey(key)) {
+            System.out.println("HELLO FROM VARDECLARATION");
+            System.out.println("Type Error: " + "Key: " + key);
             typeError = true;
         }
         return null;
@@ -193,7 +215,14 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(MethodDeclaration md, HashMap<String, String> arg) {
         String methodName = md.f2.f0.toString();
         String returnType = getTypeChoice(md.f1);
-        if (methodName.equals("") || returnType.equals("invalid type choice")) {
+
+        currMethod = methodName;
+
+        String key = retTypeKey(currClass, methodName, returnType);
+        System.out.println(key);
+        if (!arg.containsKey(key) || arg.get(key) != returnType) {
+            System.out.println("HELLO FROM METHODDECLARATION");
+            System.out.println("Type Error: " + "Key: " + key);
             typeError = true;
         }
 
@@ -223,12 +252,17 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(FormalParameter fp, HashMap<String, String> arg) {
         String fpName = fp.f1.f0.toString();
-        if (fpName.equals("")) {
-            return null;
-        }
         String fpType = getTypeChoice(fp.f0);
-        if (fpType.equals("invalid type choice")) {
+        String key = "";
+        if (currClass != null && currMethod != null) {
+            key += mParamKey(currClass, currMethod, fpName);
+        }
+        if (!arg.containsKey(key)) {
             typeError = true;
+        } else {
+            if (arg.get(key) != fpType) {
+                typeError = true;
+            }
         }
         return null;
     }
@@ -259,8 +293,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: "]"
      */
     public MyType visit(ArrayType at, HashMap<String, String> arg) {
-        String type = at.f0.toString() + at.f1.toString() + at.f2.toString();
-        isExpectedString("int[]", type);
         return null;
     }
 
@@ -269,8 +301,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "boolean"
      */
     public MyType visit(BooleanType bt, HashMap<String, String> arg) {
-        String type = bt.f0.toString();
-        isExpectedString("boolean", type);
         return null;
     }
 
@@ -279,8 +309,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "int"
      */
     public MyType visit(IntegerType it, HashMap<String, String> arg) {
-        String type = it.f0.toString();
-        isExpectedString("int", type);
         return null;
     }
 
@@ -626,5 +654,39 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             return false;
         }
         return true;
+    }
+
+    /**
+     * Helper Methods for String concatenation
+     */
+
+    public String classKey(String className) {
+        return "class:[" + className + "]";
+    }
+
+    public String parentClassKey(String pcName) {
+        return classKey(pcName) + ":parent";
+    }
+
+    public String methodKey(String className, String methodName) {
+        return classKey(className) + ":method:[" + methodName + "]";
+    }
+
+    public String retTypeKey(String className, String methodName, String retType) {
+        return methodKey(className, methodName) + ":returnType";
+    }
+
+    public String mParamKey(String className, String methodName, String paramName) {
+        return methodKey(className, methodName) + ":methodParam:[" + paramName + "]";
+    }
+
+    public String localKey(String className, String methodName, String paramName) {
+        return methodKey(className, methodName) + ":localParams:[" + paramName + "]";
+    }
+
+    // TODO: Working on VarDeclaration -- getting instVariable instead of
+    // localParams
+    public String instVarKey(String className, String varName) {
+        return classKey(className) + ":instVariable:[" + varName + "]";
     }
 }

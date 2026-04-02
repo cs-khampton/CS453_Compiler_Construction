@@ -96,7 +96,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         currMethod = m.name;
         // set class and method in symbol table
         classes.put("class:[" + className + "]", "class");
-        classes.put("class:[" + className + "]:method:[main]", m.returnType);
+        classes.put("class:[" + className + "]:method:[main]:returnType", m.returnType);
 
         String paramName = mc.f11.f0.toString();
         String paramType = "String[]";
@@ -177,7 +177,7 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
      */
     public R visit(VarDeclaration vd, A arg) {
         String name = vd.f1.f0.toString(); // Identifier()
-        String type = getTypeChoice(vd.f0); // Type();
+        String type = getTypeChoice(vd.f0); // Type()
         if (currMethod != null && currClass != null) {
             classes.put("class:[" + currClass + "]:method:[" + currMethod + "]:localParams:[" + name + "]", type);
         } else if (currMethod == null && currClass != null) {
