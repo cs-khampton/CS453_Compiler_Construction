@@ -4,7 +4,7 @@ import java.util.HashMap;
 import syntaxtree.Node;
 
 public class Typecheck {
-    @SuppressWarnings("static-access")
+    @SuppressWarnings({ "static-access", "unchecked" })
     public static <R, A> void main(String[] args) {
         Node root = null;
         try {
@@ -26,13 +26,13 @@ public class Typecheck {
                 System.out.println(key + " ==== " + symt.get(key));
             }
 
-            // TODO: Do type checking. Bottom-up visitor, also inherits from
+            // FIXME: Do type checking. Bottom-up visitor, also inherits from
             // GJDepthFirst. Visit functions return MyType (=R), and
             // take a symbol table (HashMap<String,String>) as
             // argument (=A). You may implement things differently of
             // course!
 
-            CheckType tc = new CheckType();
+            CheckType<Object, Object> tc = new CheckType<>();
             MyType res = (MyType) root.accept(tc, symt);
             if (tc.typeError) {
                 System.out.println("Type error");

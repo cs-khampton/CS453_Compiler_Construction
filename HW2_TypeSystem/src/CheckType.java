@@ -156,14 +156,17 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(ClassExtendsDeclaration ced, HashMap<String, String> arg) {
         String className = ced.f1.f0.toString();
         String extendName = ced.f3.f0.toString();
+        String classExtKey = classKey(extendName);
+
         currClass = className;
 
         String key = classKey(className) + parentClassKey(extendName);
-        if (!(arg.containsKey(key)) || className.equals(extendName)) {
+        if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)) {
             System.out.println("HELLO FROM CLASSEXTENDSDECLARATION");
             System.out.println("Type Error: " + "Key: " + key);
             typeError = true;
         }
+        // check that extends class exits
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
         currClass = null;
@@ -219,7 +222,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         currMethod = methodName;
 
         String key = retTypeKey(currClass, methodName, returnType);
-        System.out.println(key);
         if (!arg.containsKey(key) || arg.get(key) != returnType) {
             System.out.println("HELLO FROM METHODDECLARATION");
             System.out.println("Type Error: " + "Key: " + key);
@@ -257,6 +259,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (currClass != null && currMethod != null) {
             key += mParamKey(currClass, currMethod, fpName);
         }
+
         if (!arg.containsKey(key)) {
             typeError = true;
         } else {
@@ -341,8 +344,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f3: ";"
      */
     public MyType visit(AssignmentStatement as, HashMap<String, String> arg) {
+        as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
-
         return null;
     }
 

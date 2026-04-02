@@ -1,0 +1,4 @@
+// Should give Parse Exception
+class T5 {
+    
+}
