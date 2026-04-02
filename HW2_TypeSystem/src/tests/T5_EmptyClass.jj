@@ -1,4 +1,4 @@
-// This file should pass
-
-class B extends A { } 
-class A { }
+// Should give Parse Exception
+class T5 {
+    
+}

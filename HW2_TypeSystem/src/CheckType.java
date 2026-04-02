@@ -88,25 +88,18 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(MainClass mc, HashMap<String, String> arg) {
         String className = mc.f1.f0.toString();
         String methodName = mc.f6.toString();
-        String retType = mc.f5.toString();
 
-        // check that name is main, type is void, and class is not null
-        if (!methodName.equals("main")
-                || !retType.equals("void") || className.equals("")) {
+        currClass = className;
+        currMethod = methodName;
+        // Check class name in symbol table
+        if (!arg.containsKey("class:[" + className + "]")) {
             typeError = true;
-        } else {
-            currClass = className;
-            currMethod = methodName;
-            String id = mc.f11.f0.toString();
-            // check that the parameter is String[]
-            if (!(arg.get("class:[" + className + "]:method:[main]:methodParam:[" + id + "]").equals("String[]"))) {
-                typeError = true;
-            }
-            mc.f14.accept(this, arg);
-            mc.f15.accept(this, arg);
-            currClass = null;
-            currMethod = null;
         }
+
+        mc.f14.accept(this, arg);
+        mc.f15.accept(this, arg);
+        currClass = null;
+        currMethod = null;
         return null;
     }
 
@@ -266,6 +259,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: "]"
      */
     public MyType visit(ArrayType at, HashMap<String, String> arg) {
+        String type = at.f0.toString() + at.f1.toString() + at.f2.toString();
+        isExpectedString("int[]", type);
         return null;
     }
 
@@ -274,6 +269,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "boolean"
      */
     public MyType visit(BooleanType bt, HashMap<String, String> arg) {
+        String type = bt.f0.toString();
+        isExpectedString("boolean", type);
         return null;
     }
 
@@ -282,6 +279,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "int"
      */
     public MyType visit(IntegerType it, HashMap<String, String> arg) {
+        String type = it.f0.toString();
+        isExpectedString("int", type);
         return null;
     }
 
@@ -314,8 +313,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f3: ";"
      */
     public MyType visit(AssignmentStatement as, HashMap<String, String> arg) {
-        as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
+
         return null;
     }
 
@@ -330,7 +329,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f6: ";"
      */
     public MyType visit(ArrayAssignmentStatement aas, HashMap<String, String> arg) {
-        aas.f0.f0.accept(this, arg);
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -621,5 +619,12 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             return i.f0.toString();
         }
         return "invalid type choice";
+    }
+
+    public boolean isExpectedString(String expected, String actual) {
+        if (!actual.equals(expected)) {
+            return false;
+        }
+        return true;
     }
 }
