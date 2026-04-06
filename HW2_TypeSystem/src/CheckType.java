@@ -354,9 +354,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (currMethod == null && currClass != null) {
             key += instVarKey(currClass, id);
         }
-        String idType = arg.get(key);
         // XXX: Do I need to check that expression is a compatible type? Probably in
         // Expression()
+
         as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
         return null;
@@ -691,16 +691,36 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         return "invalid type choice";
     }
 
+    public String getExprChoice(Expression e) {
+        Node choice = e.f0.choice;
+        if (choice instanceof AndExpression) {
+            return "AndExpression";
+        } else if (choice instanceof CompareExpression) {
+            return "CompareExpression";
+        } else if (choice instanceof PlusExpression) {
+            return "PlusExpression";
+        } else if (choice instanceof MinusExpression) {
+            return "MinusExpression";
+        } else if (choice instanceof TimesExpression) {
+            return "TimesExpression";
+        } else if (choice instanceof ArrayLookup) {
+            return "ArrayLookup";
+        } else if (choice instanceof ArrayLength) {
+            return "ArrayLength";
+        } else if (choice instanceof MessageSend) {
+            return "MessageSend";
+        } else if (choice instanceof PrimaryExpression) {
+            return "PrimaryExpression";
+        }
+        return "invalid expression choice";
+    }
+
     public boolean isExpectedString(String expected, String actual) {
         if (!actual.equals(expected)) {
             return false;
         }
         return true;
     }
-
-    /**
-     * Helper Methods for String concatenation
-     */
 
     public String classKey(String className) {
         return "class:[" + className + "]";
