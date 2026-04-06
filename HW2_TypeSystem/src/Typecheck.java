@@ -4,7 +4,6 @@ import java.util.HashMap;
 import syntaxtree.Node;
 
 public class Typecheck {
-    @SuppressWarnings({ "static-access", "unchecked" })
     public static <R, A> void main(String[] args) {
         Node root = null;
         try {
@@ -21,7 +20,7 @@ public class Typecheck {
             root.accept(pv, 0);
             HashMap<String, String> symt = pv.classes;
 
-            // XXX: To be removed before submission
+            // Print Symbol Table
             for (String key : symt.keySet()) {
                 System.out.println(key + " ==== " + symt.get(key));
             }
@@ -34,6 +33,7 @@ public class Typecheck {
 
             CheckType<Object, Object> tc = new CheckType<>();
             MyType res = (MyType) root.accept(tc, symt);
+
             if (tc.typeError) {
                 System.out.println("Type error");
             } else {

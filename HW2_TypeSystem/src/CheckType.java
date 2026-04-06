@@ -49,7 +49,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
 
     private String currClass = null;
     private String currMethod = null;
-    boolean typeError = false;
+    public boolean typeError = false;
 
     /*
      * Goal
@@ -95,7 +95,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // Check class name in symbol table
         String key = retTypeKey(className, methodName, retType);
         if (!arg.containsKey(key)) {
-            System.out.println("MainClass - Type Error: " + "Key: " + key);
+            errorMessage("MainClass", key);
             typeError = true;
         }
 
@@ -130,7 +130,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String key;
         key = classKey(className);
         if (!arg.containsKey(key)) {
-            System.out.println("ClassDeclaration - Type Error: " + "Key: " + key);
+            errorMessage("ClassDeclaration", key);
+
             typeError = true;
         }
         cd.f3.accept(this, arg);
@@ -159,11 +160,12 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         currClass = className;
 
         String key = parentClassKey(extendName);
+        // check that extends class exists
         if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)) {
-            System.out.println("ClassExtendsDeclaration - Type Error in Key: " + key);
+            errorMessage("ClassExtendsDeclaration", key);
             typeError = true;
         }
-        // check that extends class exits
+
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
         currClass = null;
@@ -188,11 +190,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         }
 
         if (!arg.containsKey(key)) {
-            System.out.println("VarDeclaration - Type Error Key: " + key);
+            errorMessage("VarDeclaration", key);
             typeError = true;
         } else {
             if (arg.get(key) != type) {
-                System.out.println("VarDeclaration - Type Error Key: " + key);
+                errorMessage("VarDeclaration", key);
                 typeError = true;
             }
         }
@@ -223,7 +225,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
 
         String key = retTypeKey(currClass, methodName, returnType);
         if (!arg.containsKey(key) || arg.get(key) != returnType) {
-            System.out.println("MethodDeclaration - Type Error Key: " + key);
+            errorMessage("MethodDeclaration", key);
             typeError = true;
         }
 
@@ -260,7 +262,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         }
 
         if (!arg.containsKey(key)) {
-            System.out.println("MethodDeclaration - Type Error Key: " + key);
+            errorMessage("FormalParameter", key);
             typeError = true;
         } else {
             if (arg.get(key) != fpType) {
@@ -344,6 +346,17 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f3: ";"
      */
     public MyType visit(AssignmentStatement as, HashMap<String, String> arg) {
+        String id = as.f0.f0.toString();
+        String key = "";
+        if (currMethod != null && currClass != null) {
+            key += localKey(currClass, currMethod, id);
+        }
+        if (currMethod == null && currClass != null) {
+            key += instVarKey(currClass, id);
+        }
+        String idType = arg.get(key);
+        // XXX: Do I need to check that expression is a compatible type? Probably in
+        // Expression()
         as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
         return null;
@@ -360,6 +373,18 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f6: ";"
      */
     public MyType visit(ArrayAssignmentStatement aas, HashMap<String, String> arg) {
+        String key = "";
+        String id = aas.f0.f0.toString();
+        if (currClass != null && currMethod != null) {
+            key += localKey(currClass, currMethod, id);
+        }
+        if (currClass != null && currMethod == null) {
+            key += instVarKey(currClass, id);
+        }
+        if (arg.get(key) != "int[]" && arg.get(key) != "String[]") {
+            typeError = true;
+            errorMessage("ArrayAssignmentStatement", arg.get(key));
+        }
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -427,6 +452,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(AndExpression ae, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
+
         ae.f0.f0.choice.accept(this, arg);
         ae.f2.f0.choice.accept(this, arg);
         return null;
@@ -439,6 +466,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
+
         ce.f0.f0.choice.accept(this, arg);
         ce.f2.f0.choice.accept(this, arg);
         return null;
@@ -451,6 +480,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         pe.f0.f0.choice.accept(this, arg);
         pe.f2.f0.choice.accept(this, arg);
         return null;
@@ -463,6 +493,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(MinusExpression me, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         me.f0.f0.choice.accept(this, arg);
         me.f2.f0.choice.accept(this, arg);
         return null;
@@ -475,6 +506,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         te.f0.f0.choice.accept(this, arg);
         te.f2.f0.choice.accept(this, arg);
         return null;
@@ -488,6 +520,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f3: "]"
      */
     public MyType visit(ArrayLookup al, HashMap<String, String> arg) {
+        // TODO: Check that PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
         al.f2.f0.choice.accept(this, arg);
         return null;
@@ -500,6 +533,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: "length"
      */
     public MyType visit(ArrayLength al, HashMap<String, String> arg) {
+        // TODO: Check that PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
         return null;
     }
@@ -612,6 +646,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f3: ")"
      */
     public MyType visit(AllocationExpression ae, HashMap<String, String> arg) {
+        String key = classKey(ae.f1.f0.toString());
+        if (!arg.containsKey(key)) {
+            typeError = true;
+            errorMessage("AllocationExpression", key);
+        }
         ae.f1.f0.accept(this, arg);
         return null;
     }
@@ -689,5 +728,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
 
     public String instVarKey(String className, String varName) {
         return classKey(className) + ":instVariable:[" + varName + "]";
+    }
+
+    public void errorMessage(String errorLocation, String key) {
+        System.out.println(errorLocation + " - Type Error Key: " + key);
     }
 }
