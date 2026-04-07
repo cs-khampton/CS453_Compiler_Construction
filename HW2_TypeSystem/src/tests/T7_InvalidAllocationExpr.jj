@@ -1,0 +1,8 @@
+// Given during lecture
+class InvalidAllocationExpr {
+    public static void main(String[] args) {
+        int x;
+        int[] y;
+        y = new int[true];
+    }
+}

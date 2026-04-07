@@ -131,9 +131,10 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         key = classKey(className);
         if (!arg.containsKey(key)) {
             errorMessage("ClassDeclaration", key);
-
             typeError = true;
         }
+        // TODO: Check no duplicate classes (ignore parent class)
+
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
         currMethod = null;
@@ -354,8 +355,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (currMethod == null && currClass != null) {
             key += instVarKey(currClass, id);
         }
-        // XXX: Do I need to check that expression is a compatible type? Probably in
-        // Expression()
+        // XXX: Check that expression is the same type as identifier
 
         as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
@@ -385,6 +385,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             typeError = true;
             errorMessage("ArrayAssignmentStatement", arg.get(key));
         }
+        // TODO: Check that f2 is a valid int and that f0 is the same type as f5
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -453,7 +454,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(AndExpression ae, HashMap<String, String> arg) {
         // TODO: Check that left and right operands are compatible
-
         ae.f0.f0.choice.accept(this, arg);
         ae.f2.f0.choice.accept(this, arg);
         return null;
@@ -634,6 +634,12 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f4: "]"
      */
     public MyType visit(ArrayAllocationExpression aae, HashMap<String, String> arg) {
+        // f3 must be an IntegerLiteral()
+        String type = getExprChoice(aae.f3);
+        if (type != "IntegerLiteral") {
+            typeError = true;
+            errorMessage("ArrayAllocationExpression", type);
+        }
         aae.f3.f0.choice.accept(this, arg);
         return null;
     }
@@ -709,17 +715,35 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             return "ArrayLength";
         } else if (choice instanceof MessageSend) {
             return "MessageSend";
-        } else if (choice instanceof PrimaryExpression) {
-            return "PrimaryExpression";
+        } else if (choice instanceof PrimaryExpression p) {
+            String pec = getPrimeExpChoice(p);
+            return pec;
         }
         return "invalid expression choice";
     }
 
-    public boolean isExpectedString(String expected, String actual) {
-        if (!actual.equals(expected)) {
-            return false;
+    public String getPrimeExpChoice(PrimaryExpression p) {
+        Node choice = p.f0.choice;
+        if (choice instanceof IntegerLiteral) {
+            return "IntegerLiteral";
+        } else if (choice instanceof TrueLiteral) {
+            return "TrueLiteral";
+        } else if (choice instanceof FalseLiteral) {
+            return "FalseLiteral";
+        } else if (choice instanceof Identifier) {
+            return "Identifier";
+        } else if (choice instanceof ThisExpression) {
+            return "ThisExpression";
+        } else if (choice instanceof ArrayAllocationExpression) {
+            return "ArrayAllocationExpression";
+        } else if (choice instanceof AllocationExpression) {
+            return "AllocationExpression";
+        } else if (choice instanceof NotExpression) {
+            return "NotExpression";
+        } else if (choice instanceof BracketExpression) {
+            return "BracketExpression";
         }
-        return true;
+        return "invalid primary expression choice";
     }
 
     public String classKey(String className) {

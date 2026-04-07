@@ -1,0 +1,8 @@
+class Cycle {
+    public static void main(String[] args){
+
+    }
+}
+class Cycle {
+    Cycle i;
+}
