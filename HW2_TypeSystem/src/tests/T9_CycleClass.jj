@@ -1,9 +1,0 @@
-class Cycle {
-    public static void main(String[] args){
-        Cycle i;
-        i = new Cycle();
-    }
-}
-class Cycle {
-    Cycle i;
-}
