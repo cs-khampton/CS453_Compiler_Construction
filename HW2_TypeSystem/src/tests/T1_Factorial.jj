@@ -1,22 +1,24 @@
 /*
-    This is a test file to be given to Typecheck.java
+    Rules Used: r0, r1, r4, r6, r7, r25, r27, r34, r29, r42, r46, r61, r62, r64
 */
-
+// r0
 class Factorial {
-    public static void main(String[] arg) {
-        System.out.println(new Fac().ComputeFac(10));
+    public static void main(String[] arg) { // r1, r61
+        System.out.println(new Fac().ComputeFac(10)); // r29, r64, r46
     }
 }
 
+// r4
 class Fac {
-    int y;
+    int y; // r6
 
-    public int ComputeFac(int num) {
-        int num_aux;
-        if (num < 1)
-            num_aux = num_aux;
+    public int ComputeFac(int num) { // r7
+        int num_aux; // r6
+        // r27
+        if (num < 1) // r31
+            num_aux = num_aux; // r25
         else
-            num_aux = num * (this.ComputeFac(num - 1));
+            num_aux = num * (this.ComputeFac(num - 1)); // r25, r34, r62, r46, r42
         return num_aux;
     }
 }
