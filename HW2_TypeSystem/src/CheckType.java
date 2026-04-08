@@ -228,7 +228,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             errorMessage("MethodDeclaration", key);
             typeError = true;
         }
-        // TODO: Check no duplicate Methods (return type, class, and name)
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
         md.f8.accept(this, arg); // Statement()*
@@ -355,7 +354,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key += instVarKey(currClass, id);
         }
         // XXX: Check that expression is the same type as identifier
-
         as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
         return null;
