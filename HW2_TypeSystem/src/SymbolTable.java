@@ -130,12 +130,21 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String className = cd.f1.f0.toString();
         STClass c = new STClass(className, currClass);
         currClass = c.name;
-        classes.put("class:[" + className + "]", "class");
+        String key = "class:[" + className + "]";
+        if (classes.containsKey(key)) {
+            classes.put(key, "TypeError");
+        } else {
+            classes.put("class:[" + className + "]", "class");
+        }
 
         if (c.parent != null) {
             classes.put("class:[" + className + "]:parent", c.parent);
-        } else {
+        } else if (c.parent == null) {
             classes.put("class:[" + className + "]:parent", "none");
+        } else if (classes.get(key) == "TypeError") {
+            currClass = null;
+            currMethod = null;
+            return null;
         }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);

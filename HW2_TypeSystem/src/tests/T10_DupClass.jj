@@ -1,0 +1,8 @@
+class DupClass {
+    public static void main(String[] args) {
+
+    }
+}
+class DupClass {
+    
+}

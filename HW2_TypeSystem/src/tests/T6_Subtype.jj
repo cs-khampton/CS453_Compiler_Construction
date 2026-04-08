@@ -3,23 +3,21 @@
 class Subtype {
     public static void main(String[] args) {
         A a;
-        A a2;
+        A a1;
         B b;
 
-        a2 = a.get(b); // no TE! B extends A so it should be valid. 
-
-        System.out.println(1);
+        a1 = a.get(b);
+        System.out.println(0);
     }
 }
 
 class A {
-    int first;
-
-    public A get(A another) {
-        return another;
+    int c;
+    public A get(A a) {
+        return a;
     }
 }
 
 class B extends A {
-    boolean second;
+    boolean a;
 }
