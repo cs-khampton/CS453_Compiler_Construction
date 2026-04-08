@@ -12,7 +12,6 @@ public class Typecheck {
             // PPrinter<R, A> pp = new PPrinter<R, A>();
             // root.accept(pp, null);
 
-            // XXX: Review this method
             // Build the symbol table. Top-down visitor, inherits from
             // GJDepthFirst<R,A>. R=Void, A=Integer.
 
