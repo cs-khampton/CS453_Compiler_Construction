@@ -2,7 +2,15 @@
 // r0
 class Factorial {
     public static void main(String[] arg) { // r1, r61
-        int i; // r6
+        int i; // r6, r61
         i = i + 2; // r25, r32
+    }
+}
+class F {
+    public int test(){
+        return 2;
+    }
+    public int test(){
+        return 1;
     }
 }

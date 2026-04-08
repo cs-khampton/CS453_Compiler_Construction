@@ -21,9 +21,7 @@ for file in "$TEST_DIR"/*.jj; do
   echo "Running test: $file"
 
   java Typecheck < "$file"
-  status=$?
 
-  echo "Exit status: $status"
   echo "Finished test: $file"
   echo "----------------------------------------------"
 done

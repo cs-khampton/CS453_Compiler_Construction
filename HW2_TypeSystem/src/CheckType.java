@@ -159,7 +159,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         currClass = className;
 
         String key = parentClassKey(extendName);
-        // check that extends class exists
+        // check key exists, className != extendName, extendName key exists
         if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)
                 || arg.get(key) == "TypeError") {
             errorMessage("ClassExtendsDeclaration", key);
@@ -222,9 +222,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String returnType = getTypeChoice(md.f1);
 
         currMethod = methodName;
-
-        String key = retTypeKey(currClass, methodName, returnType);
-        if (!arg.containsKey(key) || arg.get(key) != returnType) {
+        String key = methodKey(currClass, methodName);
+        String retKey = retTypeKey(currClass, methodName, returnType);
+        if (!arg.containsKey(key) || arg.get(key) == "TypeError" || arg.get(retKey) == "TypeError") {
             errorMessage("MethodDeclaration", key);
             typeError = true;
         }
