@@ -31,7 +31,7 @@ public class Typecheck {
             // course!
 
             CheckType<Object, Object> tc = new CheckType<>();
-            MyType res = (MyType) root.accept(tc, symt);
+            root.accept(tc, symt);
 
             if (tc.typeError) {
                 System.out.println("Type error");

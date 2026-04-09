@@ -417,6 +417,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(WhileStatement ws, HashMap<String, String> arg) {
         ws.f2.f0.choice.accept(this, arg);
+        // TODO: check that Expression() is a boolean
         ws.f4.f0.choice.accept(this, arg);
         return null;
     }
