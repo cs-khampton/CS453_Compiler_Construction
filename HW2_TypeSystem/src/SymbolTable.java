@@ -130,12 +130,21 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String className = cd.f1.f0.toString();
         STClass c = new STClass(className, currClass);
         currClass = c.name;
-        classes.put("class:[" + className + "]", "class");
+        String key = "class:[" + className + "]";
+        if (classes.containsKey(key)) {
+            classes.put(key, "TypeError");
+        } else {
+            classes.put("class:[" + className + "]", "class");
+        }
 
         if (c.parent != null) {
             classes.put("class:[" + className + "]:parent", c.parent);
-        } else {
+        } else if (c.parent == null) {
             classes.put("class:[" + className + "]:parent", "none");
+        } else if (classes.get(key) == "TypeError") {
+            currClass = null;
+            currMethod = null;
+            return null;
         }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
@@ -206,15 +215,24 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String methodName = md.f2.f0.toString();
         String returnType = getTypeChoice(md.f1);
         STMethod m = new STMethod(methodName, returnType);
-        classes.put("class:[" + currClass + "]:method:[" + methodName + "]", "method");
-        classes.put("class:[" + currClass + "]:method:[" + methodName + "]:returnType", returnType);
-        currMethod = m.name;
+        String key = "class:[" + currClass + "]:method:[" + methodName + "]";
+        if (classes.containsKey(key)) {
+            if ((classes.containsKey(key + ":returnType") && classes.get(key + ":returnType") == "TypeError")) {
+                classes.put(key + ":returnType", "TypeError");
+            }
+            currMethod = null;
+            classes.put(key, "TypeError");
+        } else {
+            classes.put(key, "method");
+            classes.put(key + ":returnType", returnType);
+            currMethod = m.name;
 
-        md.f4.accept(this, arg); // FormalParameterList()?
-        md.f7.accept(this, arg); // VarDeclaration()*
-        md.f8.accept(this, arg); // Statement()*
-        md.f10.f0.choice.accept(this, arg); // Expression()
-        currMethod = null;
+            md.f4.accept(this, arg); // FormalParameterList()?
+            md.f7.accept(this, arg); // VarDeclaration()*
+            md.f8.accept(this, arg); // Statement()*
+            md.f10.f0.choice.accept(this, arg); // Expression()
+            currMethod = null;
+        }
         return null;
     }
 
