@@ -14,4 +14,13 @@ public class MyType extends GJDepthFirst<MyType, HashMap<String, String>> {
     public String toString() {
         return this.type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof MyType t))
+            return false;
+        return this.type.equals(t.type);
+    }
 }
