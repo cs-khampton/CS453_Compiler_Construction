@@ -354,9 +354,10 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key += instVarKey(currClass, id);
         }
         // XXX: Check that expression is the same type as identifier
-        String type = arg.get(key); // Identifier Type
-        as.f0.f0.accept(this, arg);
-        as.f2.f0.choice.accept(this, arg);
+        MyType type = new MyType(arg.get(key));
+        MyType t = as.f2.f0.choice.accept(this, arg);
+        // as.f0.f0.accept(this, arg);
+        // as.f2.f0.choice.accept(this, arg);
         return null;
     }
 
