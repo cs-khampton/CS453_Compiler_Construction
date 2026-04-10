@@ -23,6 +23,7 @@ public class J2V {
 
             if (tc.typeError) {
                 System.out.println("Type error");
+                System.exit(1);
             } else {
                 System.out.println("Program type checked successfully");
             }
