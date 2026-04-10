@@ -354,8 +354,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key += instVarKey(currClass, id);
         }
         // XXX: Check that expression is the same type as identifier
-        String type = arg.get(key); // Identifier Type
-
         as.f0.f0.accept(this, arg);
         as.f2.f0.choice.accept(this, arg);
         return null;
@@ -401,6 +399,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f6: Statement()
      */
     public MyType visit(IfStatement is, HashMap<String, String> arg) {
+        // TODO: Check that Expression() is a boolean
         is.f2.f0.choice.accept(this, arg);
         is.f4.f0.choice.accept(this, arg);
         is.f6.f0.choice.accept(this, arg);
@@ -467,7 +466,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
         // TODO: Check that left and right operands are compatible
-
         ce.f0.f0.choice.accept(this, arg);
         ce.f2.f0.choice.accept(this, arg);
         return null;
