@@ -619,26 +619,33 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * Identifier
      * f0: <IDENTIFIER>
      */
+
+    // XXX: Something's wrong with how T11_This.jj is working.
+    // FIXME: Need to find how to check a return type (this.count)
     public MyType visit(Identifier id, HashMap<String, String> arg) {
         String name = id.f0.toString();
         String key = "";
+
         if (currClass != null && currMethod != null) {
             key = localKey(currClass, currMethod, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
+
+            key = mParamKey(currClass, currMethod, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
         }
         if (currClass != null && currMethod == null) {
             key = instVarKey(currClass, name);
-        }
-
-        if (!arg.containsKey(key)) {
-            // if neither local or instance check methodParams
-            key = mParamKey(currClass, currMethod, name);
-            if (!arg.containsKey(key)) {
-                typeError = true;
-                errorMessage("Identifier", key);
-                return null;
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
             }
         }
-        return new MyType(arg.get(key));
+        typeError = true;
+        errorMessage("Identifier", key);
+        return null;
     }
 
     /*
