@@ -11,7 +11,7 @@ fi
 
 count=0
 
-for file in "$TEST_DIR"/*.jj; do
+for file in "$TEST_DIR"/*.java; do
   if [ ! -e "$file" ]; then
     echo "No .jj files found in $TEST_DIR"
     exit 1
