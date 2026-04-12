@@ -45,11 +45,37 @@ import syntaxtree.VarDeclaration;
 import syntaxtree.WhileStatement;
 import visitor.GJDepthFirst;
 
-public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
+/*
+ * Though the full specification defines many built-in operations, for your
+ * homework you are only allowed to use the following:
+ * 
+ * Add, Sub, MulS
+ * Eq, Lt, LtS
+ * PrintIntS
+ * HeapAllocZ
+ * Error
+ * The full specification allows computed goto instructions, where the target
+ * address is specified by a register. For your homework, goto can only refer to
+ * code labels.
+ * 
+ * The full specification allows strings everywhere. For your homework, strings
+ * are only allowed as arguments to the Error built-in.
+ */
 
-    public HashMap<String, String> classes = new HashMap<>();
+public class VVisitor<R, A> extends GJDepthFirst<R, A> {
+
+    private int indent = 0;
+
+    VTranslator translator;
+    public HashMap<String, String> symt;
     private String currClass = null;
     private String currMethod = null;
+
+    VVisitor(VTranslator translator, HashMap<String, String> symt) {
+        this.symt = symt;
+        this.translator = translator;
+
+    }
 
     /*
      * Goal
@@ -95,14 +121,17 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         STMethod m = new STMethod(methodName, "void");
         currMethod = m.name;
         // set class and method in symbol table
-        classes.put("class:[" + className + "]", "class");
-        classes.put("class:[" + className + "]:method:[main]:returnType", m.returnType);
+        // classes.put("class:[" + className + "]", "class");
+        // classes.put("class:[" + className + "]:method:[main]:returnType",
+        // m.returnType);
 
         String paramName = mc.f11.f0.toString();
         String paramType = "String[]";
-        classes.put("class:[" + className + "]:method:[main]:methodParam:[" + paramName + "]", paramType);
+        // classes.put("class:[" + className + "]:method:[main]:methodParam:[" +
+        // paramName + "]", paramType);
         mc.f14.accept(this, arg); // VarDeclaration()*
         mc.f15.accept(this, arg); // Statement()*
+
         currMethod = null;
         currClass = null;
         return null;
@@ -131,21 +160,21 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         STClass c = new STClass(className, currClass);
         currClass = c.name;
         String key = "class:[" + className + "]";
-        if (classes.containsKey(key)) {
-            classes.put(key, "TypeError");
-        } else {
-            classes.put("class:[" + className + "]", "class");
-        }
+        // if (classes.containsKey(key)) {
+        // classes.put(key, "TypeError");
+        // } else {
+        // classes.put("class:[" + className + "]", "class");
+        // }
 
-        if (c.parent != null) {
-            classes.put("class:[" + className + "]:parent", c.parent);
-        } else if (c.parent == null) {
-            classes.put("class:[" + className + "]:parent", "none");
-        } else if (classes.get(key) == "TypeError") {
-            currClass = null;
-            currMethod = null;
-            return null;
-        }
+        // if (c.parent != null) {
+        // classes.put("class:[" + className + "]:parent", c.parent);
+        // } else if (c.parent == null) {
+        // classes.put("class:[" + className + "]:parent", "none");
+        // } else if (classes.get(key) == "TypeError") {
+        // currClass = null;
+        // currMethod = null;
+        // return null;
+        // }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
         currClass = null;
@@ -169,8 +198,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String extendName = ced.f3.f0.toString();
         STClass cl = new STClass(className, extendName);
         currClass = cl.name;
-        classes.put("class:[" + className + "]", "class");
-        classes.put("class:[" + className + "]:parent", extendName);
+        // classes.put("class:[" + className + "]", "class");
+        // classes.put("class:[" + className + "]:parent", extendName);
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
         currClass = null;
@@ -187,11 +216,12 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
     public R visit(VarDeclaration vd, A arg) {
         String name = vd.f1.f0.toString(); // Identifier()
         String type = getTypeChoice(vd.f0); // Type()
-        if (currMethod != null && currClass != null) {
-            classes.put("class:[" + currClass + "]:method:[" + currMethod + "]:localParams:[" + name + "]", type);
-        } else if (currMethod == null && currClass != null) {
-            classes.put("class:[" + currClass + "]:instVariable:[" + name + "]", type);
-        }
+        // if (currMethod != null && currClass != null) {
+        // classes.put("class:[" + currClass + "]:method:[" + currMethod +
+        // "]:localParams:[" + name + "]", type);
+        // } else if (currMethod == null && currClass != null) {
+        // classes.put("class:[" + currClass + "]:instVariable:[" + name + "]", type);
+        // }
         return null;
     }
 
@@ -216,23 +246,24 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String returnType = getTypeChoice(md.f1);
         STMethod m = new STMethod(methodName, returnType);
         String key = "class:[" + currClass + "]:method:[" + methodName + "]";
-        if (classes.containsKey(key)) {
-            if ((classes.containsKey(key + ":returnType") && classes.get(key + ":returnType") == "TypeError")) {
-                classes.put(key + ":returnType", "TypeError");
-            }
-            currMethod = null;
-            classes.put(key, "TypeError");
-        } else {
-            classes.put(key, "method");
-            classes.put(key + ":returnType", returnType);
-            currMethod = m.name;
+        // if (classes.containsKey(key)) {
+        // if ((classes.containsKey(key + ":returnType") && classes.get(key +
+        // ":returnType") == "TypeError")) {
+        // classes.put(key + ":returnType", "TypeError");
+        // }
+        // currMethod = null;
+        // classes.put(key, "TypeError");
+        // } else {
+        // classes.put(key, "method");
+        // classes.put(key + ":returnType", returnType);
+        currMethod = m.name;
 
-            md.f4.accept(this, arg); // FormalParameterList()?
-            md.f7.accept(this, arg); // VarDeclaration()*
-            md.f8.accept(this, arg); // Statement()*
-            md.f10.f0.choice.accept(this, arg); // Expression()
-            currMethod = null;
-        }
+        md.f4.accept(this, arg); // FormalParameterList()?
+        md.f7.accept(this, arg); // VarDeclaration()*
+        md.f8.accept(this, arg); // Statement()*
+        md.f10.f0.choice.accept(this, arg); // Expression()
+        currMethod = null;
+        // }
         return null;
     }
 
@@ -256,7 +287,8 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         String fpName = fp.f1.f0.toString();
         String fpType = getTypeChoice(fp.f0);
         if (currClass != null && currMethod != null) {
-            classes.put("class:[" + currClass + "]:method:[" + currMethod + "]:methodParam:[" + fpName + "]", fpType);
+            // classes.put("class:[" + currClass + "]:method:[" + currMethod +
+            // "]:methodParam:[" + fpName + "]", fpType);
         }
         return null;
     }
@@ -645,9 +677,4 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         return "invalid type choice";
     }
 
-    public void printSymt() {
-        for (String key : classes.keySet()) {
-            System.out.println("KEY: " + key + " ===== " + classes.get(key));
-        }
-    }
 }
