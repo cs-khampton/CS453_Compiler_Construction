@@ -46,12 +46,23 @@ import syntaxtree.VarDeclaration;
 import syntaxtree.WhileStatement;
 import visitor.GJDepthFirst;
 
-public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>> {
+public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
 
     public HashMap<String, String> symt = new HashMap<>();
     private String currClass = null;
     private String currMethod = null;
-    boolean typeError;
+    VTranslator translate;
+    int tempNum;
+    int labelNum;
+
+    // Initialize all values for VVisitor
+    public VVisitor(VTranslator translator) {
+        this.translate = translator;
+        currMethod = null;
+        currClass = null;
+        tempNum = 0;
+        labelNum = 0;
+    }
 
     /*
      * Goal
@@ -90,7 +101,6 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
     public MyType visit(MainClass mc, HashMap<String, String> arg) {
         String className = mc.f1.f0.toString();
         String methodName = mc.f6.toString();
-        String retType = mc.f5.toString();
 
         currClass = className;
         currMethod = methodName;
@@ -126,8 +136,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         String key;
         key = classKey(className);
         if (!arg.containsKey(key) || arg.get(key) == "TypeError") {
-            errorMessage("ClassDeclaration", key);
-            typeError = true;
+            // errorMessage("ClassDeclaration", key);
+            // typeError = true;
         }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
@@ -158,8 +168,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         // check key exists, className != extendName, extendName key exists
         if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)
                 || arg.get(key) == "TypeError") {
-            errorMessage("ClassExtendsDeclaration", key);
-            typeError = true;
+            // errorMessage("ClassExtendsDeclaration", key);
+            // typeError = true;
         }
 
         ced.f5.accept(this, arg);
@@ -186,12 +196,12 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         }
 
         if (!arg.containsKey(key)) {
-            errorMessage("VarDeclaration", key);
-            typeError = true;
+            // errorMessage("VarDeclaration", key);
+            // typeError = true;
         } else {
             if (!arg.get(key).equals(type)) {
-                errorMessage("VarDeclaration", key);
-                typeError = true;
+                // errorMessage("VarDeclaration", key);
+                // typeError = true;
             }
         }
         return null;
@@ -221,8 +231,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         String key = methodKey(currClass, methodName);
         String retKey = retTypeKey(currClass, methodName, returnType);
         if (!arg.containsKey(key) || arg.get(key) == "TypeError" || arg.get(retKey) == "TypeError") {
-            errorMessage("MethodDeclaration", key);
-            typeError = true;
+            // errorMessage("MethodDeclaration", key);
+            // typeError = true;
         }
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
@@ -257,11 +267,11 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         }
 
         if (!arg.containsKey(key)) {
-            errorMessage("FormalParameter", key);
-            typeError = true;
+            // errorMessage("FormalParameter", key);
+            // typeError = true;
         } else {
             if (arg.get(key) != fpType) {
-                typeError = true;
+                // typeError = true;
             }
         }
         return null;
@@ -354,8 +364,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         MyType exprType = as.f2.f0.choice.accept(this, arg);
 
         if (exprType == null || !idType.equals(exprType)) {
-            typeError = true;
-            errorMessage("AssignmentStatement", key);
+            // typeError = true;
+            // errorMessage("AssignmentStatement", key);
         }
         return null;
 
@@ -381,8 +391,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
             key += instVarKey(currClass, id);
         }
         if (arg.get(key) != "int[]" && arg.get(key) != "String[]") {
-            typeError = true;
-            errorMessage("ArrayAssignmentStatement", arg.get(key));
+            // typeError = true;
+            // errorMessage("ArrayAssignmentStatement", arg.get(key));
         }
         // TODO: Check that f2 is a valid int and that f0 is the same type as f5
         aas.f2.f0.choice.accept(this, arg);
@@ -637,8 +647,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
                 return new MyType(arg.get(key));
             }
         }
-        typeError = true;
-        errorMessage("Identifier", key);
+        // typeError = true;
+        // errorMessage("Identifier", key);
         return null;
     }
 
@@ -649,8 +659,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
     public MyType visit(ThisExpression te, HashMap<String, String> arg) {
         String key = classKey(currClass);
         if (!arg.containsKey(key) || currClass == null) {
-            typeError = true;
-            errorMessage("ThisExpression", currClass);
+            // typeError = true;
+            // errorMessage("ThisExpression", currClass);
         }
         return new MyType(currClass);
     }
@@ -667,8 +677,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
         // f3 must be an IntegerLiteral()
         String type = getExprChoice(aae.f3);
         if (type != "IntegerLiteral") {
-            typeError = true;
-            errorMessage("ArrayAllocationExpression", type);
+            // typeError = true;
+            // errorMessage("ArrayAllocationExpression", type);
         }
         aae.f3.f0.choice.accept(this, arg);
         return null;
@@ -684,8 +694,8 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
     public MyType visit(AllocationExpression ae, HashMap<String, String> arg) {
         String key = classKey(ae.f1.f0.toString());
         if (!arg.containsKey(key)) {
-            typeError = true;
-            errorMessage("AllocationExpression", key);
+            // typeError = true;
+            // errorMessage("AllocationExpression", key);
         }
         ae.f1.f0.accept(this, arg);
         return null;
@@ -810,6 +820,14 @@ public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>
 
     public void setSymt(HashMap<String, String> symt) {
         this.symt = symt;
+    }
+
+    public String newTemp() {
+        return "t." + tempNum++;
+    }
+
+    public String newLabel(String pref) {
+        return pref + labelNum++;
     }
 
 }
