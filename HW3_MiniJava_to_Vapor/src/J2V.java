@@ -15,14 +15,12 @@ public class J2V extends GJDepthFirst<Object, Object> {
             root.accept(pv, 0);
 
             HashMap<String, String> symt = pv.classes;
-            pv.printSymt();
+            // pv.printSymt();
             VTranslator t = new VTranslator();
-            VVisitor visitor = new VVisitor<>(t, symt);
-            root.accept(visitor, symt);
+            root.accept(t, symt);
         } catch (ParseException e) {
             System.out.println(e.toString());
             System.exit(1);
         }
     }
-
 }

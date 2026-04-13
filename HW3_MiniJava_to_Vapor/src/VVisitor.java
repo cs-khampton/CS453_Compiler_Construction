@@ -1,3 +1,4 @@
+
 import java.util.HashMap;
 
 import syntaxtree.AllocationExpression;
@@ -45,37 +46,12 @@ import syntaxtree.VarDeclaration;
 import syntaxtree.WhileStatement;
 import visitor.GJDepthFirst;
 
-/*
- * Though the full specification defines many built-in operations, for your
- * homework you are only allowed to use the following:
- * 
- * Add, Sub, MulS
- * Eq, Lt, LtS
- * PrintIntS
- * HeapAllocZ
- * Error
- * The full specification allows computed goto instructions, where the target
- * address is specified by a register. For your homework, goto can only refer to
- * code labels.
- * 
- * The full specification allows strings everywhere. For your homework, strings
- * are only allowed as arguments to the Error built-in.
- */
+public class VVisitor<R, A> extends GJDepthFirst<MyType, HashMap<String, String>> {
 
-public class VVisitor<R, A> extends GJDepthFirst<R, A> {
-
-    private int indent = 0;
-
-    VTranslator translator;
-    public HashMap<String, String> symt;
+    public HashMap<String, String> symt = new HashMap<>();
     private String currClass = null;
     private String currMethod = null;
-
-    VVisitor(VTranslator translator, HashMap<String, String> symt) {
-        this.symt = symt;
-        this.translator = translator;
-
-    }
+    boolean typeError;
 
     /*
      * Goal
@@ -83,7 +59,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: TypeDeclaration()*
      * f2: <EOF>
      */
-    public R visit(Goal n, A arg) {
+    public MyType visit(Goal n, HashMap<String, String> arg) {
         n.f0.accept(this, arg); // MainClass()
         n.f1.accept(this, arg); // TypeDeclaration()*
         // <EOF>
@@ -111,29 +87,18 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f16: "}"
      * f17: "}"
      */
-    public R visit(MainClass mc, A arg) {
+    public MyType visit(MainClass mc, HashMap<String, String> arg) {
         String className = mc.f1.f0.toString();
-        STClass c = new STClass(className, null);
-        currClass = c.name;
-
         String methodName = mc.f6.toString();
+        String retType = mc.f5.toString();
 
-        STMethod m = new STMethod(methodName, "void");
-        currMethod = m.name;
-        // set class and method in symbol table
-        // classes.put("class:[" + className + "]", "class");
-        // classes.put("class:[" + className + "]:method:[main]:returnType",
-        // m.returnType);
-
-        String paramName = mc.f11.f0.toString();
-        String paramType = "String[]";
-        // classes.put("class:[" + className + "]:method:[main]:methodParam:[" +
-        // paramName + "]", paramType);
-        mc.f14.accept(this, arg); // VarDeclaration()*
-        mc.f15.accept(this, arg); // Statement()*
-
-        currMethod = null;
+        currClass = className;
+        currMethod = methodName;
+        System.out.println("func " + methodName + "()");
+        mc.f14.accept(this, arg);
+        mc.f15.accept(this, arg);
         currClass = null;
+        currMethod = null;
         return null;
     }
 
@@ -141,7 +106,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * TypeDeclaration
      * f0: ClassDeclaration() | ClassExtendsDeclaration()
      */
-    public R visit(TypeDeclaration d, A arg) {
+    public MyType visit(TypeDeclaration d, HashMap<String, String> arg) {
         d.f0.choice.accept(this, arg);
         return null;
     }
@@ -155,30 +120,19 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f4: MethodDeclaration()*
      * f5: "}"
      */
-    public R visit(ClassDeclaration cd, A arg) {
+    public MyType visit(ClassDeclaration cd, HashMap<String, String> arg) {
         String className = cd.f1.f0.toString();
-        STClass c = new STClass(className, currClass);
-        currClass = c.name;
-        String key = "class:[" + className + "]";
-        // if (classes.containsKey(key)) {
-        // classes.put(key, "TypeError");
-        // } else {
-        // classes.put("class:[" + className + "]", "class");
-        // }
-
-        // if (c.parent != null) {
-        // classes.put("class:[" + className + "]:parent", c.parent);
-        // } else if (c.parent == null) {
-        // classes.put("class:[" + className + "]:parent", "none");
-        // } else if (classes.get(key) == "TypeError") {
-        // currClass = null;
-        // currMethod = null;
-        // return null;
-        // }
+        currClass = className;
+        String key;
+        key = classKey(className);
+        if (!arg.containsKey(key) || arg.get(key) == "TypeError") {
+            errorMessage("ClassDeclaration", key);
+            typeError = true;
+        }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
-        currClass = null;
         currMethod = null;
+        currClass = null;
         return null;
     }
 
@@ -193,13 +147,21 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f6: MethodDeclaration()*
      * f7: "}"
      */
-    public R visit(ClassExtendsDeclaration ced, A arg) {
+    public MyType visit(ClassExtendsDeclaration ced, HashMap<String, String> arg) {
         String className = ced.f1.f0.toString();
         String extendName = ced.f3.f0.toString();
-        STClass cl = new STClass(className, extendName);
-        currClass = cl.name;
-        // classes.put("class:[" + className + "]", "class");
-        // classes.put("class:[" + className + "]:parent", extendName);
+        String classExtKey = classKey(extendName);
+
+        currClass = className;
+
+        String key = parentClassKey(extendName);
+        // check key exists, className != extendName, extendName key exists
+        if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)
+                || arg.get(key) == "TypeError") {
+            errorMessage("ClassExtendsDeclaration", key);
+            typeError = true;
+        }
+
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
         currClass = null;
@@ -213,15 +175,25 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: Identifier()
      * f2: ";"
      */
-    public R visit(VarDeclaration vd, A arg) {
-        String name = vd.f1.f0.toString(); // Identifier()
-        String type = getTypeChoice(vd.f0); // Type()
-        // if (currMethod != null && currClass != null) {
-        // classes.put("class:[" + currClass + "]:method:[" + currMethod +
-        // "]:localParams:[" + name + "]", type);
-        // } else if (currMethod == null && currClass != null) {
-        // classes.put("class:[" + currClass + "]:instVariable:[" + name + "]", type);
-        // }
+    public MyType visit(VarDeclaration vd, HashMap<String, String> arg) {
+        String idName = vd.f1.f0.toString(); // Identifier()
+        String type = getTypeChoice(vd.f0);
+        String key = "";
+        if (currMethod == null && currClass != null) {
+            key = instVarKey(currClass, idName);
+        } else if (currMethod != null && currClass != null) {
+            key = localKey(currClass, currMethod, idName);
+        }
+
+        if (!arg.containsKey(key)) {
+            errorMessage("VarDeclaration", key);
+            typeError = true;
+        } else {
+            if (!arg.get(key).equals(type)) {
+                errorMessage("VarDeclaration", key);
+                typeError = true;
+            }
+        }
         return null;
     }
 
@@ -241,29 +213,22 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f11: ";"
      * f12: "}"
      */
-    public R visit(MethodDeclaration md, A arg) {
+    public MyType visit(MethodDeclaration md, HashMap<String, String> arg) {
         String methodName = md.f2.f0.toString();
         String returnType = getTypeChoice(md.f1);
-        STMethod m = new STMethod(methodName, returnType);
-        String key = "class:[" + currClass + "]:method:[" + methodName + "]";
-        // if (classes.containsKey(key)) {
-        // if ((classes.containsKey(key + ":returnType") && classes.get(key +
-        // ":returnType") == "TypeError")) {
-        // classes.put(key + ":returnType", "TypeError");
-        // }
-        // currMethod = null;
-        // classes.put(key, "TypeError");
-        // } else {
-        // classes.put(key, "method");
-        // classes.put(key + ":returnType", returnType);
-        currMethod = m.name;
 
+        currMethod = methodName;
+        String key = methodKey(currClass, methodName);
+        String retKey = retTypeKey(currClass, methodName, returnType);
+        if (!arg.containsKey(key) || arg.get(key) == "TypeError" || arg.get(retKey) == "TypeError") {
+            errorMessage("MethodDeclaration", key);
+            typeError = true;
+        }
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
         md.f8.accept(this, arg); // Statement()*
         md.f10.f0.choice.accept(this, arg); // Expression()
         currMethod = null;
-        // }
         return null;
     }
 
@@ -272,7 +237,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: FormalParameter()
      * f1: FormalParameterRest()*
      */
-    public R visit(FormalParameterList fpl, A arg) {
+    public MyType visit(FormalParameterList fpl, HashMap<String, String> arg) {
         fpl.f0.accept(this, arg);
         fpl.f1.accept(this, arg);
         return null;
@@ -283,12 +248,21 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: Type()
      * f1: Identifier()
      */
-    public R visit(FormalParameter fp, A arg) {
+    public MyType visit(FormalParameter fp, HashMap<String, String> arg) {
         String fpName = fp.f1.f0.toString();
         String fpType = getTypeChoice(fp.f0);
+        String key = "";
         if (currClass != null && currMethod != null) {
-            // classes.put("class:[" + currClass + "]:method:[" + currMethod +
-            // "]:methodParam:[" + fpName + "]", fpType);
+            key += mParamKey(currClass, currMethod, fpName);
+        }
+
+        if (!arg.containsKey(key)) {
+            errorMessage("FormalParameter", key);
+            typeError = true;
+        } else {
+            if (arg.get(key) != fpType) {
+                typeError = true;
+            }
         }
         return null;
     }
@@ -298,7 +272,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: ","
      * f1: FormalParameter()
      */
-    public R visit(FormalParameterRest fpr, A arg) {
+    public MyType visit(FormalParameterRest fpr, HashMap<String, String> arg) {
         fpr.f1.accept(this, arg);
         return null;
     }
@@ -307,7 +281,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * Type
      * f0: ArrayType() | BooleanType() | Identifier()
      */
-    public R visit(Type t, A arg) {
+    public MyType visit(Type t, HashMap<String, String> arg) {
         t.f0.choice.accept(this, arg);
         return null;
     }
@@ -318,7 +292,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "["
      * f2: "]"
      */
-    public R visit(ArrayType at, A arg) {
+    public MyType visit(ArrayType at, HashMap<String, String> arg) {
         return null;
     }
 
@@ -326,7 +300,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * BooleanType
      * f0: "boolean"
      */
-    public R visit(BooleanType bt, A arg) {
+    public MyType visit(BooleanType bt, HashMap<String, String> arg) {
         return null;
     }
 
@@ -334,7 +308,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * IntegerType
      * f0: "int"
      */
-    public R visit(IntegerType it, A arg) {
+    public MyType visit(IntegerType it, HashMap<String, String> arg) {
         return null;
     }
 
@@ -343,7 +317,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: Block() | AssignmentStatement() | ArrayAssignmentStatement() |
      * IfStatement() | WhileStatement() | PrintStatement()
      */
-    public R visit(Statement s, A arg) {
+    public MyType visit(Statement s, HashMap<String, String> arg) {
         s.f0.choice.accept(this, arg);
         return null;
     }
@@ -354,7 +328,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: Statement()*
      * f2: "}"
      */
-    public R visit(Block b, A arg) {
+    public MyType visit(Block b, HashMap<String, String> arg) {
         b.f1.accept(this, arg);
         return null;
     }
@@ -366,10 +340,25 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f2: Expression()
      * f3: ";"
      */
-    public R visit(AssignmentStatement as, A arg) {
-        as.f0.f0.accept(this, arg);
-        as.f2.f0.choice.accept(this, arg);
+    public MyType visit(AssignmentStatement as, HashMap<String, String> arg) {
+        String id = as.f0.f0.toString();
+        String key = "";
+        if (currMethod != null && currClass != null) {
+            key += localKey(currClass, currMethod, id);
+        }
+        if (currMethod == null && currClass != null) {
+            key += instVarKey(currClass, id);
+        }
+        // XXX: Check that expression is the same type as identifier
+        MyType idType = new MyType(arg.get(key));
+        MyType exprType = as.f2.f0.choice.accept(this, arg);
+
+        if (exprType == null || !idType.equals(exprType)) {
+            typeError = true;
+            errorMessage("AssignmentStatement", key);
+        }
         return null;
+
     }
 
     /*
@@ -382,8 +371,20 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f5: Expression()
      * f6: ";"
      */
-    public R visit(ArrayAssignmentStatement aas, A arg) {
-        aas.f0.f0.accept(this, arg);
+    public MyType visit(ArrayAssignmentStatement aas, HashMap<String, String> arg) {
+        String key = "";
+        String id = aas.f0.f0.toString();
+        if (currClass != null && currMethod != null) {
+            key += localKey(currClass, currMethod, id);
+        }
+        if (currClass != null && currMethod == null) {
+            key += instVarKey(currClass, id);
+        }
+        if (arg.get(key) != "int[]" && arg.get(key) != "String[]") {
+            typeError = true;
+            errorMessage("ArrayAssignmentStatement", arg.get(key));
+        }
+        // TODO: Check that f2 is a valid int and that f0 is the same type as f5
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -399,7 +400,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f5: "else"
      * f6: Statement()
      */
-    public R visit(IfStatement is, A arg) {
+    public MyType visit(IfStatement is, HashMap<String, String> arg) {
+        // TODO: Check that Expression() is a boolean
         is.f2.f0.choice.accept(this, arg);
         is.f4.f0.choice.accept(this, arg);
         is.f6.f0.choice.accept(this, arg);
@@ -414,8 +416,9 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f3: ")"
      * f4: Statement()
      */
-    public R visit(WhileStatement ws, A arg) {
+    public MyType visit(WhileStatement ws, HashMap<String, String> arg) {
         ws.f2.f0.choice.accept(this, arg);
+        // TODO: check that Expression() is a boolean
         ws.f4.f0.choice.accept(this, arg);
         return null;
     }
@@ -428,8 +431,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f3: ")"
      * f4: ";"
      */
-
-    public R visit(PrintStatement ps, A arg) {
+    public MyType visit(PrintStatement ps, HashMap<String, String> arg) {
         ps.f2.f0.choice.accept(this, arg);
         return null;
     }
@@ -440,7 +442,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * MinusExpression() | TimesExpression() | ArrayLookup() | ArrayLength() |
      * MessageSend() | PrimaryExpression()
      */
-    public R visit(Expression e, A arg) {
+    public MyType visit(Expression e, HashMap<String, String> arg) {
         e.f0.choice.accept(this, arg);
         return null;
     }
@@ -451,7 +453,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "&&"
      * f2: PrimaryExpression()
      */
-    public R visit(AndExpression ae, A arg) {
+    public MyType visit(AndExpression ae, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         ae.f0.f0.choice.accept(this, arg);
         ae.f2.f0.choice.accept(this, arg);
         return null;
@@ -463,7 +466,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "<"
      * f2: PrimaryExpression()
      */
-    public R visit(CompareExpression ce, A arg) {
+    public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         ce.f0.f0.choice.accept(this, arg);
         ce.f2.f0.choice.accept(this, arg);
         return null;
@@ -475,7 +479,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "+"
      * f2: PrimaryExpression()
      */
-    public R visit(PlusExpression pe, A arg) {
+    public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         pe.f0.f0.choice.accept(this, arg);
         pe.f2.f0.choice.accept(this, arg);
         return null;
@@ -487,7 +492,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "-"
      * f2: PrimaryExpression()
      */
-    public R visit(MinusExpression me, A arg) {
+    public MyType visit(MinusExpression me, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         me.f0.f0.choice.accept(this, arg);
         me.f2.f0.choice.accept(this, arg);
         return null;
@@ -499,7 +505,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "*"
      * f2: PrimaryExpression()
      */
-    public R visit(TimesExpression te, A arg) {
+    public MyType visit(TimesExpression te, HashMap<String, String> arg) {
+        // TODO: Check that left and right operands are compatible
         te.f0.f0.choice.accept(this, arg);
         te.f2.f0.choice.accept(this, arg);
         return null;
@@ -512,7 +519,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f2: PrimaryExpression()
      * f3: "]"
      */
-    public R visit(ArrayLookup al, A arg) {
+    public MyType visit(ArrayLookup al, HashMap<String, String> arg) {
+        // TODO: Check that PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
         al.f2.f0.choice.accept(this, arg);
         return null;
@@ -524,7 +532,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: "."
      * f2: "length"
      */
-    public R visit(ArrayLength al, A arg) {
+    public MyType visit(ArrayLength al, HashMap<String, String> arg) {
+        // TODO: Check that PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
         return null;
     }
@@ -538,7 +547,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f4: ExpressionList()?
      * f5: ")"
      */
-    public R visit(MessageSend ms, A arg) {
+    public MyType visit(MessageSend ms, HashMap<String, String> arg) {
         ms.f0.f0.choice.accept(this, arg);
         ms.f2.f0.toString();
         ms.f4.accept(this, arg);
@@ -550,7 +559,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: Expression()
      * f1: ExpressionRest()
      */
-    public R visit(ExpressionList el, A arg) {
+    public MyType visit(ExpressionList el, HashMap<String, String> arg) {
         el.f0.f0.choice.accept(this, arg);
         el.f1.accept(this, arg);
         return null;
@@ -561,9 +570,8 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: ","
      * f1: Expression()
      */
-    public R visit(ExpressionRest er, A arg) {
-        er.f1.f0.choice.accept(this, arg);
-        return null;
+    public MyType visit(ExpressionRest er, HashMap<String, String> arg) {
+        return er.f1.f0.choice.accept(this, arg);
     }
 
     /*
@@ -572,39 +580,65 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * ThisExpression() | ArrayAllocationExpression() | AllocationExpression() |
      * NotExpression() | BracketExpression()
      */
-    public R visit(PrimaryExpression pe, A arg) {
-        pe.f0.choice.accept(this, arg);
-        return null;
+    public MyType visit(PrimaryExpression pe, HashMap<String, String> arg) {
+        return pe.f0.choice.accept(this, arg);
     }
 
     /*
      * IntegerLiteral
      * f0: <INTEGER_LITERAL>
      */
-    public R visit(IntegerLiteral il, A arg) {
-        return null;
+    public MyType visit(IntegerLiteral il, HashMap<String, String> arg) {
+        return new MyType("int");
     }
 
     /*
      * TrueLiteral
      * f0: "true"
      */
-    public R visit(TrueLiteral tl, A arg) {
-        return null;
+    public MyType visit(TrueLiteral tl, HashMap<String, String> arg) {
+        return new MyType("true");
     }
 
     /*
      * FalseLiteral
      * f0: "false"
-     */ public R visit(FalseLiteral fl, A arg) {
-        return null;
+     */ public MyType visit(FalseLiteral fl, HashMap<String, String> arg) {
+        return new MyType("false");
     }
 
     /*
      * Identifier
      * f0: <IDENTIFIER>
      */
-    public R visit(Identifier id, A arg) {
+
+    // XXX: Something's wrong with how T11_This.jj is working.
+    // FIXME: Need to find how to check a return type (this.count)
+    public MyType visit(Identifier id, HashMap<String, String> arg) {
+        String name = id.f0.toString();
+        String key = "";
+        if (currClass != null && currMethod != null) {
+            key = localKey(currClass, currMethod, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
+        }
+
+        if (currClass != null && currMethod != null) {
+            key = mParamKey(currClass, currMethod, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
+        }
+
+        if (currClass != null) {
+            key = instVarKey(currClass, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
+        }
+        typeError = true;
+        errorMessage("Identifier", key);
         return null;
     }
 
@@ -612,8 +646,13 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * ThisExpression
      * f0: "this"
      */
-    public R visit(ThisExpression te, A arg) {
-        return null;
+    public MyType visit(ThisExpression te, HashMap<String, String> arg) {
+        String key = classKey(currClass);
+        if (!arg.containsKey(key) || currClass == null) {
+            typeError = true;
+            errorMessage("ThisExpression", currClass);
+        }
+        return new MyType(currClass);
     }
 
     /*
@@ -624,7 +663,13 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f3: Expression()
      * f4: "]"
      */
-    public R visit(ArrayAllocationExpression aae, A arg) {
+    public MyType visit(ArrayAllocationExpression aae, HashMap<String, String> arg) {
+        // f3 must be an IntegerLiteral()
+        String type = getExprChoice(aae.f3);
+        if (type != "IntegerLiteral") {
+            typeError = true;
+            errorMessage("ArrayAllocationExpression", type);
+        }
         aae.f3.f0.choice.accept(this, arg);
         return null;
     }
@@ -636,7 +681,12 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f2: "("
      * f3: ")"
      */
-    public R visit(AllocationExpression ae, A arg) {
+    public MyType visit(AllocationExpression ae, HashMap<String, String> arg) {
+        String key = classKey(ae.f1.f0.toString());
+        if (!arg.containsKey(key)) {
+            typeError = true;
+            errorMessage("AllocationExpression", key);
+        }
         ae.f1.f0.accept(this, arg);
         return null;
     }
@@ -646,7 +696,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0: "!"
      * f1: Expression()
      */
-    public R visit(NotExpression ne, A arg) {
+    public MyType visit(NotExpression ne, HashMap<String, String> arg) {
         return null;
     }
 
@@ -656,7 +706,7 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1: Expression()
      * f2: ")"
      */
-    public R visit(BracketExpression be, A arg) {
+    public MyType visit(BracketExpression be, HashMap<String, String> arg) {
         be.f1.f0.choice.accept(this, arg);
         return null;
     }
@@ -675,6 +725,91 @@ public class VVisitor<R, A> extends GJDepthFirst<R, A> {
             return i.f0.toString();
         }
         return "invalid type choice";
+    }
+
+    public String getExprChoice(Expression e) {
+        Node choice = e.f0.choice;
+        if (choice instanceof AndExpression) {
+            return "AndExpression";
+        } else if (choice instanceof CompareExpression) {
+            return "CompareExpression";
+        } else if (choice instanceof PlusExpression) {
+            return "PlusExpression";
+        } else if (choice instanceof MinusExpression) {
+            return "MinusExpression";
+        } else if (choice instanceof TimesExpression) {
+            return "TimesExpression";
+        } else if (choice instanceof ArrayLookup) {
+            return "ArrayLookup";
+        } else if (choice instanceof ArrayLength) {
+            return "ArrayLength";
+        } else if (choice instanceof MessageSend) {
+            return "MessageSend";
+        } else if (choice instanceof PrimaryExpression p) {
+            String pec = getPrimeExpChoice(p);
+            return pec;
+        }
+        return "invalid expression choice";
+    }
+
+    public String getPrimeExpChoice(PrimaryExpression p) {
+        Node choice = p.f0.choice;
+        if (choice instanceof IntegerLiteral) {
+            return "IntegerLiteral";
+        } else if (choice instanceof TrueLiteral) {
+            return "TrueLiteral";
+        } else if (choice instanceof FalseLiteral) {
+            return "FalseLiteral";
+        } else if (choice instanceof Identifier) {
+            return "Identifier";
+        } else if (choice instanceof ThisExpression) {
+            return "ThisExpression";
+        } else if (choice instanceof ArrayAllocationExpression) {
+            return "ArrayAllocationExpression";
+        } else if (choice instanceof AllocationExpression) {
+            return "AllocationExpression";
+        } else if (choice instanceof NotExpression) {
+            return "NotExpression";
+        } else if (choice instanceof BracketExpression) {
+            return "BracketExpression";
+        }
+        return "invalid primary expression choice";
+    }
+
+    public String classKey(String className) {
+        return "class:[" + className + "]";
+    }
+
+    public String parentClassKey(String pcName) {
+        return classKey(pcName) + ":parent";
+    }
+
+    public String methodKey(String className, String methodName) {
+        return classKey(className) + ":method:[" + methodName + "]";
+    }
+
+    public String retTypeKey(String className, String methodName, String retType) {
+        return methodKey(className, methodName) + ":returnType";
+    }
+
+    public String mParamKey(String className, String methodName, String paramName) {
+        return methodKey(className, methodName) + ":methodParam:[" + paramName + "]";
+    }
+
+    public String localKey(String className, String methodName, String paramName) {
+        return methodKey(className, methodName) + ":localParams:[" + paramName + "]";
+    }
+
+    public String instVarKey(String className, String varName) {
+        return classKey(className) + ":instVariable:[" + varName + "]";
+    }
+
+    public void errorMessage(String errorLocation, String key) {
+        System.out.println(errorLocation + " - Type Error Key: " + key);
+    }
+
+    public void setSymt(HashMap<String, String> symt) {
+        this.symt = symt;
     }
 
 }

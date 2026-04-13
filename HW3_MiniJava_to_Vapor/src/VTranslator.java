@@ -1,6 +1,9 @@
 import java.io.PrintWriter;
+import java.util.HashMap;
 
-public class VTranslator {
+import visitor.GJDepthFirst;
+
+public class VTranslator extends GJDepthFirst<MyType, HashMap<String, String>> {
     private PrintWriter out;
 
     VTranslator() {
