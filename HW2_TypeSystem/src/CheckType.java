@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 import syntaxtree.AllocationExpression;
 import syntaxtree.AndExpression;
@@ -194,7 +193,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             errorMessage("VarDeclaration", key);
             typeError = true;
         } else {
-            if (arg.get(key) != type) {
+            if (!arg.get(key).equals(type)) {
                 errorMessage("VarDeclaration", key);
                 typeError = true;
             }
@@ -355,9 +354,15 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key += instVarKey(currClass, id);
         }
         // XXX: Check that expression is the same type as identifier
-        as.f0.f0.accept(this, arg);
-        as.f2.f0.choice.accept(this, arg);
+        MyType idType = new MyType(arg.get(key));
+        MyType exprType = as.f2.f0.choice.accept(this, arg);
+
+        if (exprType == null || !idType.equals(exprType)) {
+            typeError = true;
+            errorMessage("AssignmentStatement", key);
+        }
         return null;
+
     }
 
     /*
@@ -570,8 +575,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f1: Expression()
      */
     public MyType visit(ExpressionRest er, HashMap<String, String> arg) {
-        er.f1.f0.choice.accept(this, arg);
-        return null;
+        return er.f1.f0.choice.accept(this, arg);
     }
 
     /*
@@ -581,8 +585,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * NotExpression() | BracketExpression()
      */
     public MyType visit(PrimaryExpression pe, HashMap<String, String> arg) {
-        pe.f0.choice.accept(this, arg);
-        return null;
+        return pe.f0.choice.accept(this, arg);
     }
 
     /*
@@ -590,14 +593,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: <INTEGER_LITERAL>
      */
     public MyType visit(IntegerLiteral il, HashMap<String, String> arg) {
-        CharSequence val = il.f0.toString();
-        String digits = "^\\d+$";
-        if (!(Pattern.matches(digits, val))) {
-            System.out.println(val);
-            typeError = true;
-            return null;
-        }
-        return new MyType("IntegerLiteral");
+        return new MyType("int");
     }
 
     /*
@@ -605,40 +601,49 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "true"
      */
     public MyType visit(TrueLiteral tl, HashMap<String, String> arg) {
-        return new MyType("TrueLiteral");
+        return new MyType("true");
     }
 
     /*
      * FalseLiteral
      * f0: "false"
      */ public MyType visit(FalseLiteral fl, HashMap<String, String> arg) {
-        return new MyType("FalseLiteral");
+        return new MyType("false");
     }
 
     /*
      * Identifier
      * f0: <IDENTIFIER>
      */
+
+    // XXX: Something's wrong with how T11_This.jj is working.
+    // FIXME: Need to find how to check a return type (this.count)
     public MyType visit(Identifier id, HashMap<String, String> arg) {
         String name = id.f0.toString();
         String key = "";
         if (currClass != null && currMethod != null) {
             key = localKey(currClass, currMethod, name);
-        }
-        if (currClass != null && currMethod == null) {
-            key = instVarKey(currClass, name);
-        }
-
-        if (!arg.containsKey(key)) {
-            // if neither local or instance check methodParams
-            key = mParamKey(currClass, currMethod, name);
-            if (!arg.containsKey(key)) {
-                typeError = true;
-                errorMessage("Identifier", key);
-                return null;
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
             }
         }
-        return new MyType(arg.get(key));
+
+        if (currClass != null && currMethod != null) {
+            key = mParamKey(currClass, currMethod, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
+        }
+
+        if (currClass != null) {
+            key = instVarKey(currClass, name);
+            if (arg.containsKey(key)) {
+                return new MyType(arg.get(key));
+            }
+        }
+        typeError = true;
+        errorMessage("Identifier", key);
+        return null;
     }
 
     /*
@@ -646,7 +651,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "this"
      */
     public MyType visit(ThisExpression te, HashMap<String, String> arg) {
-        if (currClass != arg.get(classKey(currClass))) {
+        String key = classKey(currClass);
+        if (!arg.containsKey(key) || currClass == null) {
             typeError = true;
             errorMessage("ThisExpression", currClass);
         }

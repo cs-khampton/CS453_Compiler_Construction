@@ -1,37 +1,26 @@
 import java.util.HashMap;
 
 import syntaxtree.Node;
+import visitor.GJDepthFirst;
 
-public class J2V {
+public class J2V extends GJDepthFirst<Object, Object> {
     public static void main(String[] args) {
         Node root = null;
         try {
-            root = new MiniJavaParser(System.in).Goal();
+            new MiniJavaParser(System.in);
+            root = MiniJavaParser.Goal();
 
             // Build the symbol table
             SymbolTable<Void, Integer> pv = new SymbolTable<>();
             root.accept(pv, 0);
 
             HashMap<String, String> symt = pv.classes;
-
-            for (String key : symt.keySet()) {
-                System.out.println(key + " === " + symt.get(key));
-            }
-
-            CheckType<Object, Object> tc = new CheckType<>();
-            root.accept(tc, symt);
-
-            if (tc.typeError) {
-                System.out.println("Type error");
-                System.exit(1);
-            } else {
-                System.out.println("Program type checked successfully");
-            }
-
+            // pv.printSymt();
+            VTranslator t = new VTranslator();
+            root.accept(t, symt);
         } catch (ParseException e) {
             System.out.println(e.toString());
             System.exit(1);
         }
     }
-
 }
