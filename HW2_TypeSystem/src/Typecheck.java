@@ -18,11 +18,7 @@ public class Typecheck {
             SymbolTable<Void, Integer> pv = new SymbolTable<Void, Integer>();
             root.accept(pv, 0);
             HashMap<String, String> symt = pv.classes;
-
-            // Print Symbol Table
-            for (String key : symt.keySet()) {
-                System.out.println(key + " ==== " + symt.get(key));
-            }
+            pv.printSymt();
 
             // FIXME: Do type checking. Bottom-up visitor, also inherits from
             // GJDepthFirst. Visit functions return MyType (=R), and

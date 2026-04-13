@@ -26,4 +26,19 @@ for file in "$TEST_DIR"/*.java; do
   echo "----------------------------------------------"
 done
 
+for file in "$TEST_DIR"/*.jj; do
+  if [ ! -e "$file" ]; then
+    echo "No .jj files found in $TEST_DIR"
+    exit 0;
+  fi
+
+  count=$((count + 1))
+  echo "Running test: $file"
+
+  java Typecheck < "$file"
+
+  echo "Finished test: $file"
+  echo "----------------------------------------------"
+done
+
 echo "Total tests run: $count"
