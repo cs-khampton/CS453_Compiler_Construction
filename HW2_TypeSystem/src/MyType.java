@@ -7,7 +7,8 @@ public class MyType extends GJDepthFirst<MyType, HashMap<String, String>> {
     String type;
 
     public MyType(String type) {
-        this.type = type;
+        if (type != null && !type.equals(""))
+            this.type = type;
     }
 
     @Override

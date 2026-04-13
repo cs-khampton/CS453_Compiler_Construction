@@ -644,4 +644,10 @@ public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
         }
         return "invalid type choice";
     }
+
+    public void printSymt() {
+        for (String key : classes.keySet()) {
+            System.out.println("KEY: " + key + " ===== " + classes.get(key));
+        }
+    }
 }

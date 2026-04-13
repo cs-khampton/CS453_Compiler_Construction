@@ -1,6 +1,6 @@
 #!/bin/bash
 
-javac Typecheck.java || exit 1
+javac J2V.java || exit 1
 
 TEST_DIR="tests"
 
@@ -20,7 +20,8 @@ for file in "$TEST_DIR"/*.jj; do
   count=$((count + 1))
   echo "Running test: $file"
 
-  java Typecheck < "$file"
+  # java J2V < "$file" > "${file%.jj}.vapor"
+  java J2V < "$file" > "tests/out/$(basename "${file%.jj}").vapor"
 
   echo "Finished test: $file"
   echo "----------------------------------------------"

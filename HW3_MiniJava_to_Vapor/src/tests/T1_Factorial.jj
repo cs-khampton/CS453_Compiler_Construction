@@ -15,7 +15,7 @@ class Fac {
     public int ComputeFac(int num) { // r7
         int num_aux; // r6
         // r27
-        if (num && 1) // r31
+        if (num < 1) // r40
             num_aux = num_aux; // r25
         else
             num_aux = num * (this.ComputeFac(num - 1)); // r25, r34, r62, r46, r42
