@@ -20,11 +20,7 @@ public class Typecheck {
             HashMap<String, String> symt = pv.classes;
             pv.printSymt();
 
-            // FIXME: Do type checking. Bottom-up visitor, also inherits from
-            // GJDepthFirst. Visit functions return MyType (=R), and
-            // take a symbol table (HashMap<String,String>) as
-            // argument (=A). You may implement things differently of
-            // course!
+            // FIXME: Typechecking at 53% currently
 
             CheckType<Object, Object> tc = new CheckType<>();
             root.accept(tc, symt);
@@ -35,14 +31,6 @@ public class Typecheck {
                 System.out.println("Program type checked successfully");
             }
 
-            // Ugly code not to be inspired from: "my" way of storing
-            // type info / typecheck property: if some of my internal
-            // structure is empty, then things don't typecheck for
-            // me. This is specific to my own implementation.
-            // if (res != null && res.type_array.size() > 0)
-            // System.out.println("Code typechecks");
-            // else
-            // System.out.println("Type error");
         } catch (ParseException e) {
             System.out.println(e.toString());
             System.exit(1);

@@ -355,12 +355,10 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         }
         // XXX: Check that expression is the same type as identifier
         MyType idType = new MyType(arg.get(key));
-        MyType exprType = as.f2.f0.choice.accept(this, arg);
-
-        if (exprType == null || !idType.equals(exprType)) {
-            typeError = true;
-            errorMessage("AssignmentStatement", key);
-        }
+        String exprT = getExprChoice(as.f2);
+        System.out.println(exprT);
+        // MyType exprType = as.f2.f0.choice.accept(this, arg);
+        // System.out.println(idType + " " + exprType);
         return null;
 
     }
@@ -759,13 +757,13 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public String getPrimeExpChoice(PrimaryExpression p) {
         Node choice = p.f0.choice;
         if (choice instanceof IntegerLiteral) {
-            return "IntegerLiteral";
+            return "int";
         } else if (choice instanceof TrueLiteral) {
-            return "TrueLiteral";
+            return "true";
         } else if (choice instanceof FalseLiteral) {
-            return "FalseLiteral";
+            return "false";
         } else if (choice instanceof Identifier) {
-            return "Identifier";
+            return "this";
         } else if (choice instanceof ThisExpression) {
             return "ThisExpression";
         } else if (choice instanceof ArrayAllocationExpression) {
