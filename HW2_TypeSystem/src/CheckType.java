@@ -348,19 +348,21 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String id = as.f0.f0.toString();
         String key = "";
         if (currMethod != null && currClass != null) {
-            key += localKey(currClass, currMethod, id);
+            key = localKey(currClass, currMethod, id);
         }
         if (currMethod == null && currClass != null) {
-            key += instVarKey(currClass, id);
+            key = instVarKey(currClass, id);
         }
-        // XXX: Check that expression is the same type as identifier
         MyType idType = new MyType(arg.get(key));
-        String exprT = getExprChoice(as.f2);
-        System.out.println(exprT);
-        // MyType exprType = as.f2.f0.choice.accept(this, arg);
-        // System.out.println(idType + " " + exprType);
-        return null;
 
+        String exprType = getExprChoice(as.f2);
+        System.out.println(idType.type + "  " + exprType);
+        if (!idType.toString().equals(exprType)) {
+            typeError = true;
+            errorMessage("AssignmentStatement", key);
+        }
+
+        return null;
     }
 
     /*
@@ -382,11 +384,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (currClass != null && currMethod == null) {
             key += instVarKey(currClass, id);
         }
-        if (arg.get(key) != "int[]" && arg.get(key) != "String[]") {
+        // String[] to account for main method args
+        if (arg.get(key) != "int[]" && arg.get(key) != "String[]" || currClass == null) {
             typeError = true;
             errorMessage("ArrayAssignmentStatement", arg.get(key));
         }
-        // TODO: Check that f2 is a valid int and that f0 is the same type as f5
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -457,8 +459,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(AndExpression ae, HashMap<String, String> arg) {
         // TODO: Check that left and right operands are compatible
-        ae.f0.f0.choice.accept(this, arg);
-        ae.f2.f0.choice.accept(this, arg);
+        MyType t0 = new MyType(getPrimeExpChoice(ae.f0));
+        MyType t2 = new MyType(getPrimeExpChoice(ae.f2));
+
+        // ae.f0.f0.choice.accept(this, arg);
+        // ae.f2.f0.choice.accept(this, arg);
         return null;
     }
 
@@ -508,9 +513,12 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
-        te.f0.f0.choice.accept(this, arg);
-        te.f2.f0.choice.accept(this, arg);
+        MyType t0 = new MyType(getPrimeExpChoice(te.f0));
+        MyType t2 = new MyType(getPrimeExpChoice(te.f2));
+        if (!t0.toString().equals(t2.toString())) {
+            te.f0.f0.choice.accept(this, arg);
+            te.f2.f0.choice.accept(this, arg);
+        }
         return null;
     }
 
@@ -535,7 +543,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: "length"
      */
     public MyType visit(ArrayLength al, HashMap<String, String> arg) {
-        // TODO: Check that PrimaryExpression is of type []
+        // FIXME: Check that PrimaryExpression is of type []
+        String primChoice = getPrimeExpChoice(al.f0);
+        System.out.println(primChoice);
         al.f0.f0.choice.accept(this, arg);
         return null;
     }
@@ -550,6 +560,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f5: ")"
      */
     public MyType visit(MessageSend ms, HashMap<String, String> arg) {
+        // TODO:
         ms.f0.f0.choice.accept(this, arg);
         ms.f2.f0.toString();
         ms.f4.accept(this, arg);
@@ -614,8 +625,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: <IDENTIFIER>
      */
 
-    // XXX: Something's wrong with how T11_This.jj is working.
-    // FIXME: Need to find how to check a return type (this.count)
     public MyType visit(Identifier id, HashMap<String, String> arg) {
         String name = id.f0.toString();
         String key = "";
@@ -639,6 +648,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
                 return new MyType(arg.get(key));
             }
         }
+
         typeError = true;
         errorMessage("Identifier", key);
         return null;
@@ -668,7 +678,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(ArrayAllocationExpression aae, HashMap<String, String> arg) {
         // f3 must be an IntegerLiteral()
         String type = getExprChoice(aae.f3);
-        if (type != "IntegerLiteral") {
+        if (type != "int") {
             typeError = true;
             errorMessage("ArrayAllocationExpression", type);
         }
@@ -699,6 +709,10 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f1: Expression()
      */
     public MyType visit(NotExpression ne, HashMap<String, String> arg) {
+        String exprType = getExprChoice(ne.f1);
+        if (!exprType.equals("true") || !exprType.equals("false")) {
+            ne.f1.f0.choice.accept(this, arg);
+        }
         return null;
     }
 
@@ -762,14 +776,14 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             return "true";
         } else if (choice instanceof FalseLiteral) {
             return "false";
-        } else if (choice instanceof Identifier) {
-            return "this";
+        } else if (choice instanceof Identifier i) {
+            return i.f0.toString();
         } else if (choice instanceof ThisExpression) {
-            return "ThisExpression";
+            return "this";
         } else if (choice instanceof ArrayAllocationExpression) {
-            return "ArrayAllocationExpression";
+            return "int[]";
         } else if (choice instanceof AllocationExpression) {
-            return "AllocationExpression";
+            return "int[]";
         } else if (choice instanceof NotExpression) {
             return "NotExpression";
         } else if (choice instanceof BracketExpression) {
