@@ -354,14 +354,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key = instVarKey(currClass, id);
         }
         MyType idType = new MyType(arg.get(key));
-
-        String exprType = getExprChoice(as.f2);
-        System.out.println(idType.type + "  " + exprType);
-        if (!idType.toString().equals(exprType)) {
+        MyType exprType = as.f2.f0.choice.accept(this, arg);
+        if (!(exprType.equals(idType))) {
             typeError = true;
             errorMessage("AssignmentStatement", key);
         }
-
         return null;
     }
 
@@ -384,11 +381,13 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (currClass != null && currMethod == null) {
             key += instVarKey(currClass, id);
         }
+
         // String[] to account for main method args
         if (arg.get(key) != "int[]" && arg.get(key) != "String[]" || currClass == null) {
             typeError = true;
             errorMessage("ArrayAssignmentStatement", arg.get(key));
         }
+
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -447,8 +446,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * MessageSend() | PrimaryExpression()
      */
     public MyType visit(Expression e, HashMap<String, String> arg) {
-        e.f0.choice.accept(this, arg);
-        return null;
+        MyType t = e.f0.choice.accept(this, arg);
+        return t;
     }
 
     /*
@@ -461,10 +460,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // TODO: Check that left and right operands are compatible
         MyType t0 = new MyType(getPrimeExpChoice(ae.f0));
         MyType t2 = new MyType(getPrimeExpChoice(ae.f2));
-
-        // ae.f0.f0.choice.accept(this, arg);
-        // ae.f2.f0.choice.accept(this, arg);
-        return null;
+        if (!t0.type.equals(t2.type)) {
+            typeError = true;
+            errorMessage("AndExpression", t0.type + " != " + t2.type);
+        }
+        return new MyType("boolean");
     }
 
     /*
@@ -477,7 +477,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // TODO: Check that left and right operands are compatible
         ce.f0.f0.choice.accept(this, arg);
         ce.f2.f0.choice.accept(this, arg);
-        return null;
+        return new MyType("boolean");
     }
 
     /*
@@ -487,10 +487,19 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
-        pe.f0.f0.choice.accept(this, arg);
-        pe.f2.f0.choice.accept(this, arg);
-        return null;
+        String t0 = getPrimeExpChoice(pe.f0);
+        System.out.println(t0);
+        String t2 = getPrimeExpChoice(pe.f2);
+        if (t0.equals("id")) {
+            // TODO: Lookup the identifier
+            // TODO: create a lookup method that gets the identifier name in []
+            System.out.println("YAY WE MADE IT");
+        }
+        if (!t0.equals(t2)) {
+            typeError = true;
+            errorMessage("PlusExpression", t0 + " != " + t2);
+        }
+        return new MyType("int");
     }
 
     /*
@@ -503,7 +512,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // TODO: Check that left and right operands are compatible
         me.f0.f0.choice.accept(this, arg);
         me.f2.f0.choice.accept(this, arg);
-        return null;
+        return new MyType("int");
     }
 
     /*
@@ -519,7 +528,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             te.f0.f0.choice.accept(this, arg);
             te.f2.f0.choice.accept(this, arg);
         }
-        return null;
+        return new MyType("int");
     }
 
     /*
@@ -530,10 +539,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f3: "]"
      */
     public MyType visit(ArrayLookup al, HashMap<String, String> arg) {
-        // TODO: Check that PrimaryExpression is of type []
+        // TODO: Check that f0 PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
+        // TODO: check that f2 PrimaryExpression is of type int
         al.f2.f0.choice.accept(this, arg);
-        return null;
+        return new MyType("int");
     }
 
     /*
@@ -544,10 +554,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(ArrayLength al, HashMap<String, String> arg) {
         // FIXME: Check that PrimaryExpression is of type []
-        String primChoice = getPrimeExpChoice(al.f0);
-        System.out.println(primChoice);
+        // String primChoice = getPrimeExpChoice(al.f0);
         al.f0.f0.choice.accept(this, arg);
-        return null;
+        return new MyType("int");
     }
 
     /*
@@ -560,7 +569,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f5: ")"
      */
     public MyType visit(MessageSend ms, HashMap<String, String> arg) {
-        // TODO:
+        // TODO: Check class exists (f0), check methodid exists
         ms.f0.f0.choice.accept(this, arg);
         ms.f2.f0.toString();
         ms.f4.accept(this, arg);
@@ -777,7 +786,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         } else if (choice instanceof FalseLiteral) {
             return "false";
         } else if (choice instanceof Identifier i) {
-            return i.f0.toString();
+            return "id";
         } else if (choice instanceof ThisExpression) {
             return "this";
         } else if (choice instanceof ArrayAllocationExpression) {
