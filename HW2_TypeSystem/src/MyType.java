@@ -7,8 +7,11 @@ public class MyType extends GJDepthFirst<MyType, HashMap<String, String>> {
     String type;
 
     public MyType(String type) {
-        if (type != null && !type.equals(""))
-            this.type = type;
+        setType(type);
+    }
+
+    private void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -16,6 +19,7 @@ public class MyType extends GJDepthFirst<MyType, HashMap<String, String>> {
         return this.type;
     }
 
+    // FIXME: Issue with MyType.equals()
     @Override
     public boolean equals(Object o) {
         if (this == o)

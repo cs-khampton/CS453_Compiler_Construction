@@ -355,7 +355,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         }
         MyType idType = new MyType(arg.get(key));
         MyType exprType = as.f2.f0.choice.accept(this, arg);
-        if (!(exprType.equals(idType))) {
+
+        // FIXME: Issue with MyType.equals() - Issue with null
+        if (!(exprType.equals(idType.type))) {
             typeError = true;
             errorMessage("AssignmentStatement", key);
         }
@@ -475,8 +477,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
         // TODO: Check that left and right operands are compatible
-        ce.f0.f0.choice.accept(this, arg);
-        ce.f2.f0.choice.accept(this, arg);
+        MyType t0 = ce.f0.f0.choice.accept(this, arg);
+        MyType t2 = ce.f2.f0.choice.accept(this, arg);
+        if (!t0.equals(t2)) {
+            typeError = true;
+        }
         return new MyType("boolean");
     }
 
@@ -487,6 +492,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
+        // FIXME: Doesn't work for this.something
         String t0 = getPrimeExpChoice(pe.f0);
         String t2 = getPrimeExpChoice(pe.f2);
         if (t0.contains("id")) {
@@ -539,6 +545,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(MinusExpression me, HashMap<String, String> arg) {
+        // FIXME: Doesn't work for this.something
+
         String t0 = getPrimeExpChoice(me.f0);
         String t2 = getPrimeExpChoice(me.f2);
         if (t0.contains("id")) {
@@ -591,9 +599,10 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
-
+        // FIXME: Doesn't work for this.something
         String t0 = getPrimeExpChoice(te.f0);
         String t2 = getPrimeExpChoice(te.f2);
+
         if (t0.contains("id")) {
             String idName = t0.replace("id ", "");
             // try method param
