@@ -488,16 +488,46 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
         String t0 = getPrimeExpChoice(pe.f0);
-        System.out.println(t0);
         String t2 = getPrimeExpChoice(pe.f2);
-        if (t0.equals("id")) {
-            // TODO: Lookup the identifier
-            // TODO: create a lookup method that gets the identifier name in []
-            System.out.println("YAY WE MADE IT");
+        if (t0.contains("id")) {
+            String idName = t0.replace("id ", "");
+            // try method param
+            String key = mParamKey(currClass, currMethod, idName);
+            if (!arg.containsKey(key)) {
+                // try local key
+                key = localKey(currClass, currMethod, idName);
+                if (!arg.containsKey(key)) {
+                    // try inst var
+                    key = instVarKey(currClass, idName);
+                    if (!arg.containsKey(key)) {
+                        typeError = true;
+                    }
+                }
+            }
+            if (!t2.equals(arg.get(key))) {
+                typeError = true;
+            }
         }
-        if (!t0.equals(t2)) {
-            typeError = true;
-            errorMessage("PlusExpression", t0 + " != " + t2);
+        if (t2.contains("id")) {
+            String idName = t2.replace("id ", "");
+            // try method param
+            String key = mParamKey(currClass, currMethod, idName);
+            if (!arg.containsKey(key)) {
+                // try local key
+                key = localKey(currClass, currMethod, idName);
+                if (!arg.containsKey(key)) {
+                    // try inst var
+                    key = instVarKey(currClass, idName);
+                    if (!arg.containsKey(key)) {
+                        typeError = true;
+                        errorMessage("PlusExpression", key);
+                    }
+                }
+            }
+            if (!t0.equals(arg.get(key))) {
+                typeError = true;
+                errorMessage("PlusExpression", key);
+            }
         }
         return new MyType("int");
     }
@@ -509,9 +539,48 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(MinusExpression me, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
-        me.f0.f0.choice.accept(this, arg);
-        me.f2.f0.choice.accept(this, arg);
+        String t0 = getPrimeExpChoice(me.f0);
+        String t2 = getPrimeExpChoice(me.f2);
+        if (t0.contains("id")) {
+            String idName = t0.replace("id ", "");
+            // try method param
+            String key = mParamKey(currClass, currMethod, idName);
+            if (!arg.containsKey(key)) {
+                // try local key
+                key = localKey(currClass, currMethod, idName);
+                if (!arg.containsKey(key)) {
+                    // try inst var
+                    key = instVarKey(currClass, idName);
+                    if (!arg.containsKey(key)) {
+                        typeError = true;
+                    }
+                }
+            }
+            if (!t2.equals(arg.get(key))) {
+                typeError = true;
+            }
+        }
+        if (t2.contains("id")) {
+            String idName = t2.replace("id ", "");
+            // try method param
+            String key = mParamKey(currClass, currMethod, idName);
+            if (!arg.containsKey(key)) {
+                // try local key
+                key = localKey(currClass, currMethod, idName);
+                if (!arg.containsKey(key)) {
+                    // try inst var
+                    key = instVarKey(currClass, idName);
+                    if (!arg.containsKey(key)) {
+                        typeError = true;
+                        errorMessage("MinusExpression", key);
+                    }
+                }
+            }
+            if (!t0.equals(arg.get(key))) {
+                typeError = true;
+                errorMessage("MinusExpression", key);
+            }
+        }
         return new MyType("int");
     }
 
@@ -522,11 +591,50 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
-        MyType t0 = new MyType(getPrimeExpChoice(te.f0));
-        MyType t2 = new MyType(getPrimeExpChoice(te.f2));
-        if (!t0.toString().equals(t2.toString())) {
-            te.f0.f0.choice.accept(this, arg);
-            te.f2.f0.choice.accept(this, arg);
+
+        String t0 = getPrimeExpChoice(te.f0);
+        String t2 = getPrimeExpChoice(te.f2);
+        if (t0.contains("id")) {
+            String idName = t0.replace("id ", "");
+            // try method param
+            String key = mParamKey(currClass, currMethod, idName);
+            if (!arg.containsKey(key)) {
+                // try local key
+                key = localKey(currClass, currMethod, idName);
+                if (!arg.containsKey(key)) {
+                    // try inst var
+                    key = instVarKey(currClass, idName);
+                    if (!arg.containsKey(key)) {
+                        typeError = true;
+                        errorMessage("TimesExpression", key);
+                    }
+                }
+            }
+            if (!t2.equals(arg.get(key))) {
+                typeError = true;
+                errorMessage("TimesExpresson", key);
+            }
+        }
+        if (t2.contains("id")) {
+            String idName = t2.replace("id ", "");
+            // try method param
+            String key = mParamKey(currClass, currMethod, idName);
+            if (!arg.containsKey(key)) {
+                // try local key
+                key = localKey(currClass, currMethod, idName);
+                if (!arg.containsKey(key)) {
+                    // try inst var
+                    key = instVarKey(currClass, idName);
+                    if (!arg.containsKey(key)) {
+                        typeError = true;
+                        errorMessage("PlusExpression", key);
+                    }
+                }
+            }
+            if (!t0.equals(arg.get(key))) {
+                typeError = true;
+                errorMessage("PlusExpression", key);
+            }
         }
         return new MyType("int");
     }
@@ -540,7 +648,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(ArrayLookup al, HashMap<String, String> arg) {
         // TODO: Check that f0 PrimaryExpression is of type []
-        al.f0.f0.choice.accept(this, arg);
+        String t0 = getPrimeExpChoice(al.f0);
         // TODO: check that f2 PrimaryExpression is of type int
         al.f2.f0.choice.accept(this, arg);
         return new MyType("int");
@@ -786,7 +894,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         } else if (choice instanceof FalseLiteral) {
             return "false";
         } else if (choice instanceof Identifier i) {
-            return "id";
+            return "id " + i.f0.toString();
         } else if (choice instanceof ThisExpression) {
             return "this";
         } else if (choice instanceof ArrayAllocationExpression) {
