@@ -343,25 +343,26 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(AssignmentStatement as, HashMap<String, String> arg) {
         String id = as.f0.f0.toString();
-        String key = "";
-        if (currMethod != null && currClass != null) {
-            key = localKey(currClass, currMethod, id);
-        } else if (currMethod == null && currClass != null) {
+        String key = localKey(currClass, currMethod, id);
+        if (!arg.containsKey(key)) {
             key = instVarKey(currClass, id);
+            if (!arg.containsKey(key)) {
+                key = mParamKey(currClass, currMethod, id);
+                if (!arg.containsKey(key)) {
+                    typeError = true;
+                    errorMessage("AssignmentStatement", key);
+                    return null;
+                }
+            }
         }
 
         MyType idType = new MyType(arg.get(key));
         MyType exprType = as.f2.f0.choice.accept(this, arg);
 
         // FIXME: Need to get the rhs properly - won't do null.toString() obv.
-        if (exprType != null) {
-            if (!exprType.equals(idType)) {
-                typeError = true;
-                errorMessage("AssignmentStatement", key);
-
-            }
-        } else {
-            exprType = new MyType(getExprChoice(as.f2));
+        if (exprType == null || !exprType.equals(idType)) {
+            typeError = true;
+            errorMessage("AssignmentStatement", key);
         }
         return null;
     }
@@ -526,9 +527,9 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
-        // FIXME: Doesn't work for this.something
         MyType t0 = getOp(te.f0, arg);
         MyType t2 = getOp(te.f2, arg);
+        System.out.println(t2.type); // XXX: throwing a null err bc this.something doesn't return anything yet
         if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
             typeError = true;
             errorMessage("TimesExpression", t0.type + " * " + t2.type);
@@ -581,6 +582,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
 
         ms.f2.f0.toString();
         ms.f4.accept(this, arg);
+        // should return whatever value type is the return type.
         return null;
     }
 
