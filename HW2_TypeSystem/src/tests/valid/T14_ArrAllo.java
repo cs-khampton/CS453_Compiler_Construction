@@ -1,5 +1,5 @@
 
-class T14 {
+class T14_ArrAllo {
     public static void main(String[] a) {
         int[] arr;
         int x;
