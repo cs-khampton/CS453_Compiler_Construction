@@ -97,6 +97,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!arg.containsKey(key)) {
             typeError = true;
             errorMessage("MainClass", key);
+            return null;
         }
 
         mc.f14.accept(this, arg);
@@ -132,6 +133,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!arg.containsKey(key) || arg.get(key) == "TypeError") {
             typeError = true;
             errorMessage("ClassDeclaration", key);
+            return null;
         }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
@@ -164,6 +166,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
                 || arg.get(key) == "TypeError") {
             typeError = true;
             errorMessage("ClassExtendsDeclaration", key);
+            return null;
         }
 
         ced.f5.accept(this, arg);
@@ -189,10 +192,16 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key = localKey(currClass, currMethod, idName);
         }
 
-        if (!arg.containsKey(key) || !arg.get(key).equals(type)) {
+        if (!arg.containsKey(key)) {
             typeError = true;
             errorMessage("VarDeclaration", key);
+            return null;
+        }
 
+        if (!type.equals("int") && !type.equals("boolean") && !type.equals("int[]")) {
+            typeError = true;
+            errorMessage("VarDeclaration", key);
+            return null;
         }
         return null;
     }
@@ -223,6 +232,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!arg.containsKey(key) || arg.get(key) == "TypeError" || arg.get(retKey) == "TypeError") {
             typeError = true;
             errorMessage("MethodDeclaration", key);
+            return null;
         }
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
@@ -259,13 +269,14 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!arg.containsKey(key)) {
             typeError = true;
             errorMessage("FormalParameter", key);
-        } else {
-            if (arg.get(key) != fpType) {
-                typeError = true;
-                errorMessage("FormalParameter", key);
-            }
+            return null;
         }
-        return null;
+        if (arg.get(key) != fpType) {
+            typeError = true;
+            errorMessage("FormalParameter", key);
+            return null;
+        }
+        return new MyType(fpType);
     }
 
     /*
@@ -354,7 +365,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
                     errorMessage("AssignmentStatement", key);
                     return null;
                 }
-                return null;
             }
         }
 
@@ -365,6 +375,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (exprType == null || !exprType.equals(idType)) {
             typeError = true;
             errorMessage("AssignmentStatement", key);
+            return null;
         }
         return null;
     }
@@ -467,6 +478,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!t0.type.equals(t2.type)) {
             typeError = true;
             errorMessage("AndExpression", t0.type + " != " + t2.type);
+            return null;
         }
         return new MyType("boolean");
     }
@@ -484,6 +496,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
             typeError = true;
             errorMessage("CompareExpression", t0.type + " < " + t2.type);
+            return null;
         }
         return new MyType("boolean");
     }
@@ -501,6 +514,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
             typeError = true;
             errorMessage("PlusExpression", t0.type + " + " + t2.type);
+            return null;
         }
         return new MyType("int");
     }
@@ -518,6 +532,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
             typeError = true;
             errorMessage("PlusExpression", t0.type + " + " + t2.type);
+            return null;
         }
         return new MyType("int");
     }
@@ -536,6 +551,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
             typeError = true;
             errorMessage("TimesExpression", t0.type + " * " + t2.type);
+            return null;
         }
         return new MyType("int");
     }
@@ -693,6 +709,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!arg.containsKey(key) || currClass == null) {
             typeError = true;
             errorMessage("ThisExpression", currClass);
+            return null;
         }
         return new MyType(currClass);
     }
@@ -711,6 +728,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!type.type.equals("int")) {
             typeError = true;
             errorMessage("ArrayAllocationExpression", type.toString());
+            return null;
         }
         return new MyType("int[]");
     }
@@ -731,6 +749,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!arg.containsKey(key)) {
             typeError = true;
             errorMessage("AllocationExpression", key);
+            return null;
         }
         return ae.f1.f0.accept(this, arg);
     }
@@ -745,6 +764,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         if (!exprType.toString().equals("boolean")) {
             typeError = true;
             errorMessage("NotExpression", exprType + " != boolean");
+            return null;
         }
         return ne.f1.f0.choice.accept(this, arg);
     }
