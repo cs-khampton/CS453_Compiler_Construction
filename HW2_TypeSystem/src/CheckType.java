@@ -95,8 +95,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // Check class name in symbol table
         String key = retTypeKey(className, methodName, retType);
         if (!arg.containsKey(key)) {
-            errorMessage("MainClass", key);
             typeError = true;
+            errorMessage("MainClass", key);
         }
 
         mc.f14.accept(this, arg);
@@ -130,8 +130,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String key;
         key = classKey(className);
         if (!arg.containsKey(key) || arg.get(key) == "TypeError") {
-            errorMessage("ClassDeclaration", key);
             typeError = true;
+            errorMessage("ClassDeclaration", key);
         }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
@@ -162,8 +162,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // check key exists, className != extendName, extendName key exists
         if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)
                 || arg.get(key) == "TypeError") {
-            errorMessage("ClassExtendsDeclaration", key);
             typeError = true;
+            errorMessage("ClassExtendsDeclaration", key);
         }
 
         ced.f5.accept(this, arg);
@@ -189,14 +189,10 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             key = localKey(currClass, currMethod, idName);
         }
 
-        if (!arg.containsKey(key)) {
-            errorMessage("VarDeclaration", key);
+        if (!arg.containsKey(key) || !arg.get(key).equals(type)) {
             typeError = true;
-        } else {
-            if (!arg.get(key).equals(type)) {
-                errorMessage("VarDeclaration", key);
-                typeError = true;
-            }
+            errorMessage("VarDeclaration", key);
+
         }
         return null;
     }
@@ -225,8 +221,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String key = methodKey(currClass, methodName);
         String retKey = retTypeKey(currClass, methodName, returnType);
         if (!arg.containsKey(key) || arg.get(key) == "TypeError" || arg.get(retKey) == "TypeError") {
-            errorMessage("MethodDeclaration", key);
             typeError = true;
+            errorMessage("MethodDeclaration", key);
         }
         md.f4.accept(this, arg); // FormalParameterList()?
         md.f7.accept(this, arg); // VarDeclaration()*
@@ -261,11 +257,12 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         }
 
         if (!arg.containsKey(key)) {
-            errorMessage("FormalParameter", key);
             typeError = true;
+            errorMessage("FormalParameter", key);
         } else {
             if (arg.get(key) != fpType) {
                 typeError = true;
+                errorMessage("FormalParameter", key);
             }
         }
         return null;
@@ -349,17 +346,22 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String key = "";
         if (currMethod != null && currClass != null) {
             key = localKey(currClass, currMethod, id);
-        }
-        if (currMethod == null && currClass != null) {
+        } else if (currMethod == null && currClass != null) {
             key = instVarKey(currClass, id);
         }
+
         MyType idType = new MyType(arg.get(key));
         MyType exprType = as.f2.f0.choice.accept(this, arg);
 
-        // FIXME: Issue with MyType.equals() - Issue with null
-        if (!(exprType.equals(idType.type))) {
-            typeError = true;
-            errorMessage("AssignmentStatement", key);
+        // FIXME: Need to get the rhs properly - won't do null.toString() obv.
+        if (exprType != null) {
+            if (!exprType.equals(idType)) {
+                typeError = true;
+                errorMessage("AssignmentStatement", key);
+
+            }
+        } else {
+            exprType = new MyType(getExprChoice(as.f2));
         }
         return null;
     }
@@ -377,19 +379,16 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
     public MyType visit(ArrayAssignmentStatement aas, HashMap<String, String> arg) {
         String key = "";
         String id = aas.f0.f0.toString();
-        if (currClass != null && currMethod != null) {
-            key += localKey(currClass, currMethod, id);
-        }
-        if (currClass != null && currMethod == null) {
-            key += instVarKey(currClass, id);
-        }
-
-        // String[] to account for main method args
-        if (arg.get(key) != "int[]" && arg.get(key) != "String[]" || currClass == null) {
-            typeError = true;
-            errorMessage("ArrayAssignmentStatement", arg.get(key));
+        if (currMethod != null && currClass != null) {
+            key = localKey(currClass, currMethod, id);
+        } else if (currMethod == null && currClass != null) {
+            key = instVarKey(currClass, id);
         }
 
+        // fallback to method param
+        if (!arg.containsKey(key)) {
+            key = mParamKey(currClass, currMethod, id);
+        }
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -477,10 +476,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
         // TODO: Check that left and right operands are compatible
-        MyType t0 = ce.f0.f0.choice.accept(this, arg);
-        MyType t2 = ce.f2.f0.choice.accept(this, arg);
-        if (!t0.equals(t2)) {
+        MyType t0 = getOp(ce.f0, arg);
+        MyType t2 = getOp(ce.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
             typeError = true;
+            errorMessage("CompareExpression", t0.type + " < " + t2.type);
         }
         return new MyType("boolean");
     }
@@ -493,47 +493,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
         // FIXME: Doesn't work for this.something
-        String t0 = getPrimeExpChoice(pe.f0);
-        String t2 = getPrimeExpChoice(pe.f2);
-        if (t0.contains("id")) {
-            String idName = t0.replace("id ", "");
-            // try method param
-            String key = mParamKey(currClass, currMethod, idName);
-            if (!arg.containsKey(key)) {
-                // try local key
-                key = localKey(currClass, currMethod, idName);
-                if (!arg.containsKey(key)) {
-                    // try inst var
-                    key = instVarKey(currClass, idName);
-                    if (!arg.containsKey(key)) {
-                        typeError = true;
-                    }
-                }
-            }
-            if (!t2.equals(arg.get(key))) {
-                typeError = true;
-            }
-        }
-        if (t2.contains("id")) {
-            String idName = t2.replace("id ", "");
-            // try method param
-            String key = mParamKey(currClass, currMethod, idName);
-            if (!arg.containsKey(key)) {
-                // try local key
-                key = localKey(currClass, currMethod, idName);
-                if (!arg.containsKey(key)) {
-                    // try inst var
-                    key = instVarKey(currClass, idName);
-                    if (!arg.containsKey(key)) {
-                        typeError = true;
-                        errorMessage("PlusExpression", key);
-                    }
-                }
-            }
-            if (!t0.equals(arg.get(key))) {
-                typeError = true;
-                errorMessage("PlusExpression", key);
-            }
+        MyType t0 = getOp(pe.f0, arg);
+        MyType t2 = getOp(pe.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+            typeError = true;
+            errorMessage("PlusExpression", t0.type + " + " + t2.type);
         }
         return new MyType("int");
     }
@@ -546,48 +510,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(MinusExpression me, HashMap<String, String> arg) {
         // FIXME: Doesn't work for this.something
-
-        String t0 = getPrimeExpChoice(me.f0);
-        String t2 = getPrimeExpChoice(me.f2);
-        if (t0.contains("id")) {
-            String idName = t0.replace("id ", "");
-            // try method param
-            String key = mParamKey(currClass, currMethod, idName);
-            if (!arg.containsKey(key)) {
-                // try local key
-                key = localKey(currClass, currMethod, idName);
-                if (!arg.containsKey(key)) {
-                    // try inst var
-                    key = instVarKey(currClass, idName);
-                    if (!arg.containsKey(key)) {
-                        typeError = true;
-                    }
-                }
-            }
-            if (!t2.equals(arg.get(key))) {
-                typeError = true;
-            }
-        }
-        if (t2.contains("id")) {
-            String idName = t2.replace("id ", "");
-            // try method param
-            String key = mParamKey(currClass, currMethod, idName);
-            if (!arg.containsKey(key)) {
-                // try local key
-                key = localKey(currClass, currMethod, idName);
-                if (!arg.containsKey(key)) {
-                    // try inst var
-                    key = instVarKey(currClass, idName);
-                    if (!arg.containsKey(key)) {
-                        typeError = true;
-                        errorMessage("MinusExpression", key);
-                    }
-                }
-            }
-            if (!t0.equals(arg.get(key))) {
-                typeError = true;
-                errorMessage("MinusExpression", key);
-            }
+        MyType t0 = getOp(me.f0, arg);
+        MyType t2 = getOp(me.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+            typeError = true;
+            errorMessage("PlusExpression", t0.type + " + " + t2.type);
         }
         return new MyType("int");
     }
@@ -600,50 +527,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
         // FIXME: Doesn't work for this.something
-        String t0 = getPrimeExpChoice(te.f0);
-        String t2 = getPrimeExpChoice(te.f2);
-
-        if (t0.contains("id")) {
-            String idName = t0.replace("id ", "");
-            // try method param
-            String key = mParamKey(currClass, currMethod, idName);
-            if (!arg.containsKey(key)) {
-                // try local key
-                key = localKey(currClass, currMethod, idName);
-                if (!arg.containsKey(key)) {
-                    // try inst var
-                    key = instVarKey(currClass, idName);
-                    if (!arg.containsKey(key)) {
-                        typeError = true;
-                        errorMessage("TimesExpression", key);
-                    }
-                }
-            }
-            if (!t2.equals(arg.get(key))) {
-                typeError = true;
-                errorMessage("TimesExpresson", key);
-            }
-        }
-        if (t2.contains("id")) {
-            String idName = t2.replace("id ", "");
-            // try method param
-            String key = mParamKey(currClass, currMethod, idName);
-            if (!arg.containsKey(key)) {
-                // try local key
-                key = localKey(currClass, currMethod, idName);
-                if (!arg.containsKey(key)) {
-                    // try inst var
-                    key = instVarKey(currClass, idName);
-                    if (!arg.containsKey(key)) {
-                        typeError = true;
-                        errorMessage("PlusExpression", key);
-                    }
-                }
-            }
-            if (!t0.equals(arg.get(key))) {
-                typeError = true;
-                errorMessage("PlusExpression", key);
-            }
+        MyType t0 = getOp(te.f0, arg);
+        MyType t2 = getOp(te.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+            typeError = true;
+            errorMessage("TimesExpression", t0.type + " * " + t2.type);
         }
         return new MyType("int");
     }
@@ -686,8 +574,11 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f5: ")"
      */
     public MyType visit(MessageSend ms, HashMap<String, String> arg) {
-        // TODO: Check class exists (f0), check methodid exists
-        ms.f0.f0.choice.accept(this, arg);
+        // TODO: Check class exists (f0), check methodID exists (f2) and it's params if
+        // any (f4).
+        // TODO: Also check that the return type of the method is what is being passed
+        // back.
+
         ms.f2.f0.toString();
         ms.f4.accept(this, arg);
         return null;
@@ -736,14 +627,14 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f0: "true"
      */
     public MyType visit(TrueLiteral tl, HashMap<String, String> arg) {
-        return new MyType("true");
+        return new MyType("boolean");
     }
 
     /*
      * FalseLiteral
      * f0: "false"
      */ public MyType visit(FalseLiteral fl, HashMap<String, String> arg) {
-        return new MyType("false");
+        return new MyType("boolean");
     }
 
     /*
@@ -802,14 +693,17 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f4: "]"
      */
     public MyType visit(ArrayAllocationExpression aae, HashMap<String, String> arg) {
-        // f3 must be an IntegerLiteral()
-        String type = getExprChoice(aae.f3);
-        if (type != "int") {
+        MyType type = getOp(aae.f3, arg);
+
+        if (!type.type.equals("int")) {
             typeError = true;
-            errorMessage("ArrayAllocationExpression", type);
+            errorMessage("ArrayAllocationExpression", type.toString());
         }
-        aae.f3.f0.choice.accept(this, arg);
-        return null;
+        return new MyType("int[]");
+    }
+
+    public MyType getOp(Expression e, HashMap<String, String> arg) {
+        return e.f0.choice.accept(this, arg);
     }
 
     /*
@@ -825,8 +719,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             typeError = true;
             errorMessage("AllocationExpression", key);
         }
-        ae.f1.f0.accept(this, arg);
-        return null;
+        return ae.f1.f0.accept(this, arg);
     }
 
     /*
@@ -835,11 +728,12 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f1: Expression()
      */
     public MyType visit(NotExpression ne, HashMap<String, String> arg) {
-        String exprType = getExprChoice(ne.f1);
-        if (!exprType.equals("true") || !exprType.equals("false")) {
-            ne.f1.f0.choice.accept(this, arg);
+        MyType exprType = ne.f1.f0.choice.accept(this, arg);
+        if (!exprType.equals("boolean")) {
+            typeError = true;
+            errorMessage("NotExpression", exprType + " != boolean");
         }
-        return null;
+        return ne.f1.f0.choice.accept(this, arg);
     }
 
     /*
@@ -849,11 +743,14 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      * f2: ")"
      */
     public MyType visit(BracketExpression be, HashMap<String, String> arg) {
-        be.f1.f0.choice.accept(this, arg);
-        return null;
+        return be.f1.f0.choice.accept(this, arg);
     }
 
     /************ Helper Methods **********/
+
+    private MyType getOp(PrimaryExpression p, HashMap<String, String> arg) {
+        return p.f0.choice.accept(this, arg);
+    }
 
     public String getTypeChoice(Type t) {
         Node choice = t.f0.choice;
