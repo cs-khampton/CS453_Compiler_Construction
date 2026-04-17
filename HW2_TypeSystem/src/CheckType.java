@@ -579,8 +579,17 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         // any (f4).
         // TODO: Also check that the return type of the method is what is being passed
         // back.
-
-        ms.f2.f0.toString();
+        MyType rec = ms.f0.f0.choice.accept(this, arg);
+        String methodName = ms.f2.f0.toString();
+        if (rec != null) {
+            String method = methodKey(currClass, methodName);
+            if (arg.containsKey(method)) {
+                method += ":returnType";
+                String type = arg.get(method);
+                return new MyType(type);
+            }
+        }
+        // ms.f2.f0.toString();
         ms.f4.accept(this, arg);
         // should return whatever value type is the return type.
         return null;
@@ -654,15 +663,14 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
             }
         }
 
-        if (currClass != null && currMethod != null) {
-            key = mParamKey(currClass, currMethod, name);
+        if (currClass != null) {
+            key = instVarKey(currClass, name);
             if (arg.containsKey(key)) {
                 return new MyType(arg.get(key));
             }
         }
-
-        if (currClass != null) {
-            key = instVarKey(currClass, name);
+        if (currClass != null && currMethod != null) {
+            key = mParamKey(currClass, currMethod, name);
             if (arg.containsKey(key)) {
                 return new MyType(arg.get(key));
             }
@@ -731,7 +739,7 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(NotExpression ne, HashMap<String, String> arg) {
         MyType exprType = ne.f1.f0.choice.accept(this, arg);
-        if (!exprType.equals("boolean")) {
+        if (!exprType.toString().equals("boolean")) {
             typeError = true;
             errorMessage("NotExpression", exprType + " != boolean");
         }
