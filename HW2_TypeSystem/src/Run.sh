@@ -10,8 +10,11 @@ if [ ! -d "$TEST_DIR" ]; then
 fi
 
 count=0
+echo "----------------------------------------------"
+echo "Starting Valid Tests"
+echo "----------------------------------------------"
 
-for file in "$TEST_DIR"/*.java; do
+for file in "$TEST_DIR"/valid/*.java; do
   if [ ! -e "$file" ]; then
     echo "No .jj files found in $TEST_DIR"
     exit 1
@@ -25,20 +28,23 @@ for file in "$TEST_DIR"/*.java; do
   echo "Finished test: $file"
   echo "----------------------------------------------"
 done
+echo "----------------------------------------------"
+echo "Starting Invalid Tests"
+echo "----------------------------------------------"
 
-# for file in "$TEST_DIR"/*.jj; do
-#   if [ ! -e "$file" ]; then
-#     echo "No .jj files found in $TEST_DIR"
-#     exit 0;
-#   fi
+for file in "$TEST_DIR"/invalid/*.java; do
+  if [ ! -e "$file" ]; then
+    echo "No .jj files found in $TEST_DIR"
+    exit 0;
+  fi
 
-#   count=$((count + 1))
-#   echo "Running test: $file"
+  count=$((count + 1))
+  echo "Running test: $file"
 
-#   java Typecheck < "$file"
+  java Typecheck < "$file"
 
-#   echo "Finished test: $file"
-#   echo "----------------------------------------------"
-# done
+  echo "Finished test: $file"
+  echo "----------------------------------------------"
+done
 
 echo "Total tests run: $count"

@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 
 import syntaxtree.Node;
@@ -8,7 +7,7 @@ public class Typecheck {
         Node root = null;
         try {
             root = new MiniJavaParser(System.in).Goal();
-            // FIXME: Review indentation further
+            // XXX: Review indentation further
             // PPrinter<R, A> pp = new PPrinter<R, A>();
             // root.accept(pp, null);
 
@@ -18,9 +17,8 @@ public class Typecheck {
             SymbolTable<Void, Integer> pv = new SymbolTable<Void, Integer>();
             root.accept(pv, 0);
             HashMap<String, String> symt = pv.classes;
-            pv.printSymt();
 
-            // FIXME: Typechecking at 53% currently
+            // FIXME: Typechecking at 53% currently - Can try again 4/17
 
             CheckType<Object, Object> tc = new CheckType<>();
             root.accept(tc, symt);
@@ -31,7 +29,7 @@ public class Typecheck {
                 System.out.println("Program type checked successfully");
             }
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
             System.exit(1);
         }
