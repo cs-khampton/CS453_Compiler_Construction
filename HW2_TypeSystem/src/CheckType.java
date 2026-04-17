@@ -186,6 +186,8 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
         String idName = vd.f1.f0.toString(); // Identifier()
         String type = getTypeChoice(vd.f0);
         String key = "";
+
+        // FIXME: Same problem as AssignmentStatement
         if (currMethod == null && currClass != null) {
             key = instVarKey(currClass, idName);
         } else if (currMethod != null && currClass != null) {
