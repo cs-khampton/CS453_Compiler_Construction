@@ -15,79 +15,79 @@ java -jar jtb132.jar minijava.jj
 java -cp javacc-6.0/bin/lib/javacc.jar javacc jtb.out.jj
 ```
 
-## [BNF for MiniJava](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html)
+## BNF for MiniJava
 
-## [MiniJava TypeSystem](https://cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/doc/miniJava-typesystem.pdf)
+## MiniJava TypeSystem
 
 | Rule# | Non-Terminal | Production(s) |
 | --- | --- | --- |
-| 0 | Goal | [MainClass](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod2) ( [TypeDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod3) )* \<EOF> |
-| 1 | MainClass | "class" [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "{" "public" "static" "void" "main" "(" "String" "[" "]" [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) ")" "{" ( [VarDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod5) )* ( [Statement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod6) )* "}" "}" |
+| 0 | Goal |  MainClass ( TypeDeclaration )* \<EOF> |
+| 1 | MainClass | "class" Identifier "{" "public" "static" "void" "main" "(" "String" "[" "]" Identifier ")" "{" ( VarDeclaration() )* ( Statement )* "}" "}" |
 | 2 | TypeDeclaration | ClassDeclaration |
 | 3 |  | ClassExtendsDeclaration |
-| 4 | ClassDeclaration | "class" [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "{" ( [VarDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod5) )* ( [MethodDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod9) )* "}" |
-| 5 | ClassExtendsDeclaration | "class" [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "extends" [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "{" ( [VarDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod5) )* ( [MethodDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod9) )* "}" |
-| 6 | VarDeclaration | [Type](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod10) [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) ";" |
-| 7 | MethodDeclaration | "public" [Type](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod10) [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "(" ( [FormalParameterList](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod11) )? ")" "{" ( [VarDeclaration](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod5) )* ( [Statement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod6) )* "return" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ";" "}" |
-| 8 | FormalParameterList | [FormalParameter](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod13) ( [FormalParameterRest](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod14) )* |
-| 9 | FormalParameter | [Type](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod10) [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) |
-| 10 | FormalParameterRest | "," [FormalParameter](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod13) |
-| 11 | Type | [ArrayType](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod15) |
-| 12 |  | [BooleanType](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod16) |
-| 13 |  | [IntegerType](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod17) |
-| 14 |  | [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) |
+| 4 | ClassDeclaration | "class" Identifier "{" ( VarDeclaration )* ( MethodDeclaration )* "}" |
+| 5 | ClassExtendsDeclaration | "class" Identifier "extends" Identifier "{" ( VarDeclaration )* ( MethodDeclaration )* "}" |
+| 6 | VarDeclaration | Type Identifier ";" |
+| 7 | MethodDeclaration | "public" Type Identifier "(" ( FormalParameterList )? ")" "{" ( VarDeclaration )* ( Statement )* "return" Expression ";" "}" |
+| 8 | FormalParameterList | FormalParameter ( FormalParameterRest )* |
+| 9 | FormalParameter | Type Identifier |
+| 10 | FormalParameterRest | "," FormalParameter |
+| 11 | Type | ArrayType |
+| 12 |  | BooleanType |
+| 13 |  | IntegerType |
+| 14 |  | Identifier |
 | 15 | ArrayType | “int” “[” “]” |
 | 16 | BooleanType | “boolean” |
 | 17 | IntegerType | "int” |
-| 18 | Statement | [Block](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod18) |
-| 19 |  | [AssignmentStatement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod19) |
-| 20 |  | [ArrayAssignmentStatement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod20) |
-| 21 |  | [IfStatement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod21) |
-| 22 |  | [WhileStatement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod22) |
-| 23 |  | [PrintStatement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod23) |
-| 24 | Block | "{" ( [Statement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod6) )* "}" |
-| 25 | AssignmentStatement | [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "=" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ";" |
-| 26 | ArrayAssignmentStatement | [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "[" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) "]" "=" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ";" |
-| 27 | IfStatement | "if" "(" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ")" [Statement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod6) "else" [Statement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod6) |
-| 28 | WhileStatement | "while" "(" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ")" [Statement](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod6) |
-| 29 | PrintStatement | "System.out.println" "(" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ")" ";" |
-| 30 | Expression | [AndExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod24) |
-| 31 |  | [CompareExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod25) |
-| 32 |  | [PlusExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod26) |
-| 33 |  | [MinusExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod27) |
-| 34 |  | [TimesExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod28) |
-| 35 |  | [ArrayLookup](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod29) |
-| 36 |  | [ArrayLength](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod30) |
-| 37 |  | [MessageSend](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod31) |
-| 38 |  | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) |
-| 39 | AndExpression | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "&&" [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) |
-| 40 | CompareExpression | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "<" [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) |
-| 41 | PlusExpression | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "+" [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) |
-| 42 | MinusExpression | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "-" [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) |
-| 43 | TimesExpression | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "*" [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) |
-| 44 | ArrayLookup | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "[" [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) “]” |
-| 45 | ArrayLength | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "." "length" |
-| 46 | MessageSend | [PrimaryExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod32) "." [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "(" ( [ExpressionList](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod33) )? ")" |
-| 47 | ExpressionList | [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ( [ExpressionRest](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod34) )* |
-| 48 | ExpressionRest | "," [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) |
-| 49 | PrimaryExpression | [IntegerLiteral](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod35) |
-| 50 |  | [TrueLiteral](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod36) |
-| 51 |  | [FalseLiteral](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod37) |
-| 52 |  | [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) |
-| 53 |  | [ThisExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod38) |
-| 54 |  | [ArrayAllocationExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod39) |
-| 55 |  | [AllocationExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod40) |
-| 56 |  | [NotExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod41) |
-| 57 |  | [BracketExpression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod42) |
+| 18 | Statement | Block |
+| 19 |  | AssignmentStatement |
+| 20 |  | ArrayAssignmentStatement |
+| 21 |  | [IfStatement |
+| 22 |  | WhileStatement |
+| 23 |  | PrintStatement |
+| 24 | Block | "{" ( Statement )* "}" |
+| 25 | AssignmentStatement | Identifier "=" Expression ";" |
+| 26 | ArrayAssignmentStatement | Identifier "[" Expression "]" "=" Expression ";" |
+| 27 | IfStatement | "if" "(" Expression ")" Statement "else" Statement |
+| 28 | WhileStatement | "while" "(" Expression ")" Statement |
+| 29 | PrintStatement | "System.out.println" "(" Expression ")" ";" |
+| 30 | Expression | AndExpression |
+| 31 |  | CompareExpression |
+| 32 |  | PlusExpression |
+| 33 |  | MinusExpression |
+| 34 |  | TimesExpression |
+| 35 |  | ArrayLookup |
+| 36 |  | ArrayLength |
+| 37 |  | MessageSend |
+| 38 |  | PrimaryExpression |
+| 39 | AndExpression | PrimaryExpression "&&" PrimaryExpression |
+| 40 | CompareExpression | PrimaryExpression "<" PrimaryExpression |
+| 41 | PlusExpression | PrimaryExpression "+" PrimaryExpression |
+| 42 | MinusExpression | PrimaryExpression "-" PrimaryExpression |
+| 43 | TimesExpression | PrimaryExpression "*" PrimaryExpression |
+| 44 | ArrayLookup | PrimaryExpression "[" PrimaryExpression “]” |
+| 45 | ArrayLength | PrimaryExpression "." "length" |
+| 46 | MessageSend | PrimaryExpression "." Identifier "(" ( ExpressionList )? ")" |
+| 47 | ExpressionList | Expression ( ExpressionRest )* |
+| 48 | ExpressionRest | "," Expression |
+| 49 | PrimaryExpression | IntegerLiteral |
+| 50 |  | TrueLiteral |
+| 51 |  | FalseLiteral |
+| 52 |  | Identifier |
+| 53 |  | ThisExpression |
+| 54 |  | ArrayAllocationExpression |
+| 55 |  | AllocationExpression |
+| 56 |  | NotExpression |
+| 57 |  | BracketExpression |
 | 58 | IntegerLiteral | \<INTEGER_LITERAL> |
 | 59 | TrueLiteral | “true” |
 | 60 | FalseLiteral | “false” |
 | 61 | Identifier | \<IDENTIFIER> |
 | 62 | ThisExpression | "this” |
-| 63 | ArrayAllocationExpression | "new" "int" "[" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) "]" |
-| 64 | AllocationExpression | "new" [Identifier](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod4) "(" ")" |
-| 65 | NotExpression | "!" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) |
-| 66 | BracketExpression | "(" [Expression](https://www.cs.colostate.edu/~pouchet/classes/CS453/hw25-minijava/cs453/mj/minijava.html#prod12) ")" |
+| 63 | ArrayAllocationExpression | "new" "int" "[" Expression "]" |
+| 64 | AllocationExpression | "new" Identifier "(" ")" |
+| 65 | NotExpression | "!" Expression |
+| 66 | BracketExpression | "(" Expression ")" |
 
 
 - Use FIRST/FOLLOW sets to type check

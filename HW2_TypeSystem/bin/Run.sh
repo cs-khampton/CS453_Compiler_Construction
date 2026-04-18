@@ -65,5 +65,3 @@ for file in "$TEST_DIR"/invalid/*.java; do
 done
 
 echo "Total tests run: $count"
-find . -name "*.class" -delete
-echo "Cleared all .class files"
