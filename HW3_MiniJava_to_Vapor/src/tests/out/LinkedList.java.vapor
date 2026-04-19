@@ -22,10 +22,10 @@ const vmt_LL
   :LL.Start
 
 func Main()
-  ret
+ret
 
-func Element.Init(this v_Age syntaxtree.Identifier@776ec8df syntaxtree.Identifier@4eec7777)
-  ret true
+func Element.Init(this v_Age v_Salary v_Married)
+  ret 1
 
 func Element.GetAge(this)
   ret Age
@@ -39,20 +39,20 @@ func Element.GetMarried(this)
 func Element.Equal(this other)
   ret ret_val
 
-func Element.Compare(this num1 syntaxtree.Identifier@41629346)
+func Element.Compare(this num1 num2)
   ret retval
 
 func List.Init(this)
-  ret true
+  ret 1
 
-func List.InitNew(this v_elem syntaxtree.Identifier@404b9385 syntaxtree.Identifier@6d311334)
-  ret true
+func List.InitNew(this v_elem v_next v_end)
+  ret 1
 
 func List.Insert(this new_elem)
   ret aux02
 
 func List.SetNext(this v_next)
-  ret true
+  ret 1
 
 func List.Delete(this e)
   ret my_head
@@ -70,7 +70,7 @@ func List.GetNext(this)
   ret next
 
 func List.Print(this)
-  ret true
+  ret 1
 
 func LL.Start(this)
   ret 0

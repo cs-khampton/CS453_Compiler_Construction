@@ -5,12 +5,12 @@ const vmt_QS
   :QS.Print
 
 func Main()
-  ret
+ret
 
 func QS.Start(this sz)
   ret 0
 
-func QS.Sort(this left syntaxtree.Identifier@404b9385)
+func QS.Sort(this left right)
   ret 0
 
 func QS.Print(this)

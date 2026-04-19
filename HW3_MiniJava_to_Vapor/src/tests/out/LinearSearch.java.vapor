@@ -5,7 +5,7 @@ const vmt_LS
   :LS.Print
 
 func Main()
-  ret
+ret
 
 func LS.Start(this sz)
   ret 55

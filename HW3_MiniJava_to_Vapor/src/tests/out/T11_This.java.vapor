@@ -3,7 +3,7 @@ const vmt_Count
   :Count.doubled
 
 func Main()
-  ret
+ret
 
 func Count.getDoubleVal(this)
   ret MessageSend

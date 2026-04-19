@@ -5,7 +5,7 @@ const vmt_Dog
   :Dog.speak
 
 func Main()
-  ret
+ret
 
 func Animal.speak(this)
   ret 0

@@ -3,11 +3,11 @@ const vmt_MT4
   :MT4.Change
 
 func Main()
-  ret
+ret
 
-func MT4.Start(this p1 syntaxtree.Identifier@87aac27 syntaxtree.Identifier@3e3abc88 syntaxtree.Identifier@6ce253f1 syntaxtree.Identifier@53d8d10a syntaxtree.Identifier@e9e54c2)
+func MT4.Start(this p1 p2 p3 p4 p5 p6)
   ret aux
 
-func MT4.Change(this p1 syntaxtree.Identifier@65ab7765 syntaxtree.Identifier@1b28cdfa syntaxtree.Identifier@eed1f14 syntaxtree.Identifier@7229724f syntaxtree.Identifier@4c873330)
+func MT4.Change(this p1 p2 p3 p4 p5 p6)
   ret 0
 

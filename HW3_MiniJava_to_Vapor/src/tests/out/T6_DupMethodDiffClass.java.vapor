@@ -5,7 +5,7 @@ const vmt_G
   :G.test
 
 func Main()
-  ret
+ret
 
 func F.test(this)
   ret 2

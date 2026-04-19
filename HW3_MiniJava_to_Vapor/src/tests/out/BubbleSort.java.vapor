@@ -5,7 +5,7 @@ const vmt_BBS
   :BBS.Start
 
 func Main()
-  ret
+ret
 
 func BBS.Start(this sz)
   ret 0

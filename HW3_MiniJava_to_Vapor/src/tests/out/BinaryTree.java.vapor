@@ -24,19 +24,19 @@ const vmt_Tree
   :Tree.Print
 
 func Main()
-  ret
+ret
 
 func BT.Start(this)
   ret 0
 
 func Tree.Init(this v_key)
-  ret true
+  ret 1
 
 func Tree.SetRight(this rn)
-  ret true
+  ret 1
 
 func Tree.SetLeft(this ln)
-  ret true
+  ret 1
 
 func Tree.GetRight(this)
   ret right
@@ -48,7 +48,7 @@ func Tree.GetKey(this)
   ret key
 
 func Tree.SetKey(this v_key)
-  ret true
+  ret 1
 
 func Tree.GetHas_Right(this)
   ret has_right
@@ -57,35 +57,35 @@ func Tree.GetHas_Left(this)
   ret has_left
 
 func Tree.SetHas_Left(this val)
-  ret true
+  ret 1
 
 func Tree.SetHas_Right(this val)
-  ret true
+  ret 1
 
-func Tree.Compare(this num1 syntaxtree.Identifier@776ec8df)
+func Tree.Compare(this num1 num2)
   ret ntb
 
 func Tree.Insert(this v_key)
-  ret true
+  ret 1
 
 func Tree.Delete(this v_key)
   ret found
 
-func Tree.Remove(this p_node syntaxtree.Identifier@4eec7777)
-  ret true
+func Tree.Remove(this p_node c_node)
+  ret 1
 
-func Tree.RemoveRight(this p_node syntaxtree.Identifier@3b07d329)
-  ret true
+func Tree.RemoveRight(this p_node c_node)
+  ret 1
 
-func Tree.RemoveLeft(this p_node syntaxtree.Identifier@41629346)
-  ret true
+func Tree.RemoveLeft(this p_node c_node)
+  ret 1
 
 func Tree.Search(this v_key)
   ret ifound
 
 func Tree.Print(this)
-  ret true
+  ret 1
 
 func Tree.RecPrint(this node)
-  ret true
+  ret 1
 

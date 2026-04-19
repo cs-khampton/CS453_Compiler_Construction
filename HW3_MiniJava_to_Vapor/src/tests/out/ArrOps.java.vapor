@@ -2,7 +2,7 @@ const vmt_Sorter
   :Sorter.getElement
 
 func Main()
-  ret
+ret
 
 func Sorter.getElement(this idx)
   ret result
