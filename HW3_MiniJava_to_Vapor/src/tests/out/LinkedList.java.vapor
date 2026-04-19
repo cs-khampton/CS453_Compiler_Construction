@@ -1,0 +1,77 @@
+const vmt_Element
+  :Element.Init
+  :Element.Equal
+  :Element.Compare
+  :Element.GetAge
+  :Element.GetSalary
+  :Element.GetMarried
+
+const vmt_List
+  :List.GetElem
+  :List.SetNext
+  :List.InitNew
+  :List.GetNext
+  :List.Print
+  :List.Search
+  :List.Delete
+  :List.Init
+  :List.GetEnd
+  :List.Insert
+
+const vmt_LL
+  :LL.Start
+
+func Main()
+  ret
+
+func Element.Init(this v_Age syntaxtree.Identifier@776ec8df syntaxtree.Identifier@4eec7777)
+  ret true
+
+func Element.GetAge(this)
+  ret Age
+
+func Element.GetSalary(this)
+  ret Salary
+
+func Element.GetMarried(this)
+  ret Married
+
+func Element.Equal(this other)
+  ret ret_val
+
+func Element.Compare(this num1 syntaxtree.Identifier@41629346)
+  ret retval
+
+func List.Init(this)
+  ret true
+
+func List.InitNew(this v_elem syntaxtree.Identifier@404b9385 syntaxtree.Identifier@6d311334)
+  ret true
+
+func List.Insert(this new_elem)
+  ret aux02
+
+func List.SetNext(this v_next)
+  ret true
+
+func List.Delete(this e)
+  ret my_head
+
+func List.Search(this e)
+  ret int_ret_val
+
+func List.GetEnd(this)
+  ret end
+
+func List.GetElem(this)
+  ret elem
+
+func List.GetNext(this)
+  ret next
+
+func List.Print(this)
+  ret true
+
+func LL.Start(this)
+  ret 0
+

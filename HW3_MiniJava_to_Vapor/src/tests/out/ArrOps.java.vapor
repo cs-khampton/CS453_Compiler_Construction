@@ -1,0 +1,9 @@
+const vmt_Sorter
+  :Sorter.getElement
+
+func Main()
+  ret
+
+func Sorter.getElement(this idx)
+  ret result
+

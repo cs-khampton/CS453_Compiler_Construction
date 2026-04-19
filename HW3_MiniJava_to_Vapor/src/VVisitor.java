@@ -114,12 +114,12 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         tempNum = 0;
 
         // "Main" per given Factorial.vapor
-        translate.addToOut("func Main()");
+        translate.addToOut(formatIndent("func Main()"));
 
         mc.f14.accept(this, arg);
         mc.f15.accept(this, arg);
 
-        translate.addToOut("  ret");
+        translate.addToOut(formatIndent("ret"));
         translate.addToOut("");
 
         currClass = null;
@@ -209,18 +209,17 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         String methodName = md.f2.f0.toString();
         currMethod = methodName;
         String rVal = getExprChoice(md.f10);
-
         String out = "this";
         currMethod = methodName;
         tempNum = 0;
 
-        // Check if FPL exists
+        // Check if FPL exists, grab all params
         if (md.f4.present()) {
             FormalParameterList fp = (FormalParameterList) md.f4.node;
             out += " " + fp.f0.f1.f0.toString();
             for (Node n : fp.f1.nodes) {
                 FormalParameterRest fr = (FormalParameterRest) n;
-                out += " " + fr.f1.f1.toString();
+                out += " " + fr.f1.f1.f0.toString();
             }
         }
         md.f8.accept(this, arg); // Statement()*
@@ -338,7 +337,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         if (currMethod == null && currClass != null) {
             key += instVarKey(currClass, id);
         }
-        // XXX: Check that expression is the same type as identifier
         MyType idType = new MyType(arg.get(key));
         MyType exprType = as.f2.f0.choice.accept(this, arg);
 
@@ -366,7 +364,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             key += instVarKey(currClass, id);
         }
 
-        // TODO: Check that f2 is a valid int and that f0 is the same type as f5
         aas.f2.f0.choice.accept(this, arg);
         aas.f5.f0.choice.accept(this, arg);
         return null;
@@ -383,7 +380,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f6: Statement()
      */
     public MyType visit(IfStatement is, HashMap<String, String> arg) {
-        // TODO: Check that Expression() is a boolean
         is.f2.f0.choice.accept(this, arg);
         is.f4.f0.choice.accept(this, arg);
         is.f6.f0.choice.accept(this, arg);
@@ -400,7 +396,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      */
     public MyType visit(WhileStatement ws, HashMap<String, String> arg) {
         ws.f2.f0.choice.accept(this, arg);
-        // TODO: check that Expression() is a boolean
         ws.f4.f0.choice.accept(this, arg);
         return null;
     }
@@ -436,7 +431,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(AndExpression ae, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
         ae.f0.f0.choice.accept(this, arg);
         ae.f2.f0.choice.accept(this, arg);
         return null;
@@ -449,7 +443,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
         ce.f0.f0.choice.accept(this, arg);
         ce.f2.f0.choice.accept(this, arg);
         return null;
@@ -462,7 +455,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
         pe.f0.f0.choice.accept(this, arg);
         pe.f2.f0.choice.accept(this, arg);
         return null;
@@ -475,7 +467,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(MinusExpression me, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
         me.f0.f0.choice.accept(this, arg);
         me.f2.f0.choice.accept(this, arg);
         return null;
@@ -488,7 +479,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
-        // TODO: Check that left and right operands are compatible
         te.f0.f0.choice.accept(this, arg);
         te.f2.f0.choice.accept(this, arg);
         return null;
@@ -502,7 +492,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f3: "]"
      */
     public MyType visit(ArrayLookup al, HashMap<String, String> arg) {
-        // TODO: Check that PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
         al.f2.f0.choice.accept(this, arg);
         return null;
@@ -515,7 +504,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: "length"
      */
     public MyType visit(ArrayLength al, HashMap<String, String> arg) {
-        // TODO: Check that PrimaryExpression is of type []
         al.f0.f0.choice.accept(this, arg);
         return null;
     }
@@ -579,14 +567,14 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f0: "true"
      */
     public MyType visit(TrueLiteral tl, HashMap<String, String> arg) {
-        return new MyType("true");
+        return new MyType("1");
     }
 
     /*
      * FalseLiteral
      * f0: "false"
      */ public MyType visit(FalseLiteral fl, HashMap<String, String> arg) {
-        return new MyType("false");
+        return new MyType("0");
     }
 
     /*
@@ -594,8 +582,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f0: <IDENTIFIER>
      */
 
-    // XXX: Something's wrong with how T11_This.jj is working.
-    // FIXME: Need to find how to check a return type (this.count)
     public MyType visit(Identifier id, HashMap<String, String> arg) {
         String name = id.f0.toString();
         String key = "";
@@ -728,7 +714,8 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         if (currClass != null && currMethod == null && arg.containsKey(instVarKey(currClass, name))) {
             String temp = newTemp();
             int off = getInstVarOff(currClass, name, arg);
-            translate.addToOut("  " + temp + " = [this+" + off + "]");
+            String formatted = formatIndent(temp + " = [this+" + off + "]");
+            translate.addToOut(formatted);
             return temp;
         }
         return name;
@@ -745,7 +732,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
                 off += 4;
             }
         }
-        return 1;
+        return 1; // error flag
     }
 
     public String getTypeChoice(Type t) {
@@ -792,9 +779,9 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         if (choice instanceof IntegerLiteral i) {
             return i.f0.toString();
         } else if (choice instanceof TrueLiteral) {
-            return "true";
+            return "1";
         } else if (choice instanceof FalseLiteral) {
-            return "false";
+            return "0";
         } else if (choice instanceof Identifier i) {
             return i.f0.toString();
         } else if (choice instanceof ThisExpression) {
@@ -861,5 +848,14 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
 
     private String heapAlloc(String i) {
         return "HeapAllocZ(" + i + ")";
+    }
+
+    private String formatIndent(String message) {
+        String ret = "";
+        for (int i = 0; i < indent; i++) {
+            ret += "  ";
+        }
+        ret += message;
+        return ret;
     }
 }

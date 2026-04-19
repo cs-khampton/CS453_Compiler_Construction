@@ -1,0 +1,15 @@
+const vmt_Animal
+  :Animal.speak
+
+const vmt_Dog
+  :Dog.speak
+
+func Main()
+  ret
+
+func Animal.speak(this)
+  ret 0
+
+func Dog.speak(this)
+  ret 1
+

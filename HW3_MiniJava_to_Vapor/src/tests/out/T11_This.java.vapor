@@ -1,0 +1,13 @@
+const vmt_Count
+  :Count.getDoubleVal
+  :Count.doubled
+
+func Main()
+  ret
+
+func Count.getDoubleVal(this)
+  ret MessageSend
+
+func Count.doubled(this)
+  ret TimesExpression
+
