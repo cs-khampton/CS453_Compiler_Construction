@@ -5,5 +5,5 @@ func Main()
 ret
 
 func Sorter.getElement(this idx)
-  ret result
+  ret t.0
 

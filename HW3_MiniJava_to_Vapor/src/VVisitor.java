@@ -1,5 +1,6 @@
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import syntaxtree.AllocationExpression;
 import syntaxtree.AndExpression;
@@ -55,7 +56,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
     private int labelNum;
     private int indent = 0;
 
-    // Initialize all values for VVisitor
     public VVisitor(VTranslator translator) {
         this.translate = translator;
         currMethod = null;
@@ -71,8 +71,16 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: <EOF>
      */
     public MyType visit(Goal n, HashMap<String, String> arg) {
+        for (String k : arg.keySet()) {
+            if (k.matches("class:\\[.*\\]") && !k.contains(":")) {
+                if (arg.get(k).equals("TypeError")) {
+                    // errorMessage("Goal", k);
+                    return null;
+                }
+            }
+        }
         if (n.f1.present()) {
-            // print all present methods
+            // print all present methods and classes
             for (Node no : n.f1.nodes) {
                 printMT((TypeDeclaration) no, arg);
             }
@@ -148,10 +156,17 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
     public MyType visit(ClassDeclaration cd, HashMap<String, String> arg) {
         String className = cd.f1.f0.toString();
         currClass = className;
-
+        String key;
+        key = classKey(className);
+        if (!arg.containsKey(key) || arg.get(key).equals("TypeError")) {
+            // errorMessage("ClassDeclaration", key);
+            currMethod = null;
+            currClass = null;
+            return null;
+        }
         cd.f3.accept(this, arg);
         cd.f4.accept(this, arg);
-        // reset class
+        currMethod = null;
         currClass = null;
         return null;
     }
@@ -169,13 +184,46 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      */
     public MyType visit(ClassExtendsDeclaration ced, HashMap<String, String> arg) {
         String className = ced.f1.f0.toString();
+        String extendName = ced.f3.f0.toString();
+        String classExtKey = classKey(extendName);
+
         currClass = className;
 
+        String key = parentClassKey(extendName);
+        // check key exists, className != extendName, extendName key exists
+        if (!(arg.containsKey(key)) || className.equals(extendName) || !arg.containsKey(classExtKey)
+                || arg.get(key).equals("TypeError")) {
+            // errorMessage("ClassExtendsDeclaration", key);
+            return null;
+        }
         ced.f5.accept(this, arg);
         ced.f6.accept(this, arg);
-
         currClass = null;
+        currMethod = null;
+
+        // check parent method signature if duplicate method
+        for (String k : arg.keySet()) {
+            if (k.startsWith("class:[" + className + "]:method:[") && k.endsWith("]")
+                    && arg.get(k).equals("method")) {
+                String mName = stripKey(k);
+                String pk = resmKey(extendName, mName, arg);
+                if (pk != null) {
+                    // check the signatures are the same return type
+                    String c = arg.get(methodKey(className, mName) + ":returnType");
+                    String p = arg.get(pk + ":returnType");
+                    if (c != null && !c.equals(p)) {
+                        // errorMessage("ClassExtendsDeclaration", mName);
+                        currClass = null;
+                        return null;
+                    }
+                }
+            }
+        }
         return null;
+    }
+
+    private String stripKey(String k) {
+        return k.substring(k.lastIndexOf('[') + 1, k.lastIndexOf(']'));
     }
 
     /*
@@ -185,6 +233,29 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: ";"
      */
     public MyType visit(VarDeclaration vd, HashMap<String, String> arg) {
+        String idName = vd.f1.f0.toString(); // Identifier()
+        String type = getTypeChoice(vd.f0);
+
+        String key = "";
+
+        if (currMethod == null && currClass != null) {
+            key = instVarKey(currClass, idName);
+        } else if (currMethod != null && currClass != null) {
+            key = localKey(currClass, currMethod, idName);
+        }
+
+        if (!arg.containsKey(key)) {
+            // errorMessage("VarDeclaration", key);
+            return null;
+        }
+
+        if (!type.equals("int") && !type.equals("boolean") && !type.equals("int[]")) {
+            String classKey = classKey(type);
+            if (!arg.containsKey(classKey)) {
+                // errorMessage("VarDeclaration", key);
+                return null;
+            }
+        }
         return null;
     }
 
@@ -204,7 +275,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f11: ";"
      * f12: "}"
      */
-
     public MyType visit(MethodDeclaration md, HashMap<String, String> arg) {
         String methodName = md.f2.f0.toString();
         currMethod = methodName;
@@ -246,13 +316,23 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f0: Type()
      * f1: Identifier()
      */
-
-    // XXX: WORKING ON THIS ONE
     public MyType visit(FormalParameter fp, HashMap<String, String> arg) {
         String fpName = fp.f1.f0.toString();
         String fpType = getTypeChoice(fp.f0);
+        String key = "";
+        if (currClass != null && currMethod != null) {
+            key += mParamKey(currClass, currMethod, fpName);
+        }
 
-        return null;
+        if (!arg.containsKey(key)) {
+            // errorMessage("FormalParameter", key);
+            return null;
+        }
+        if (!arg.get(key).equals(fpType)) {
+            // errorMessage("FormalParameter", key);
+            return null;
+        }
+        return new MyType(fpType);
     }
 
     /*
@@ -331,17 +411,31 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
     public MyType visit(AssignmentStatement as, HashMap<String, String> arg) {
         String id = as.f0.f0.toString();
         String key = "";
-        if (currMethod != null && currClass != null) {
-            key += localKey(currClass, currMethod, id);
+        if (currClass != null && currMethod != null) {
+            key = localKey(currClass, currMethod, id);
+            if (!arg.containsKey(key)) {
+                key = mParamKey(currClass, currMethod, id);
+            }
         }
-        if (currMethod == null && currClass != null) {
-            key += instVarKey(currClass, id);
+
+        if (!arg.containsKey(key) && currClass != null) {
+            String temp = resiKey(currClass, id, arg);
+            if (temp != null) {
+                key = temp;
+            }
         }
+        if (!arg.containsKey(key)) {
+            // errorMessage("AssignmentStatement", key);
+            return null;
+        }
+
         MyType idType = new MyType(arg.get(key));
         MyType exprType = as.f2.f0.choice.accept(this, arg);
 
+        if (exprType == null || !isSub(exprType.type, idType.type, arg)) {
+            // errorMessage("AssignmentStatement", key);
+        }
         return null;
-
     }
 
     /*
@@ -357,15 +451,38 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
     public MyType visit(ArrayAssignmentStatement aas, HashMap<String, String> arg) {
         String key = "";
         String id = aas.f0.f0.toString();
-        if (currClass != null && currMethod != null) {
-            key += localKey(currClass, currMethod, id);
+        if (currMethod != null && currClass != null) {
+            key = localKey(currClass, currMethod, id);
+            if (!arg.containsKey(key)) {
+                key = mParamKey(currClass, currMethod, id);
+            }
         }
-        if (currClass != null && currMethod == null) {
-            key += instVarKey(currClass, id);
+        if (!arg.containsKey(key) && currClass != null) {
+            String temp = resiKey(currClass, id, arg);
+            if (temp != null) {
+                key = temp;
+            }
+        }
+        if (!arg.containsKey(key)) {
+            // errorMessage("ArrayAssignmentStatement", key);
+            return null;
+        }
+        String idType = arg.get(key);
+        // check for int[] or String[] -- String[] from MainClassDeclaration
+        if (idType == null || (!idType.equals("int[]") && !idType.equals("String[]"))) {
+            // errorMessage("ArrayAssignmentStatement", key);
+            return null;
+        }
+        // Check f2 and f5 are both type "int"
+        MyType idx = aas.f2.f0.choice.accept(this, arg);
+        if (idx == null || !(idx.type.equals("int"))) {
+            // errorMessage("ArrayAssignmentStatement", key);
         }
 
-        aas.f2.f0.choice.accept(this, arg);
-        aas.f5.f0.choice.accept(this, arg);
+        MyType exp = aas.f5.f0.choice.accept(this, arg);
+        if (exp == null || !(exp.type.equals("int"))) {
+            // errorMessage("ArrayAssignmentStatement", key);
+        }
         return null;
     }
 
@@ -380,7 +497,10 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f6: Statement()
      */
     public MyType visit(IfStatement is, HashMap<String, String> arg) {
-        is.f2.f0.choice.accept(this, arg);
+        MyType c = is.f2.f0.choice.accept(this, arg);
+        if (c == null || !c.type.equals("boolean")) {
+            // errorMessage("IfStatement", c == null ? "null" : c.type + " != boolean");
+        }
         is.f4.f0.choice.accept(this, arg);
         is.f6.f0.choice.accept(this, arg);
         return null;
@@ -395,7 +515,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f4: Statement()
      */
     public MyType visit(WhileStatement ws, HashMap<String, String> arg) {
-        ws.f2.f0.choice.accept(this, arg);
+        MyType c = ws.f2.f0.choice.accept(this, arg);
+        if (c == null || !c.type.equals("boolean")) {
+            // errorMessage("WhileStatement", c == null ? "null" : c.type + " != boolean");
+            return null;
+        }
         ws.f4.f0.choice.accept(this, arg);
         return null;
     }
@@ -409,7 +533,10 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f4: ";"
      */
     public MyType visit(PrintStatement ps, HashMap<String, String> arg) {
-        ps.f2.f0.choice.accept(this, arg);
+        MyType t2 = ps.f2.f0.choice.accept(this, arg);
+        if (t2 == null || !t2.type.equals("int")) {
+            // errorMessage("PrintStatement", t2 == null ? "null" : t2.type);
+        }
         return null;
     }
 
@@ -420,8 +547,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * MessageSend() | PrimaryExpression()
      */
     public MyType visit(Expression e, HashMap<String, String> arg) {
-        e.f0.choice.accept(this, arg);
-        return null;
+        return e.f0.choice.accept(this, arg);
     }
 
     /*
@@ -431,9 +557,17 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(AndExpression ae, HashMap<String, String> arg) {
-        ae.f0.f0.choice.accept(this, arg);
-        ae.f2.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = getOp(ae.f0, arg);
+        MyType t2 = getOp(ae.f2, arg);
+
+        if (t0 == null || t2 == null || !t0.type.equals("boolean") || !t2.type.equals("boolean")) {
+
+            String l = t0 == null ? "null" : t0.type;
+            String r = t2 == null ? "null" : t2.type;
+            // errorMessage("AndExpression", l + " && " + r);
+            return null;
+        }
+        return new MyType("boolean");
     }
 
     /*
@@ -443,9 +577,16 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(CompareExpression ce, HashMap<String, String> arg) {
-        ce.f0.f0.choice.accept(this, arg);
-        ce.f2.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = getOp(ce.f0, arg);
+        MyType t2 = getOp(ce.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+
+            String l = t0 == null ? "null" : t0.type;
+            String r = t2 == null ? "null" : t2.type;
+            // errorMessage("CompareExpression", l + " < " + r);
+            return null;
+        }
+        return new MyType("boolean");
     }
 
     /*
@@ -455,9 +596,16 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(PlusExpression pe, HashMap<String, String> arg) {
-        pe.f0.f0.choice.accept(this, arg);
-        pe.f2.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = getOp(pe.f0, arg);
+        MyType t2 = getOp(pe.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+
+            String l = t0 == null ? "null" : t0.type;
+            String r = t2 == null ? "null" : t2.type;
+            // errorMessage("PlusExpression", l + " + " + r);
+            return null;
+        }
+        return new MyType("int");
     }
 
     /*
@@ -467,9 +615,16 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(MinusExpression me, HashMap<String, String> arg) {
-        me.f0.f0.choice.accept(this, arg);
-        me.f2.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = getOp(me.f0, arg);
+        MyType t2 = getOp(me.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+
+            String l = t0 == null ? "null" : t0.type;
+            String r = t2 == null ? "null" : t2.type;
+            // errorMessage("PlusExpression", l + " - " + r);
+            return null;
+        }
+        return new MyType("int");
     }
 
     /*
@@ -479,9 +634,16 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(TimesExpression te, HashMap<String, String> arg) {
-        te.f0.f0.choice.accept(this, arg);
-        te.f2.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = getOp(te.f0, arg);
+        MyType t2 = getOp(te.f2, arg);
+        if (t0 == null || t2 == null || !t0.type.equals("int") || !t2.type.equals("int")) {
+
+            String l = t0 == null ? "null" : t0.type;
+            String r = t2 == null ? "null" : t2.type;
+            // errorMessage("TimesExpression", l + " * " + r);
+            return null;
+        }
+        return new MyType("int");
     }
 
     /*
@@ -492,9 +654,20 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f3: "]"
      */
     public MyType visit(ArrayLookup al, HashMap<String, String> arg) {
-        al.f0.f0.choice.accept(this, arg);
-        al.f2.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = getOp(al.f0, arg);
+        if (t0 == null || !t0.type.equals("int[]")) {
+
+            // errorMessage("ArrayLookup", t0 == null ? "null" : t0.type);
+            return null;
+        }
+        MyType t2 = al.f2.f0.choice.accept(this, arg);
+        if (t2 == null || !t2.type.equals("int")) {
+
+            // errorMessage("ArrayLookup", t2 == null ? "null" : t2.type);
+            return null;
+        }
+
+        return new MyType("int");
     }
 
     /*
@@ -504,8 +677,13 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: "length"
      */
     public MyType visit(ArrayLength al, HashMap<String, String> arg) {
-        al.f0.f0.choice.accept(this, arg);
-        return null;
+        MyType t0 = al.f0.f0.choice.accept(this, arg);
+        if (t0 == null || !t0.type.equals("int[]")) {
+
+            // errorMessage("ArrayLength", t0 == null ? "null" : t0.type + ".length");
+            return null;
+        }
+        return new MyType("int");
     }
 
     /*
@@ -518,10 +696,41 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f5: ")"
      */
     public MyType visit(MessageSend ms, HashMap<String, String> arg) {
-        ms.f0.f0.choice.accept(this, arg);
-        ms.f2.f0.toString();
-        ms.f4.accept(this, arg);
-        return null;
+        MyType rec = ms.f0.f0.choice.accept(this, arg);
+        String methodName = ms.f2.f0.toString();
+        if (rec == null) {
+
+            // errorMessage("MessageSend", "null." + methodName);
+            return null;
+        }
+
+        String mk = resmKey(rec.type, methodName, arg);
+        if (mk == null) {
+
+            // errorMessage("MessageSend", rec.type + "." + methodName);
+            return null;
+        }
+
+        // count number of params
+        int count = 0;
+        for (String k : arg.keySet()) {
+            if (k.startsWith(mk + ":methodParam:[")) {
+                count++;
+            }
+        }
+        int act = 0;
+
+        if (ms.f4.present()) {
+            ExpressionList el = (ExpressionList) ms.f4.node;
+            act = 1 + el.f1.nodes.size();
+            ms.f4.accept(this, arg);
+        }
+
+        if (act != count) {
+
+            // errorMessage("MessageSend", mk);
+        }
+        return new MyType(arg.get(mk + ":returnType"));
     }
 
     /*
@@ -567,14 +776,14 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f0: "true"
      */
     public MyType visit(TrueLiteral tl, HashMap<String, String> arg) {
-        return new MyType("1");
+        return new MyType("boolean");
     }
 
     /*
      * FalseLiteral
      * f0: "false"
      */ public MyType visit(FalseLiteral fl, HashMap<String, String> arg) {
-        return new MyType("0");
+        return new MyType("boolean");
     }
 
     /*
@@ -590,22 +799,18 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             if (arg.containsKey(key)) {
                 return new MyType(arg.get(key));
             }
-        }
-
-        if (currClass != null && currMethod != null) {
             key = mParamKey(currClass, currMethod, name);
             if (arg.containsKey(key)) {
                 return new MyType(arg.get(key));
             }
         }
-
         if (currClass != null) {
-            key = instVarKey(currClass, name);
-            if (arg.containsKey(key)) {
+            key = resiKey(currClass, name, arg);
+            if (key != null) {
                 return new MyType(arg.get(key));
             }
         }
-        // typeError = true;
+
         // errorMessage("Identifier", key);
         return null;
     }
@@ -615,10 +820,10 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f0: "this"
      */
     public MyType visit(ThisExpression te, HashMap<String, String> arg) {
-        String key = classKey(currClass);
-        if (!arg.containsKey(key) || currClass == null) {
-            // typeError = true;
+        if (currClass == null || !arg.containsKey(classKey(currClass))) {
+
             // errorMessage("ThisExpression", currClass);
+            return null;
         }
         return new MyType(currClass);
     }
@@ -632,14 +837,14 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f4: "]"
      */
     public MyType visit(ArrayAllocationExpression aae, HashMap<String, String> arg) {
-        // f3 must be an IntegerLiteral()
-        String type = getExprChoice(aae.f3);
-        if (type != "IntegerLiteral") {
-            // typeError = true;
-            // errorMessage("ArrayAllocationExpression", type);
+        MyType type = getOp(aae.f3, arg);
+
+        if (type == null || !type.type.equals("int")) {
+
+            // errorMessage("ArrayAllocationExpression", type == null ? "null" : type.type);
+            return null;
         }
-        aae.f3.f0.choice.accept(this, arg);
-        return null;
+        return new MyType("int[]");
     }
 
     /*
@@ -650,13 +855,15 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f3: ")"
      */
     public MyType visit(AllocationExpression ae, HashMap<String, String> arg) {
-        String key = classKey(ae.f1.f0.toString());
+        String className = ae.f1.f0.toString();
+        // FIXME: check for null className
+        String key = classKey(className);
         if (!arg.containsKey(key)) {
-            // typeError = true;
+
             // errorMessage("AllocationExpression", key);
+            return null;
         }
-        ae.f1.f0.accept(this, arg);
-        return null;
+        return new MyType(className);
     }
 
     /*
@@ -665,7 +872,14 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f1: Expression()
      */
     public MyType visit(NotExpression ne, HashMap<String, String> arg) {
-        return null;
+        MyType exprType = ne.f1.f0.choice.accept(this, arg);
+        if (exprType == null || !exprType.type.equals("boolean")) {
+
+            // errorMessage("NotExpression", exprType == null ? "null" : exprType.type + "
+            // != boolean");
+            return null;
+        }
+        return exprType;
     }
 
     /*
@@ -675,78 +889,18 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: ")"
      */
     public MyType visit(BracketExpression be, HashMap<String, String> arg) {
-        be.f1.f0.choice.accept(this, arg);
-        return null;
+        return be.f1.f0.choice.accept(this, arg);
     }
 
     /************ Helper Methods **********/
 
-    private void printMT(TypeDeclaration td, HashMap<String, String> arg) {
-        String className;
-        if (td.f0.choice instanceof ClassDeclaration cd) {
-            className = cd.f1.f0.toString();
-        } else {
-            ClassExtendsDeclaration ced = (ClassExtendsDeclaration) td.f0.choice;
-            className = ced.f1.f0.toString();
+    private String formatIndent(String message) {
+        String ret = "";
+        for (int i = 0; i < indent; i++) {
+            ret += "  ";
         }
-
-        translate.addToOut("const vmt_" + className);
-        indent();
-        for (String k : arg.keySet()) {
-            if (k.startsWith("class:[" + className + "]:method:[") && k.endsWith("]") && arg.get(k).equals("method")) {
-                String methodName = stripKey(k);
-                translate.addToOut("  :" + className + "." + methodName);
-            }
-        }
-        deIndent();
-        translate.addToOut("");
-    }
-
-    private String lookupVar(String name, HashMap<String, String> arg) {
-        if (currClass != null && currMethod != null) {
-            if (arg.containsKey(localKey(currClass, currMethod, name))) {
-                return name;
-            }
-            if (arg.containsKey(mParamKey(currClass, currClass, name))) {
-                return name;
-            }
-        }
-        if (currClass != null && currMethod == null && arg.containsKey(instVarKey(currClass, name))) {
-            String temp = newTemp();
-            int off = getInstVarOff(currClass, name, arg);
-            String formatted = formatIndent(temp + " = [this+" + off + "]");
-            translate.addToOut(formatted);
-            return temp;
-        }
-        return name;
-    }
-
-    private int getInstVarOff(String className, String methodName, HashMap<String, String> arg) {
-        int off = 0;
-        for (String k : arg.keySet()) {
-            if (k.startsWith("class:[" + className + "]:method:[") && k.endsWith("]") && arg.get(k).equals("method")) {
-                String name = k.replace("class:[" + className + "]:method[", "").replace("]", "");
-                if (name.equals(methodName)) {
-                    return off;
-                }
-                off += 4;
-            }
-        }
-        return 1; // error flag
-    }
-
-    public String getTypeChoice(Type t) {
-        Node choice = t.f0.choice;
-        if (choice instanceof ArrayType) {
-            return "int[]";
-        } else if (choice instanceof BooleanType) {
-            return "boolean";
-        } else if (choice instanceof IntegerType) {
-            return "int";
-        } else if (choice instanceof Identifier i) {
-            return i.f0.toString();
-        }
-        return "invalid type choice";
+        ret += message;
+        return ret;
     }
 
     public String getExprChoice(Expression e) {
@@ -783,7 +937,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         } else if (choice instanceof FalseLiteral) {
             return "0";
         } else if (choice instanceof Identifier i) {
-            return i.f0.toString();
+            return newTemp();
         } else if (choice instanceof ThisExpression) {
             return "this";
         } else if (choice instanceof ArrayAllocationExpression) {
@@ -796,6 +950,118 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             return "BracketExpression";
         }
         return "invalid primary expression choice";
+    }
+
+    private String newTemp() {
+        return "t." + tempNum++;
+    }
+
+    private void indent() {
+        indent++;
+    }
+
+    private void deIndent() {
+        indent--;
+    }
+
+    private void printMT(TypeDeclaration td, HashMap<String, String> arg) {
+        String className;
+        List<MethodDeclaration> methods = new ArrayList<>();
+        if (td.f0.choice instanceof ClassDeclaration cd) {
+            className = cd.f1.f0.toString();
+            for (Node n : cd.f4.nodes) {
+                methods.add((MethodDeclaration) n);
+            }
+        } else {
+            ClassExtendsDeclaration ced = (ClassExtendsDeclaration) td.f0.choice;
+            className = ced.f1.f0.toString();
+            for (Node n : ced.f6.nodes) {
+                methods.add((MethodDeclaration) n);
+            }
+        }
+
+        translate.addToOut("const vmt_" + className);
+        indent();
+        for (MethodDeclaration m : methods) {
+            String mName = m.f2.f0.toString();
+            translate.addToOut("  :" + className + "." + mName);
+        }
+
+        deIndent();
+        translate.addToOut("");
+    }
+
+    public MyType getOp(Expression e, HashMap<String, String> arg) {
+        return e.f0.choice.accept(this, arg);
+    }
+
+    private MyType getOp(PrimaryExpression p, HashMap<String, String> arg) {
+        return p.f0.choice.accept(this, arg);
+    }
+
+    private String resiKey(String className, String var, HashMap<String, String> arg) {
+        String curr = className;
+        while (curr != null && !curr.equals("none")) {
+            String key = instVarKey(curr, var);
+            if (arg.containsKey(key))
+                return key;
+            String pk = parentClassKey(curr);
+            if (arg.containsKey(pk)) {
+                curr = arg.get(pk);
+            } else {
+                curr = null;
+            }
+        }
+        return null;
+    }
+
+    private String resmKey(String className, String methodName, HashMap<String, String> arg) {
+        String curr = className;
+        while (curr != null && !curr.equals("none")) {
+            String key = methodKey(curr, methodName);
+            if (arg.containsKey(key)) {
+                return key;
+            }
+            String pk = parentClassKey(curr);
+            if (arg.containsKey(pk)) {
+                curr = arg.get(pk);
+            } else {
+                curr = null;
+            }
+        }
+        return null;
+    }
+
+    private boolean isSub(String t0, String t2, HashMap<String, String> arg) {
+        if (t0.equals(t2)) {
+            return true;
+        }
+        String curr = t0;
+        while (curr != null && !curr.equals("none")) {
+            String pk = parentClassKey(curr);
+            if (!arg.containsKey(pk)) {
+                return false;
+            }
+            curr = arg.get(pk);
+            if (curr.equals(t2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getTypeChoice(Type t) {
+        Node choice = t.f0.choice;
+        if (choice instanceof ArrayType) {
+            return "int[]";
+        } else if (choice instanceof BooleanType) {
+            return "boolean";
+        } else if (choice instanceof IntegerType) {
+            return "int";
+        } else if (choice instanceof Identifier i) {
+            return i.f0.toString();
+        }
+        return "invalid type choice";
     }
 
     public String classKey(String className) {
@@ -818,44 +1084,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         return methodKey(className, methodName) + ":methodParam:[" + paramName + "]";
     }
 
-    private String localKey(String className, String methodName, String paramName) {
+    public String localKey(String className, String methodName, String paramName) {
         return methodKey(className, methodName) + ":localParams:[" + paramName + "]";
     }
 
-    private String instVarKey(String className, String varName) {
+    public String instVarKey(String className, String varName) {
         return classKey(className) + ":instVariable:[" + varName + "]";
-    }
-
-    private void indent() {
-        indent++;
-    }
-
-    private void deIndent() {
-        indent--;
-    }
-
-    private String newTemp() {
-        return "t." + tempNum++;
-    }
-
-    public String newLabel(String pref) {
-        return pref + labelNum++;
-    }
-
-    private String stripKey(String key) {
-        return key.substring(key.lastIndexOf('[') + 1, key.lastIndexOf(']'));
-    }
-
-    private String heapAlloc(String i) {
-        return "HeapAllocZ(" + i + ")";
-    }
-
-    private String formatIndent(String message) {
-        String ret = "";
-        for (int i = 0; i < indent; i++) {
-            ret += "  ";
-        }
-        ret += message;
-        return ret;
     }
 }

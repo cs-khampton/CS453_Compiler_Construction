@@ -1,8 +1,8 @@
 const vmt_BBS
-  :BBS.Init
-  :BBS.Print
-  :BBS.Sort
   :BBS.Start
+  :BBS.Sort
+  :BBS.Print
+  :BBS.Init
 
 func Main()
 ret

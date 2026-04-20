@@ -1,39 +1,32 @@
-const vmt_TV
-  :TV.Start
+const vmt_BT
+  :BT.Start
 
 const vmt_Tree
+  :Tree.Init
+  :Tree.SetRight
+  :Tree.SetLeft
+  :Tree.GetRight
+  :Tree.GetLeft
+  :Tree.GetKey
   :Tree.SetKey
+  :Tree.GetHas_Right
+  :Tree.GetHas_Left
+  :Tree.SetHas_Left
+  :Tree.SetHas_Right
+  :Tree.Compare
   :Tree.Insert
+  :Tree.Delete
   :Tree.Remove
   :Tree.RemoveRight
-  :Tree.GetRight
-  :Tree.Search
-  :Tree.SetLeft
-  :Tree.GetHas_Left
-  :Tree.GetKey
-  :Tree.Compare
-  :Tree.SetRight
-  :Tree.Init
-  :Tree.Delete
-  :Tree.GetLeft
-  :Tree.SetHas_Right
-  :Tree.SetHas_Left
-  :Tree.RecPrint
-  :Tree.accept
   :Tree.RemoveLeft
-  :Tree.GetHas_Right
+  :Tree.Search
   :Tree.Print
-
-const vmt_Visitor
-  :Visitor.visit
-
-const vmt_MyVisitor
-  :MyVisitor.visit
+  :Tree.RecPrint
 
 func Main()
 ret
 
-func TV.Start(this)
+func BT.Start(this)
   ret 0
 
 func Tree.Init(this v_key)
@@ -46,22 +39,22 @@ func Tree.SetLeft(this ln)
   ret 1
 
 func Tree.GetRight(this)
-  ret right
+  ret t.0
 
 func Tree.GetLeft(this)
-  ret left
+  ret t.0
 
 func Tree.GetKey(this)
-  ret key
+  ret t.0
 
 func Tree.SetKey(this v_key)
   ret 1
 
 func Tree.GetHas_Right(this)
-  ret has_right
+  ret t.0
 
 func Tree.GetHas_Left(this)
-  ret has_left
+  ret t.0
 
 func Tree.SetHas_Left(this val)
   ret 1
@@ -70,13 +63,13 @@ func Tree.SetHas_Right(this val)
   ret 1
 
 func Tree.Compare(this num1 num2)
-  ret ntb
+  ret t.0
 
 func Tree.Insert(this v_key)
   ret 1
 
 func Tree.Delete(this v_key)
-  ret found
+  ret t.0
 
 func Tree.Remove(this p_node c_node)
   ret 1
@@ -88,20 +81,11 @@ func Tree.RemoveLeft(this p_node c_node)
   ret 1
 
 func Tree.Search(this v_key)
-  ret ifound
+  ret t.0
 
 func Tree.Print(this)
   ret 1
 
 func Tree.RecPrint(this node)
   ret 1
-
-func Tree.accept(this v)
-  ret 0
-
-func Visitor.visit(this n)
-  ret 0
-
-func MyVisitor.visit(this n)
-  ret 0
 

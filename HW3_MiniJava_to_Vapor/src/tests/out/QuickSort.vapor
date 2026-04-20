@@ -1,8 +1,8 @@
 const vmt_QS
-  :QS.Init
-  :QS.Sort
   :QS.Start
+  :QS.Sort
   :QS.Print
+  :QS.Init
 
 func Main()
 ret

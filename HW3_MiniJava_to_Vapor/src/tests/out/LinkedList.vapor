@@ -1,22 +1,22 @@
 const vmt_Element
   :Element.Init
-  :Element.Equal
-  :Element.Compare
   :Element.GetAge
   :Element.GetSalary
   :Element.GetMarried
+  :Element.Equal
+  :Element.Compare
 
 const vmt_List
-  :List.GetElem
-  :List.SetNext
+  :List.Init
   :List.InitNew
+  :List.Insert
+  :List.SetNext
+  :List.Delete
+  :List.Search
+  :List.GetEnd
+  :List.GetElem
   :List.GetNext
   :List.Print
-  :List.Search
-  :List.Delete
-  :List.Init
-  :List.GetEnd
-  :List.Insert
 
 const vmt_LL
   :LL.Start
@@ -28,19 +28,19 @@ func Element.Init(this v_Age v_Salary v_Married)
   ret 1
 
 func Element.GetAge(this)
-  ret Age
+  ret t.0
 
 func Element.GetSalary(this)
-  ret Salary
+  ret t.0
 
 func Element.GetMarried(this)
-  ret Married
+  ret t.0
 
 func Element.Equal(this other)
-  ret ret_val
+  ret t.0
 
 func Element.Compare(this num1 num2)
-  ret retval
+  ret t.0
 
 func List.Init(this)
   ret 1
@@ -49,25 +49,25 @@ func List.InitNew(this v_elem v_next v_end)
   ret 1
 
 func List.Insert(this new_elem)
-  ret aux02
+  ret t.0
 
 func List.SetNext(this v_next)
   ret 1
 
 func List.Delete(this e)
-  ret my_head
+  ret t.0
 
 func List.Search(this e)
-  ret int_ret_val
+  ret t.0
 
 func List.GetEnd(this)
-  ret end
+  ret t.0
 
 func List.GetElem(this)
-  ret elem
+  ret t.0
 
 func List.GetNext(this)
-  ret next
+  ret t.0
 
 func List.Print(this)
   ret 1

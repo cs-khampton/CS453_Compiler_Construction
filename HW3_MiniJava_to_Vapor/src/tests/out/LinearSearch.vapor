@@ -1,8 +1,8 @@
 const vmt_LS
-  :LS.Search
-  :LS.Init
   :LS.Start
   :LS.Print
+  :LS.Search
+  :LS.Init
 
 func Main()
 ret
@@ -14,7 +14,7 @@ func LS.Print(this)
   ret 0
 
 func LS.Search(this num)
-  ret ifound
+  ret t.0
 
 func LS.Init(this sz)
   ret 0

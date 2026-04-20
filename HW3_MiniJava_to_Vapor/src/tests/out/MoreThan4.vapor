@@ -6,7 +6,7 @@ func Main()
 ret
 
 func MT4.Start(this p1 p2 p3 p4 p5 p6)
-  ret aux
+  ret t.0
 
 func MT4.Change(this p1 p2 p3 p4 p5 p6)
   ret 0

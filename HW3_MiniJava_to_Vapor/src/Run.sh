@@ -11,7 +11,7 @@ fi
 
 count=0
 
-for file in "$TEST_DIR"/valid/*.java; do
+for file in "$TEST_DIR"/*.java; do
   if [ ! -e "$file" ]; then
     echo "No .java files found in $TEST_DIR"
     exit 1
@@ -20,8 +20,8 @@ for file in "$TEST_DIR"/valid/*.java; do
   count=$((count + 1))
   echo "Running test: $file"
 
-  # java J2V < "$file" > "${file%.jj}.vapor"
-  java J2V < "$file" > "tests/out/$(basename "${file%.jj}").vapor"
+  # java J2V < "$file" > "${file%.java}.vapor"
+  java J2V < "$file" > "tests/out/$(basename "${file%.java}").vapor"
 
   echo "Finished test: $file"
   echo "----------------------------------------------"

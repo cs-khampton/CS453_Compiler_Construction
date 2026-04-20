@@ -5,5 +5,5 @@ func Main()
 ret
 
 func Fac.ComputeFac(this num)
-  ret num_aux
+  ret t.0
 
