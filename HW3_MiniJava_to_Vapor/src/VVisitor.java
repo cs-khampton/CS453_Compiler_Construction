@@ -222,10 +222,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         return null;
     }
 
-    private String stripKey(String k) {
-        return k.substring(k.lastIndexOf('[') + 1, k.lastIndexOf(']'));
-    }
-
     /*
      * VarDeclaration
      * f0: Type()
@@ -892,7 +888,9 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         return be.f1.f0.choice.accept(this, arg);
     }
 
-    /************ Helper Methods **********/
+    /********************* HELPER METHODS *****************/
+
+    /************** FORMATTING ************/
 
     private String formatIndent(String message) {
         String ret = "";
@@ -902,6 +900,51 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         ret += message;
         return ret;
     }
+
+    private String stripKey(String k) {
+        return k.substring(k.lastIndexOf('[') + 1, k.lastIndexOf(']'));
+    }
+
+    private String newTemp() {
+        return "t." + tempNum++;
+    }
+
+    private void indent() {
+        indent++;
+    }
+
+    private void deIndent() {
+        indent--;
+    }
+
+    private void printMT(TypeDeclaration td, HashMap<String, String> arg) {
+        String className;
+        List<MethodDeclaration> methods = new ArrayList<>();
+        if (td.f0.choice instanceof ClassDeclaration cd) {
+            className = cd.f1.f0.toString();
+            for (Node n : cd.f4.nodes) {
+                methods.add((MethodDeclaration) n);
+            }
+        } else {
+            ClassExtendsDeclaration ced = (ClassExtendsDeclaration) td.f0.choice;
+            className = ced.f1.f0.toString();
+            for (Node n : ced.f6.nodes) {
+                methods.add((MethodDeclaration) n);
+            }
+        }
+
+        translate.addToOut("const vmt_" + className);
+        indent();
+        for (MethodDeclaration m : methods) {
+            String mName = m.f2.f0.toString();
+            translate.addToOut("  :" + className + "." + mName);
+        }
+
+        deIndent();
+        translate.addToOut("");
+    }
+
+    /************** CHOICES ************/
 
     public String getExprChoice(Expression e) {
         Node choice = e.f0.choice;
@@ -950,45 +993,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             return "BracketExpression";
         }
         return "invalid primary expression choice";
-    }
-
-    private String newTemp() {
-        return "t." + tempNum++;
-    }
-
-    private void indent() {
-        indent++;
-    }
-
-    private void deIndent() {
-        indent--;
-    }
-
-    private void printMT(TypeDeclaration td, HashMap<String, String> arg) {
-        String className;
-        List<MethodDeclaration> methods = new ArrayList<>();
-        if (td.f0.choice instanceof ClassDeclaration cd) {
-            className = cd.f1.f0.toString();
-            for (Node n : cd.f4.nodes) {
-                methods.add((MethodDeclaration) n);
-            }
-        } else {
-            ClassExtendsDeclaration ced = (ClassExtendsDeclaration) td.f0.choice;
-            className = ced.f1.f0.toString();
-            for (Node n : ced.f6.nodes) {
-                methods.add((MethodDeclaration) n);
-            }
-        }
-
-        translate.addToOut("const vmt_" + className);
-        indent();
-        for (MethodDeclaration m : methods) {
-            String mName = m.f2.f0.toString();
-            translate.addToOut("  :" + className + "." + mName);
-        }
-
-        deIndent();
-        translate.addToOut("");
     }
 
     public MyType getOp(Expression e, HashMap<String, String> arg) {
@@ -1064,6 +1068,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         return "invalid type choice";
     }
 
+    /************** KEY FORMATTING ************/
     public String classKey(String className) {
         return "class:[" + className + "]";
     }
