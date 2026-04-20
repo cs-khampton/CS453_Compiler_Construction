@@ -2,8 +2,9 @@ const vmt_Fac
   :Fac.ComputeFac
 
 func Main()
-ret
+  t.0 = HeapAllocZ(4)
+  ret
 
 func Fac.ComputeFac(this num)
-  ret t.0
+  ret int
 

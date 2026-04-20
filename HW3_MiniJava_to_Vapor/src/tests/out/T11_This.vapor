@@ -3,11 +3,12 @@ const vmt_Count
   :Count.doubled
 
 func Main()
-ret
+  t.0 = HeapAllocZ(8)
+  ret
 
 func Count.getDoubleVal(this)
-  ret MessageSend
+  ret int
 
 func Count.doubled(this)
-  ret TimesExpression
+  ret int
 

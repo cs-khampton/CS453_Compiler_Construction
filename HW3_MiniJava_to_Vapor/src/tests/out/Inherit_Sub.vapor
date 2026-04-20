@@ -5,11 +5,12 @@ const vmt_Dog
   :Dog.speak
 
 func Main()
-ret
+  t.0 = HeapAllocZ(4)
+  ret
 
 func Animal.speak(this)
-  ret 0
+  ret int
 
 func Dog.speak(this)
-  ret 1
+  ret int
 

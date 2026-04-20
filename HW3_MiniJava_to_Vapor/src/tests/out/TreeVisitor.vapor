@@ -31,77 +31,81 @@ const vmt_MyVisitor
   :MyVisitor.visit
 
 func Main()
-ret
+  t.0 = HeapAllocZ(4)
+  ret
 
 func TV.Start(this)
-  ret 0
+  t.0 = HeapAllocZ(28)
+  t.1 = HeapAllocZ(12)
+  ret int
 
 func Tree.Init(this v_key)
-  ret 1
+  ret boolean
 
 func Tree.SetRight(this rn)
-  ret 1
+  ret boolean
 
 func Tree.SetLeft(this ln)
-  ret 1
+  ret boolean
 
 func Tree.GetRight(this)
-  ret t.0
+  ret Tree
 
 func Tree.GetLeft(this)
-  ret t.0
+  ret Tree
 
 func Tree.GetKey(this)
-  ret t.0
+  ret int
 
 func Tree.SetKey(this v_key)
-  ret 1
+  ret boolean
 
 func Tree.GetHas_Right(this)
-  ret t.0
+  ret boolean
 
 func Tree.GetHas_Left(this)
-  ret t.0
+  ret boolean
 
 func Tree.SetHas_Left(this val)
-  ret 1
+  ret boolean
 
 func Tree.SetHas_Right(this val)
-  ret 1
+  ret boolean
 
 func Tree.Compare(this num1 num2)
-  ret t.0
+  ret boolean
 
 func Tree.Insert(this v_key)
-  ret 1
+  t.0 = HeapAllocZ(28)
+  ret boolean
 
 func Tree.Delete(this v_key)
-  ret t.0
+  ret boolean
 
 func Tree.Remove(this p_node c_node)
-  ret 1
+  ret boolean
 
 func Tree.RemoveRight(this p_node c_node)
-  ret 1
+  ret boolean
 
 func Tree.RemoveLeft(this p_node c_node)
-  ret 1
+  ret boolean
 
 func Tree.Search(this v_key)
-  ret t.0
+  ret int
 
 func Tree.Print(this)
-  ret 1
+  ret boolean
 
 func Tree.RecPrint(this node)
-  ret 1
+  ret boolean
 
 func Tree.accept(this v)
-  ret 0
+  ret int
 
 func Visitor.visit(this n)
-  ret 0
+  ret int
 
 func MyVisitor.visit(this n)
-  ret 0
+  ret int
 

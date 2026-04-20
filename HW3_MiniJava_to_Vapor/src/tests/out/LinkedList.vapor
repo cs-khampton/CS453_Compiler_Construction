@@ -22,56 +22,64 @@ const vmt_LL
   :LL.Start
 
 func Main()
-ret
+  t.0 = HeapAllocZ(4)
+  ret
 
 func Element.Init(this v_Age v_Salary v_Married)
-  ret 1
+  ret boolean
 
 func Element.GetAge(this)
-  ret t.0
+  ret int
 
 func Element.GetSalary(this)
-  ret t.0
+  ret int
 
 func Element.GetMarried(this)
-  ret t.0
+  ret boolean
 
 func Element.Equal(this other)
-  ret t.0
+  ret boolean
 
 func Element.Compare(this num1 num2)
-  ret t.0
+  ret boolean
 
 func List.Init(this)
-  ret 1
+  ret boolean
 
 func List.InitNew(this v_elem v_next v_end)
-  ret 1
+  ret boolean
 
 func List.Insert(this new_elem)
-  ret t.0
+  t.0 = HeapAllocZ(16)
+  ret List
 
 func List.SetNext(this v_next)
-  ret 1
+  ret boolean
 
 func List.Delete(this e)
-  ret t.0
+  ret List
 
 func List.Search(this e)
-  ret t.0
+  ret int
 
 func List.GetEnd(this)
-  ret t.0
+  ret boolean
 
 func List.GetElem(this)
-  ret t.0
+  ret Element
 
 func List.GetNext(this)
-  ret t.0
+  ret List
 
 func List.Print(this)
-  ret 1
+  ret boolean
 
 func LL.Start(this)
-  ret 0
+  t.0 = HeapAllocZ(16)
+  t.1 = HeapAllocZ(16)
+  t.2 = HeapAllocZ(16)
+  t.3 = HeapAllocZ(16)
+  t.4 = HeapAllocZ(16)
+  t.5 = HeapAllocZ(16)
+  ret int
 

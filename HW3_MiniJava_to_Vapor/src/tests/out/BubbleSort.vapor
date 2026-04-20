@@ -5,17 +5,18 @@ const vmt_BBS
   :BBS.Init
 
 func Main()
-ret
+  t.0 = HeapAllocZ(12)
+  ret
 
 func BBS.Start(this sz)
-  ret 0
+  ret int
 
 func BBS.Sort(this)
-  ret 0
+  ret int
 
 func BBS.Print(this)
-  ret 0
+  ret int
 
 func BBS.Init(this sz)
-  ret 0
+  ret int
 

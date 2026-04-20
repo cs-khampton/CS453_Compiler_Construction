@@ -5,11 +5,11 @@ const vmt_G
   :G.test
 
 func Main()
-ret
+  ret
 
 func F.test(this)
-  ret 2
+  ret int
 
 func G.test(this)
-  ret 1
+  ret int
 

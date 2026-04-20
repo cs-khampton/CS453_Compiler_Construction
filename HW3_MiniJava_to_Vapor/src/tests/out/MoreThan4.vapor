@@ -3,11 +3,12 @@ const vmt_MT4
   :MT4.Change
 
 func Main()
-ret
+  t.0 = HeapAllocZ(4)
+  ret
 
 func MT4.Start(this p1 p2 p3 p4 p5 p6)
-  ret t.0
+  ret int
 
 func MT4.Change(this p1 p2 p3 p4 p5 p6)
-  ret 0
+  ret int
 

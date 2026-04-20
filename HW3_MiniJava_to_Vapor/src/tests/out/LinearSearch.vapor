@@ -5,17 +5,18 @@ const vmt_LS
   :LS.Init
 
 func Main()
-ret
+  t.0 = HeapAllocZ(12)
+  ret
 
 func LS.Start(this sz)
-  ret 55
+  ret int
 
 func LS.Print(this)
-  ret 0
+  ret int
 
 func LS.Search(this num)
-  ret t.0
+  ret int
 
 func LS.Init(this sz)
-  ret 0
+  ret int
 
