@@ -851,21 +851,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         return new MyType(temp);
     }
 
-    private int getAllocationSize(String name, HashMap<String, String> arg) {
-        int count = 0;
-        String curr = name;
-        while (curr != null && !curr.equals("none")) {
-            for (String k : arg.keySet()) {
-                if (k.startsWith("class:[" + curr + "]:instVariable:[")) {
-                    count++;
-                }
-            }
-            String pk = parentClassKey(curr);
-            curr = arg.containsKey(pk) ? arg.get(pk) : null; // make sure parent key exists before setting
-        }
-        return (count + 1) * 4;
-    }
-
     /*
      * NotExpression
      * f0: "!"
@@ -946,6 +931,21 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
 
         deIndent();
         translate.addToOut("");
+    }
+
+    private int getAllocationSize(String name, HashMap<String, String> arg) {
+        int count = 0;
+        String curr = name;
+        while (curr != null && !curr.equals("none")) {
+            for (String k : arg.keySet()) {
+                if (k.startsWith("class:[" + curr + "]:instVariable:[")) {
+                    count++;
+                }
+            }
+            String pk = parentClassKey(curr);
+            curr = arg.containsKey(pk) ? arg.get(pk) : null; // make sure parent key exists before setting
+        }
+        return (count + 1) * 4;
     }
 
     /************** CHOICES ************/
