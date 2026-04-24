@@ -1,3 +1,4 @@
+
 const vmt_LS
   :LS.Start
   :LS.Print
@@ -6,17 +7,98 @@ const vmt_LS
 
 func Main()
   t.0 = HeapAllocZ(12)
+  [t.0] = :vmt_LS
+  PrintIntS(null)
   ret
 
 func LS.Start(this sz)
-  ret int
+  aux01 = null
+  aux02 = null
+  PrintIntS(9999)
+  PrintIntS(null)
+  PrintIntS(null)
+  PrintIntS(null)
+  PrintIntS(null)
+  ret 55
 
 func LS.Print(this)
-  ret int
+  j = 1
+  while0_top:
+    t.0 = [this+8]
+    t.1 = LtS(j t.0)
+    if0 t.1 goto :while0_end
+    t.2 = [this+4]
+    PrintIntS(int)
+    t.3 = Add(j 1)
+    j = t.3
+    goto :while0_top
+  while0_end:
+  ret 0
 
 func LS.Search(this num)
-  ret int
+  j = 1
+  ls01 = 0
+  ifound = 0
+  while1_top:
+    t.0 = [this+8]
+    t.1 = LtS(j t.0)
+    if0 t.1 goto :while1_end
+    t.2 = [this+4]
+    aux01 = int
+    t.3 = Add(num 1)
+    aux02 = t.3
+    t.4 = LtS(aux01 num)
+    if0 t.4 goto :if2_else
+      nt = 0
+      goto :if2_end
+    if2_end:
+      t.5 = LtS(aux01 aux02)
+      t.6 = Sub(1 t.5)
+      if0 t.6 goto :if3_else
+        nt = 0
+        goto :if3_end
+      if3_end:
+        ls01 = 1
+        ifound = 1
+        t.7 = [this+8]
+        j = t.7
+      if3_end:
+    if2_end:
+    t.8 = Add(j 1)
+    j = t.8
+    goto :while1_top
+  while1_end:
+  ret ifound
 
 func LS.Init(this sz)
-  ret int
+  [this+8] = sz
+  [this+4] = int[]
+  j = 1
+  t.0 = [this+8]
+  t.1 = Add(t.0 1)
+  k = t.1
+  while4_top:
+    t.2 = [this+8]
+    t.3 = LtS(j t.2)
+    if0 t.3 goto :while4_end
+    t.4 = MulS(2 j)
+    aux01 = t.4
+    t.5 = Sub(k 3)
+    aux02 = t.5
+    t.6 = Add(aux01 aux02)
+    t.7 = [number]
+    t.8 = LtS(j t.7)
+    if t.8 goto :bounds0_ok
+      Error("array index out of bounds")
+    bounds0_ok:
+    t.9 = MulS(j 4)
+    t.9 = Add(t.9 number)
+    [t.9+4] = t.6
+    t.10 = Add(j 1)
+    j = t.10
+    t.11 = Sub(k 1)
+    k = t.11
+    goto :while4_top
+  while4_end:
+  ret 0
 

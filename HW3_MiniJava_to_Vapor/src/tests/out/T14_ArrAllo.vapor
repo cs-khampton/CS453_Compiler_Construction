@@ -1,3 +1,16 @@
+
 func Main()
+  arr = int[]
+  t.0 = [arr]
+  t.1 = LtS(3 t.0)
+  if t.1 goto :bounds0_ok
+    Error("array index out of bounds")
+  bounds0_ok:
+  t.2 = MulS(3 4)
+  t.2 = Add(t.2 arr)
+  [t.2+4] = 7
+  t.3 = Add(int int)
+  x = t.3
+  PrintIntS(x)
   ret
 

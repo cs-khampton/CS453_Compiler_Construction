@@ -1,3 +1,4 @@
+
 const vmt_BT
   :BT.Start
 
@@ -25,70 +26,297 @@ const vmt_Tree
 
 func Main()
   t.0 = HeapAllocZ(4)
+  [t.0] = :vmt_BT
+  PrintIntS(null)
   ret
 
 func BT.Start(this)
   t.0 = HeapAllocZ(28)
-  ret int
+  [t.0] = :vmt_Tree
+  root = t.0
+  ntb = null
+  ntb = null
+  PrintIntS(100000000)
+  ntb = null
+  ntb = null
+  ntb = null
+  ntb = null
+  ntb = null
+  ntb = null
+  ntb = null
+  ntb = null
+  ntb = null
+  PrintIntS(null)
+  PrintIntS(null)
+  PrintIntS(null)
+  PrintIntS(null)
+  PrintIntS(null)
+  ntb = null
+  ntb = null
+  PrintIntS(null)
+  ret 0
 
 func Tree.Init(this v_key)
-  ret boolean
+  [this+12] = v_key
+  [this+16] = 0
+  [this+20] = 0
+  ret 1
 
 func Tree.SetRight(this rn)
-  ret boolean
+  [this+8] = rn
+  ret 1
 
 func Tree.SetLeft(this ln)
-  ret boolean
+  [this+4] = ln
+  ret 1
 
 func Tree.GetRight(this)
-  ret Tree
+  t.0 = [this+8]
+  ret t.0
 
 func Tree.GetLeft(this)
-  ret Tree
+  t.0 = [this+4]
+  ret t.0
 
 func Tree.GetKey(this)
-  ret int
+  t.0 = [this+12]
+  ret t.0
 
 func Tree.SetKey(this v_key)
-  ret boolean
+  [this+12] = v_key
+  ret 1
 
 func Tree.GetHas_Right(this)
-  ret boolean
+  t.0 = [this+20]
+  ret t.0
 
 func Tree.GetHas_Left(this)
-  ret boolean
+  t.0 = [this+16]
+  ret t.0
 
 func Tree.SetHas_Left(this val)
-  ret boolean
+  [this+16] = val
+  ret 1
 
 func Tree.SetHas_Right(this val)
-  ret boolean
+  [this+20] = val
+  ret 1
 
 func Tree.Compare(this num1 num2)
-  ret boolean
+  ntb = 0
+  t.0 = Add(num2 1)
+  nti = t.0
+  t.1 = LtS(num1 num2)
+  if0 t.1 goto :if0_else
+    ntb = 0
+    goto :if0_end
+  if0_end:
+    t.2 = LtS(num1 nti)
+    t.3 = Sub(1 t.2)
+    if0 t.3 goto :if1_else
+      ntb = 0
+      goto :if1_end
+    if1_end:
+      ntb = 1
+    if1_end:
+  if0_end:
+  ret ntb
 
 func Tree.Insert(this v_key)
   t.0 = HeapAllocZ(28)
-  ret boolean
+  [t.0] = :vmt_Tree
+  new_node = t.0
+  ntb = null
+  current_node = this
+  cont = 1
+  while2_top:
+    if0 cont goto :while2_end
+    key_aux = null
+    t.1 = LtS(v_key key_aux)
+    if0 t.1 goto :if3_else
+      if0 null goto :if4_else
+        current_node = null
+        goto :if4_end
+      if4_end:
+        cont = 0
+        ntb = null
+        ntb = null
+      if4_end:
+      goto :if3_end
+    if3_end:
+      if0 null goto :if5_else
+        current_node = null
+        goto :if5_end
+      if5_end:
+        cont = 0
+        ntb = null
+        ntb = null
+      if5_end:
+    if3_end:
+    goto :while2_top
+  while2_end:
+  ret 1
 
 func Tree.Delete(this v_key)
-  ret boolean
+  current_node = this
+  parent_node = this
+  cont = 1
+  found = 0
+  is_root = 1
+  while6_top:
+    if0 cont goto :while6_end
+    key_aux = null
+    t.0 = LtS(v_key key_aux)
+    if0 t.0 goto :if7_else
+      if0 null goto :if8_else
+        parent_node = current_node
+        current_node = null
+        goto :if8_end
+      if8_end:
+        cont = 0
+      if8_end:
+      goto :if7_end
+    if7_end:
+      t.1 = LtS(key_aux v_key)
+      if0 t.1 goto :if9_else
+        if0 null goto :if10_else
+          parent_node = current_node
+          current_node = null
+          goto :if10_end
+        if10_end:
+          cont = 0
+        if10_end:
+        goto :if9_end
+      if9_end:
+        if0 is_root goto :if11_else
+          t.2 = Sub(1 null)
+          t.3 = Sub(1 null)
+          if0 t.2 goto :ss14_else
+            if0 t.3 goto :ss14_else
+              t.4 = 1
+              goto :ss14_end
+          ss14_else:
+            t.4 = 0
+          ss14_end:
+          if0 t.4 goto :if12_else
+            ntb = 1
+            goto :if12_end
+          if12_end:
+            ntb = null
+          if12_end:
+          goto :if11_end
+        if11_end:
+          ntb = null
+        if11_end:
+        found = 1
+        cont = 0
+      if9_end:
+    if7_end:
+    is_root = 0
+    goto :while6_top
+  while6_end:
+  ret found
 
 func Tree.Remove(this p_node c_node)
-  ret boolean
+  if0 null goto :if14_else
+    ntb = null
+    goto :if14_end
+  if14_end:
+    if0 null goto :if15_else
+      ntb = null
+      goto :if15_end
+    if15_end:
+      auxkey1 = null
+      auxkey2 = null
+      if0 null goto :if16_else
+        ntb = null
+        ntb = null
+        goto :if16_end
+      if16_end:
+        ntb = null
+        ntb = null
+      if16_end:
+    if15_end:
+  if14_end:
+  ret 1
 
 func Tree.RemoveRight(this p_node c_node)
-  ret boolean
+  while17_top:
+    if0 null goto :while17_end
+    ntb = null
+    p_node = c_node
+    c_node = null
+    goto :while17_top
+  while17_end:
+  ntb = null
+  ntb = null
+  ret 1
 
 func Tree.RemoveLeft(this p_node c_node)
-  ret boolean
+  while18_top:
+    if0 null goto :while18_end
+    ntb = null
+    p_node = c_node
+    c_node = null
+    goto :while18_top
+  while18_end:
+  ntb = null
+  ntb = null
+  ret 1
 
 func Tree.Search(this v_key)
-  ret int
+  current_node = this
+  cont = 1
+  ifound = 0
+  while19_top:
+    if0 cont goto :while19_end
+    key_aux = null
+    t.0 = LtS(v_key key_aux)
+    if0 t.0 goto :if20_else
+      if0 null goto :if21_else
+        current_node = null
+        goto :if21_end
+      if21_end:
+        cont = 0
+      if21_end:
+      goto :if20_end
+    if20_end:
+      t.1 = LtS(key_aux v_key)
+      if0 t.1 goto :if22_else
+        if0 null goto :if23_else
+          current_node = null
+          goto :if23_end
+        if23_end:
+          cont = 0
+        if23_end:
+        goto :if22_end
+      if22_end:
+        ifound = 1
+        cont = 0
+      if22_end:
+    if20_end:
+    goto :while19_top
+  while19_end:
+  ret ifound
 
 func Tree.Print(this)
-  ret boolean
+  current_node = this
+  ntb = null
+  ret 1
 
 func Tree.RecPrint(this node)
-  ret boolean
+  if0 null goto :if24_else
+    ntb = null
+    goto :if24_end
+  if24_end:
+    ntb = 1
+  if24_end:
+  PrintIntS(null)
+  if0 null goto :if25_else
+    ntb = null
+    goto :if25_end
+  if25_end:
+    ntb = 1
+  if25_end:
+  ret 1
 

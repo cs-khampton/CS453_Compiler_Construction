@@ -877,7 +877,6 @@ public class CheckType<R, A> extends GJDepthFirst<MyType, HashMap<String, String
      */
     public MyType visit(AllocationExpression ae, HashMap<String, String> arg) {
         String className = ae.f1.f0.toString();
-        // FIXME: check for null className
         String key = classKey(className);
         if (!arg.containsKey(key)) {
             typeError = true;

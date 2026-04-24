@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import syntaxtree.Node;
 
@@ -12,7 +12,7 @@ public class J2V {
             SymbolTable<Void, Integer> pv = new SymbolTable<>();
             root.accept(pv, 0);
 
-            HashMap<String, String> symt = pv.classes;
+            LinkedHashMap<String, String> symt = pv.classes;
 
             VTranslator translator = new VTranslator();
             // set the translator for output

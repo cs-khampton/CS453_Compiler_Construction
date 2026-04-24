@@ -1,3 +1,4 @@
+
 const vmt_Element
   :Element.Init
   :Element.GetAge
@@ -23,63 +24,260 @@ const vmt_LL
 
 func Main()
   t.0 = HeapAllocZ(4)
+  [t.0] = :vmt_LL
+  PrintIntS(null)
   ret
 
 func Element.Init(this v_Age v_Salary v_Married)
-  ret boolean
+  [this+4] = v_Age
+  [this+8] = v_Salary
+  [this+12] = v_Married
+  ret 1
 
 func Element.GetAge(this)
-  ret int
+  t.0 = [this+4]
+  ret t.0
 
 func Element.GetSalary(this)
-  ret int
+  t.0 = [this+8]
+  ret t.0
 
 func Element.GetMarried(this)
-  ret boolean
+  t.0 = [this+12]
+  ret t.0
 
 func Element.Equal(this other)
-  ret boolean
+  ret_val = 1
+  aux01 = null
+  t.0 = Sub(1 null)
+  if0 t.0 goto :if0_else
+    ret_val = 0
+    goto :if0_end
+  if0_end:
+    aux02 = null
+    t.1 = Sub(1 null)
+    if0 t.1 goto :if1_else
+      ret_val = 0
+      goto :if1_end
+    if1_end:
+      t.2 = [this+12]
+      if0 t.2 goto :if2_else
+        t.3 = Sub(1 null)
+        if0 t.3 goto :if3_else
+          ret_val = 0
+          goto :if3_end
+        if3_end:
+          nt = 0
+        if3_end:
+        goto :if2_end
+      if2_end:
+        if0 null goto :if4_else
+          ret_val = 0
+          goto :if4_end
+        if4_end:
+          nt = 0
+        if4_end:
+      if2_end:
+    if1_end:
+  if0_end:
+  ret ret_val
 
 func Element.Compare(this num1 num2)
-  ret boolean
+  retval = 0
+  t.0 = Add(num2 1)
+  aux02 = t.0
+  t.1 = LtS(num1 num2)
+  if0 t.1 goto :if5_else
+    retval = 0
+    goto :if5_end
+  if5_end:
+    t.2 = LtS(num1 aux02)
+    t.3 = Sub(1 t.2)
+    if0 t.3 goto :if6_else
+      retval = 0
+      goto :if6_end
+    if6_end:
+      retval = 1
+    if6_end:
+  if5_end:
+  ret retval
 
 func List.Init(this)
-  ret boolean
+  [this+12] = 1
+  ret 1
 
 func List.InitNew(this v_elem v_next v_end)
-  ret boolean
+  [this+12] = v_end
+  [this+4] = v_elem
+  [this+8] = v_next
+  ret 1
 
 func List.Insert(this new_elem)
+  aux03 = this
   t.0 = HeapAllocZ(16)
-  ret List
+  [t.0] = :vmt_List
+  aux02 = t.0
+  ret_val = null
+  ret aux02
 
 func List.SetNext(this v_next)
-  ret boolean
+  [this+8] = v_next
+  ret 1
 
 func List.Delete(this e)
-  ret List
+  my_head = this
+  ret_val = 0
+  t.0 = Sub(0 1)
+  aux04 = t.0
+  aux01 = this
+  prev = this
+  t.1 = [this+12]
+  var_end = t.1
+  t.2 = [this+4]
+  var_elem = t.2
+  while7_top:
+    t.3 = Sub(1 var_end)
+    t.4 = Sub(1 ret_val)
+    if0 t.3 goto :ss9_else
+      if0 t.4 goto :ss9_else
+        t.5 = 1
+        goto :ss9_end
+    ss9_else:
+      t.5 = 0
+    ss9_end:
+    if0 t.5 goto :while7_end
+    if0 null goto :if9_else
+      ret_val = 1
+      t.6 = LtS(aux04 0)
+      if0 t.6 goto :if10_else
+        my_head = null
+        goto :if10_end
+      if10_end:
+        t.7 = Sub(0 555)
+        PrintIntS(t.7)
+        aux05 = null
+        t.8 = Sub(0 555)
+        PrintIntS(t.8)
+      if10_end:
+      goto :if9_end
+    if9_end:
+      nt = 0
+    if9_end:
+    t.9 = Sub(1 ret_val)
+    if0 t.9 goto :if11_else
+      prev = aux01
+      aux01 = null
+      var_end = null
+      var_elem = null
+      aux04 = 1
+      goto :if11_end
+    if11_end:
+      nt = 0
+    if11_end:
+    goto :while7_top
+  while7_end:
+  ret my_head
 
 func List.Search(this e)
-  ret int
+  int_ret_val = 0
+  aux01 = this
+  t.0 = [this+12]
+  var_end = t.0
+  t.1 = [this+4]
+  var_elem = t.1
+  while12_top:
+    t.2 = Sub(1 var_end)
+    if0 t.2 goto :while12_end
+    if0 null goto :if13_else
+      int_ret_val = 1
+      goto :if13_end
+    if13_end:
+      nt = 0
+    if13_end:
+    aux01 = null
+    var_end = null
+    var_elem = null
+    goto :while12_top
+  while12_end:
+  ret int_ret_val
 
 func List.GetEnd(this)
-  ret boolean
+  t.0 = [this+12]
+  ret t.0
 
 func List.GetElem(this)
-  ret Element
+  t.0 = [this+4]
+  ret t.0
 
 func List.GetNext(this)
-  ret List
+  t.0 = [this+8]
+  ret t.0
 
 func List.Print(this)
-  ret boolean
+  aux01 = this
+  t.0 = [this+12]
+  var_end = t.0
+  t.1 = [this+4]
+  var_elem = t.1
+  while14_top:
+    t.2 = Sub(1 var_end)
+    if0 t.2 goto :while14_end
+    PrintIntS(null)
+    aux01 = null
+    var_end = null
+    var_elem = null
+    goto :while14_top
+  while14_end:
+  ret 1
 
 func LL.Start(this)
   t.0 = HeapAllocZ(16)
+  [t.0] = :vmt_List
+  last_elem = t.0
+  aux01 = null
+  head = last_elem
+  aux01 = null
+  aux01 = null
   t.1 = HeapAllocZ(16)
+  [t.1] = :vmt_Element
+  el01 = t.1
+  aux01 = null
+  head = null
+  aux01 = null
+  PrintIntS(10000000)
   t.2 = HeapAllocZ(16)
+  [t.2] = :vmt_Element
+  el01 = t.2
+  aux01 = null
+  el02 = el01
+  head = null
+  aux01 = null
+  PrintIntS(10000000)
   t.3 = HeapAllocZ(16)
+  [t.3] = :vmt_Element
+  el01 = t.3
+  aux01 = null
+  head = null
+  aux01 = null
   t.4 = HeapAllocZ(16)
+  [t.4] = :vmt_Element
+  el03 = t.4
+  aux01 = null
+  PrintIntS(null)
+  PrintIntS(null)
+  PrintIntS(10000000)
   t.5 = HeapAllocZ(16)
-  ret int
+  [t.5] = :vmt_Element
+  el01 = t.5
+  aux01 = null
+  head = null
+  aux01 = null
+  PrintIntS(2220000)
+  head = null
+  aux01 = null
+  PrintIntS(33300000)
+  head = null
+  aux01 = null
+  PrintIntS(44440000)
+  ret 0
 

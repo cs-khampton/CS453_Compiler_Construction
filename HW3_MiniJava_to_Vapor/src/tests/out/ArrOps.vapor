@@ -1,10 +1,33 @@
+
 const vmt_Sorter
   :Sorter.getElement
 
 func Main()
   t.0 = HeapAllocZ(4)
+  [t.0] = :vmt_Sorter
+  PrintIntS(null)
   ret
 
 func Sorter.getElement(this idx)
-  ret int
+  arr = int[]
+  t.0 = [arr]
+  t.1 = LtS(0 t.0)
+  if t.1 goto :bounds0_ok
+    Error("array index out of bounds")
+  bounds0_ok:
+  t.2 = MulS(0 4)
+  t.2 = Add(t.2 arr)
+  [t.2+4] = 10
+  t.3 = [arr]
+  t.4 = LtS(1 t.3)
+  if t.4 goto :bounds1_ok
+    Error("array index out of bounds")
+  bounds1_ok:
+  t.5 = MulS(1 4)
+  t.5 = Add(t.5 arr)
+  [t.5+4] = 20
+  val = int
+  t.6 = Add(val idx)
+  result = t.6
+  ret result
 

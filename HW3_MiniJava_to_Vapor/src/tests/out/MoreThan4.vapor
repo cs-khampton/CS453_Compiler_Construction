@@ -1,14 +1,30 @@
+
 const vmt_MT4
   :MT4.Start
   :MT4.Change
 
 func Main()
   t.0 = HeapAllocZ(4)
+  [t.0] = :vmt_MT4
+  PrintIntS(null)
   ret
 
 func MT4.Start(this p1 p2 p3 p4 p5 p6)
-  ret int
+  PrintIntS(p1)
+  PrintIntS(p2)
+  PrintIntS(p3)
+  PrintIntS(p4)
+  PrintIntS(p5)
+  PrintIntS(p6)
+  aux = null
+  ret aux
 
 func MT4.Change(this p1 p2 p3 p4 p5 p6)
-  ret int
+  PrintIntS(p1)
+  PrintIntS(p2)
+  PrintIntS(p3)
+  PrintIntS(p4)
+  PrintIntS(p5)
+  PrintIntS(p6)
+  ret 0
 

@@ -1,3 +1,4 @@
+
 const vmt_Animal
   :Animal.speak
 
@@ -6,11 +7,14 @@ const vmt_Dog
 
 func Main()
   t.0 = HeapAllocZ(4)
+  [t.0] = :vmt_Dog
+  a = t.0
+  PrintIntS(null)
   ret
 
 func Animal.speak(this)
-  ret int
+  ret 0
 
 func Dog.speak(this)
-  ret int
+  ret 1
 

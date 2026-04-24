@@ -1,3 +1,4 @@
+
 const vmt_QS
   :QS.Start
   :QS.Sort
@@ -6,17 +7,226 @@ const vmt_QS
 
 func Main()
   t.0 = HeapAllocZ(12)
+  [t.0] = :vmt_QS
+  PrintIntS(null)
   ret
 
 func QS.Start(this sz)
-  ret int
+  aux01 = null
+  aux01 = null
+  PrintIntS(9999)
+  t.0 = [this+8]
+  t.1 = Sub(t.0 1)
+  aux01 = t.1
+  aux01 = null
+  aux01 = null
+  ret 0
 
 func QS.Sort(this left right)
-  ret int
+  t = 0
+  t.0 = LtS(left right)
+  if0 t.0 goto :if0_else
+    t.1 = [this+4]
+    v = int
+    t.2 = Sub(left 1)
+    i = t.2
+    j = right
+    cont01 = 1
+    while1_top:
+      if0 cont01 goto :while1_end
+      cont02 = 1
+      while2_top:
+        if0 cont02 goto :while2_end
+        t.3 = Add(i 1)
+        i = t.3
+        t.4 = [this+4]
+        aux03 = int
+        t.5 = LtS(aux03 v)
+        t.6 = Sub(1 t.5)
+        if0 t.6 goto :if3_else
+          cont02 = 0
+          goto :if3_end
+        if3_end:
+          cont02 = 1
+        if3_end:
+        goto :while2_top
+      while2_end:
+      cont02 = 1
+      while4_top:
+        if0 cont02 goto :while4_end
+        t.7 = Sub(j 1)
+        j = t.7
+        t.8 = [this+4]
+        aux03 = int
+        t.9 = LtS(v aux03)
+        t.10 = Sub(1 t.9)
+        if0 t.10 goto :if5_else
+          cont02 = 0
+          goto :if5_end
+        if5_end:
+          cont02 = 1
+        if5_end:
+        goto :while4_top
+      while4_end:
+      t.11 = [this+4]
+      t = int
+      t.12 = [this+4]
+      t.13 = [number]
+      t.14 = LtS(i t.13)
+      if t.14 goto :bounds0_ok
+        Error("array index out of bounds")
+      bounds0_ok:
+      t.15 = MulS(i 4)
+      t.15 = Add(t.15 number)
+      [t.15+4] = int
+      t.16 = [number]
+      t.17 = LtS(j t.16)
+      if t.17 goto :bounds1_ok
+        Error("array index out of bounds")
+      bounds1_ok:
+      t.18 = MulS(j 4)
+      t.18 = Add(t.18 number)
+      [t.18+4] = t
+      t.19 = Add(i 1)
+      t.20 = LtS(j t.19)
+      if0 t.20 goto :if6_else
+        cont01 = 0
+        goto :if6_end
+      if6_end:
+        cont01 = 1
+      if6_end:
+      goto :while1_top
+    while1_end:
+    t.21 = [this+4]
+    t.22 = [number]
+    t.23 = LtS(j t.22)
+    if t.23 goto :bounds2_ok
+      Error("array index out of bounds")
+    bounds2_ok:
+    t.24 = MulS(j 4)
+    t.24 = Add(t.24 number)
+    [t.24+4] = int
+    t.25 = [this+4]
+    t.26 = [number]
+    t.27 = LtS(i t.26)
+    if t.27 goto :bounds3_ok
+      Error("array index out of bounds")
+    bounds3_ok:
+    t.28 = MulS(i 4)
+    t.28 = Add(t.28 number)
+    [t.28+4] = int
+    t.29 = [number]
+    t.30 = LtS(right t.29)
+    if t.30 goto :bounds4_ok
+      Error("array index out of bounds")
+    bounds4_ok:
+    t.31 = MulS(right 4)
+    t.31 = Add(t.31 number)
+    [t.31+4] = t
+    nt = null
+    nt = null
+    goto :if0_end
+  if0_end:
+    nt = 0
+  if0_end:
+  ret 0
 
 func QS.Print(this)
-  ret int
+  j = 0
+  while7_top:
+    t.0 = [this+8]
+    t.1 = LtS(j t.0)
+    if0 t.1 goto :while7_end
+    t.2 = [this+4]
+    PrintIntS(int)
+    t.3 = Add(j 1)
+    j = t.3
+    goto :while7_top
+  while7_end:
+  ret 0
 
 func QS.Init(this sz)
-  ret int
+  [this+8] = sz
+  [this+4] = int[]
+  t.0 = [number]
+  t.1 = LtS(0 t.0)
+  if t.1 goto :bounds5_ok
+    Error("array index out of bounds")
+  bounds5_ok:
+  t.2 = MulS(0 4)
+  t.2 = Add(t.2 number)
+  [t.2+4] = 20
+  t.3 = [number]
+  t.4 = LtS(1 t.3)
+  if t.4 goto :bounds6_ok
+    Error("array index out of bounds")
+  bounds6_ok:
+  t.5 = MulS(1 4)
+  t.5 = Add(t.5 number)
+  [t.5+4] = 7
+  t.6 = [number]
+  t.7 = LtS(2 t.6)
+  if t.7 goto :bounds7_ok
+    Error("array index out of bounds")
+  bounds7_ok:
+  t.8 = MulS(2 4)
+  t.8 = Add(t.8 number)
+  [t.8+4] = 12
+  t.9 = [number]
+  t.10 = LtS(3 t.9)
+  if t.10 goto :bounds8_ok
+    Error("array index out of bounds")
+  bounds8_ok:
+  t.11 = MulS(3 4)
+  t.11 = Add(t.11 number)
+  [t.11+4] = 18
+  t.12 = [number]
+  t.13 = LtS(4 t.12)
+  if t.13 goto :bounds9_ok
+    Error("array index out of bounds")
+  bounds9_ok:
+  t.14 = MulS(4 4)
+  t.14 = Add(t.14 number)
+  [t.14+4] = 2
+  t.15 = [number]
+  t.16 = LtS(5 t.15)
+  if t.16 goto :bounds10_ok
+    Error("array index out of bounds")
+  bounds10_ok:
+  t.17 = MulS(5 4)
+  t.17 = Add(t.17 number)
+  [t.17+4] = 11
+  t.18 = [number]
+  t.19 = LtS(6 t.18)
+  if t.19 goto :bounds11_ok
+    Error("array index out of bounds")
+  bounds11_ok:
+  t.20 = MulS(6 4)
+  t.20 = Add(t.20 number)
+  [t.20+4] = 6
+  t.21 = [number]
+  t.22 = LtS(7 t.21)
+  if t.22 goto :bounds12_ok
+    Error("array index out of bounds")
+  bounds12_ok:
+  t.23 = MulS(7 4)
+  t.23 = Add(t.23 number)
+  [t.23+4] = 9
+  t.24 = [number]
+  t.25 = LtS(8 t.24)
+  if t.25 goto :bounds13_ok
+    Error("array index out of bounds")
+  bounds13_ok:
+  t.26 = MulS(8 4)
+  t.26 = Add(t.26 number)
+  [t.26+4] = 19
+  t.27 = [number]
+  t.28 = LtS(9 t.27)
+  if t.28 goto :bounds14_ok
+    Error("array index out of bounds")
+  bounds14_ok:
+  t.29 = MulS(9 4)
+  t.29 = Add(t.29 number)
+  [t.29+4] = 5
+  ret 0
 

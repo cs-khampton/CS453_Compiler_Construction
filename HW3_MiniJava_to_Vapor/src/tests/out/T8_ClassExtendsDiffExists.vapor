@@ -1,3 +1,4 @@
+
 const vmt_F
   :F.test
 
@@ -5,11 +6,13 @@ const vmt_G
   :G.test
 
 func Main()
+  t.0 = Add(i 2)
+  i = t.0
   ret
 
 func F.test(this)
-  ret int
+  ret 2
 
 func G.test(this)
-  ret int
+  ret 1
 

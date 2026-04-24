@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import syntaxtree.AllocationExpression;
 import syntaxtree.AndExpression;
@@ -47,7 +47,7 @@ import visitor.GJDepthFirst;
 
 public class SymbolTable<R, A> extends GJDepthFirst<R, A> {
 
-    public HashMap<String, String> classes = new HashMap<>();
+    public LinkedHashMap<String, String> classes = new LinkedHashMap<>();
     private String currClass = null;
     private String currMethod = null;
 
