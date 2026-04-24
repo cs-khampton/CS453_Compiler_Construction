@@ -1,6 +1,4 @@
-
 func Main()
-  t.0 = Add(i 2)
-  i = t.0
+  i = Add(i 2)
   ret
 

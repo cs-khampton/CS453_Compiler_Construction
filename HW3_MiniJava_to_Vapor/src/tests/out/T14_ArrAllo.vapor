@@ -1,16 +1,33 @@
-
 func Main()
-  arr = int[]
-  t.0 = [arr]
-  t.1 = LtS(3 t.0)
-  if t.1 goto :bounds0_ok
+  t.0 = MulS(10 4)
+  t.0 = Add(t.0 4)
+  t.1 = HeapAllocZ(t.0)
+  [t.1] = 10
+  arr = t.1
+  t.2 = [arr]
+  t.3 = LtS(3 t.2)
+  if t.3 goto :bounds1_ok
     Error("array index out of bounds")
-  bounds0_ok:
-  t.2 = MulS(3 4)
-  t.2 = Add(t.2 arr)
-  [t.2+4] = 7
-  t.3 = Add(int int)
-  x = t.3
+  bounds1_ok:
+  t.4 = MulS(3 4)
+  t.4 = Add(t.4 arr)
+  [t.4+4] = 7
+  if arr goto :null2_ok
+    Error("null pointer")
+  null2_ok:
+  t.5 = [arr]
+  t.6 = LtS(3 t.5)
+  if t.6 goto :bounds3_ok
+    Error("array index out of bounds")
+  bounds3_ok:
+  t.7 = MulS(3 4)
+  t.7 = Add(t.7 arr)
+  t.8 = [t.7+4]
+  if arr goto :null4_ok
+    Error("null pointer")
+  null4_ok:
+  t.9 = [arr]
+  x = Add(t.8 t.9)
   PrintIntS(x)
   ret
 

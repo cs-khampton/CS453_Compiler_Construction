@@ -1,11 +1,17 @@
-
 const vmt_Checker
   :Checker.check
+
 
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_Checker
-  PrintIntS(null)
+  if t.0 goto :null1
+    Error("null pointer")
+  null1:
+  t.1 = [t.0]
+  t.1 = [t.1+0]
+  t.2 = call t.1(t.0)
+  PrintIntS(t.2)
   ret
 
 func Checker.check(this)
@@ -18,11 +24,11 @@ func Checker.check(this)
   ss2_else:
     t.0 = 0
   ss2_end:
-  if0 t.0 goto :if0_else
+  if0 t.0 goto :if1_else
     result = 1
-    goto :if0_end
-  if0_end:
+    goto :if1_end
+  if1_else:
     result = 0
-  if0_end:
+  if1_end:
   ret result
 

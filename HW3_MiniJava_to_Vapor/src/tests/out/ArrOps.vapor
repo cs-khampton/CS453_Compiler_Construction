@@ -1,33 +1,53 @@
-
 const vmt_Sorter
   :Sorter.getElement
+
 
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_Sorter
-  PrintIntS(null)
+  if t.0 goto :null1
+    Error("null pointer")
+  null1:
+  t.1 = [t.0]
+  t.1 = [t.1+0]
+  t.2 = call t.1(t.0 3)
+  PrintIntS(t.2)
   ret
 
 func Sorter.getElement(this idx)
-  arr = int[]
-  t.0 = [arr]
-  t.1 = LtS(0 t.0)
-  if t.1 goto :bounds0_ok
+  t.0 = MulS(5 4)
+  t.0 = Add(t.0 4)
+  t.1 = HeapAllocZ(t.0)
+  [t.1] = 5
+  arr = t.1
+  t.2 = [arr]
+  t.3 = LtS(0 t.2)
+  if t.3 goto :bounds2_ok
     Error("array index out of bounds")
-  bounds0_ok:
-  t.2 = MulS(0 4)
-  t.2 = Add(t.2 arr)
-  [t.2+4] = 10
-  t.3 = [arr]
-  t.4 = LtS(1 t.3)
-  if t.4 goto :bounds1_ok
+  bounds2_ok:
+  t.4 = MulS(0 4)
+  t.4 = Add(t.4 arr)
+  [t.4+4] = 10
+  t.5 = [arr]
+  t.6 = LtS(1 t.5)
+  if t.6 goto :bounds3_ok
     Error("array index out of bounds")
-  bounds1_ok:
-  t.5 = MulS(1 4)
-  t.5 = Add(t.5 arr)
-  [t.5+4] = 20
-  val = int
-  t.6 = Add(val idx)
-  result = t.6
+  bounds3_ok:
+  t.7 = MulS(1 4)
+  t.7 = Add(t.7 arr)
+  [t.7+4] = 20
+  if arr goto :null4_ok
+    Error("null pointer")
+  null4_ok:
+  t.8 = [arr]
+  t.9 = LtS(idx t.8)
+  if t.9 goto :bounds5_ok
+    Error("array index out of bounds")
+  bounds5_ok:
+  t.10 = MulS(idx 4)
+  t.10 = Add(t.10 arr)
+  t.11 = [t.10+4]
+  val = t.11
+  result = Add(val idx)
   ret result
 
