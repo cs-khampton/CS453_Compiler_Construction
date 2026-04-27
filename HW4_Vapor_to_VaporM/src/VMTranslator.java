@@ -1,9 +1,9 @@
 import java.io.PrintWriter;
 
-public class VTranslator {
+public class VMTranslator {
     private PrintWriter out;
 
-    VTranslator() {
+    VMTranslator() {
         this.out = new PrintWriter(System.out);
     }
 
