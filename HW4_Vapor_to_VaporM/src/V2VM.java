@@ -4,12 +4,14 @@ import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
 
 import java.io.InputStreamReader;
+import static java.lang.System.in;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.LinkedList;
 
 public class V2VM {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Op[] ops = {
                 Op.Add, Op.Sub, Op.MulS, Op.Eq, Op.Lt, Op.LtS,
                 Op.PrintIntS, Op.HeapAllocZ, Op.Error,
@@ -24,16 +26,10 @@ public class V2VM {
                     java.util.Arrays.asList(ops),
                     allowLocals, registers, allowStack);
         } catch (ProblemException ex) {
-            err.println(ex.getMessage());
-            return null;
+            System.err.println(ex.getMessage());
         }
-
-        printVMTranslation(translator.vm);
+        VMTranslator vmt = new VMTranslator();
+        VMVisitor vm = new VMVisitor(vmt);
     }
 
-    public static void printVMTranslation(LinkedList<String> vm) {
-        for (String line : vm) {
-            System.out.println(line);
-        }
-    }
 }

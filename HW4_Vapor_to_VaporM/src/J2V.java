@@ -14,9 +14,9 @@ public class J2V {
 
             HashMap<String, String> symt = pv.classes;
 
-            VTranslator translator = new VTranslator();
+            VMTranslator translator = new VMTranslator();
             // set the translator for output
-            VVisitor v = new VVisitor(translator);
+            VMVisitor v = new VMVisitor(translator);
             root.accept(v, symt);
             // pv.printSymt();
         } catch (ParseException e) {
