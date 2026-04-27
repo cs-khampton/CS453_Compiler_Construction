@@ -63,9 +63,8 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         currClass = null;
 
         indent = 0;
-
         tempCount = 0;
-        labelCount = 1; // if, while, ss labels
+        labelCount = 1;
         nullCount = 1;
     }
 
@@ -115,7 +114,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         currMethod = mc.f6.toString();
 
         tempCount = 0;
-
         translate.addToOut("func Main()");
         indent();
 
@@ -213,7 +211,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         currMethod = md.f2.f0.toString();
         String params = "this";
         tempCount = 0;
-
         // Check if FPL exists, grab all params
         if (md.f4.present()) {
             FormalParameterList fp = (FormalParameterList) md.f4.node;
@@ -431,11 +428,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         String boundLabel = "bounds" + nullCount++;
         translate.addToOut(formatIndent(t0 + " = [" + id + "]"));
         translate.addToOut(formatIndent(t1 + " = LtS(" + index.type + " " + t0 + ")"));
-        translate.addToOut(formatIndent("if " + t1 + " goto :" + boundLabel + "_ok"));
+        translate.addToOut(formatIndent("if " + t1 + " goto :" + boundLabel + ""));
         indent();
         translate.addToOut(formatIndent("Error(\"array index out of bounds\")"));
         deIndent();
-        translate.addToOut(formatIndent(boundLabel + "_ok:"));
+        translate.addToOut(formatIndent(boundLabel + ":"));
 
         String address = newTemp();
         translate.addToOut(formatIndent(address + " = MulS(" + index.type + " 4)"));
@@ -648,11 +645,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
 
         String nullLabel = "null" + nullCount++;
 
-        translate.addToOut(formatIndent("if " + arr.type + " goto :" + nullLabel + "_ok"));
+        translate.addToOut(formatIndent("if " + arr.type + " goto :" + nullLabel));
         indent();
         translate.addToOut(formatIndent("Error(\"null pointer\")"));
         deIndent();
-        translate.addToOut(formatIndent(nullLabel + "_ok:"));
+        translate.addToOut(formatIndent(nullLabel + ":"));
 
         // Check bounds
         String b0 = newTemp();
@@ -660,11 +657,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         String boundsLabel = "bounds" + nullCount++;
         translate.addToOut(formatIndent(b0 + " = [" + arr.type + "]"));
         translate.addToOut(formatIndent(b2 + " = LtS(" + index.type + " " + b0 + ")"));
-        translate.addToOut(formatIndent("if " + b2 + " goto :" + boundsLabel + "_ok"));
+        translate.addToOut(formatIndent("if " + b2 + " goto :" + boundsLabel));
         indent();
         translate.addToOut(formatIndent("Error(\"array index out of bounds\")"));
         deIndent();
-        translate.addToOut(formatIndent(boundsLabel + "_ok:"));
+        translate.addToOut(formatIndent(boundsLabel + ":"));
 
         // calc address and load the value
         String address = newTemp();
@@ -686,11 +683,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         // TODO:
         MyType t0 = al.f0.f0.choice.accept(this, arg);
         String nullLabel = "null" + nullCount++;
-        translate.addToOut(formatIndent("if " + t0.type + " goto :" + nullLabel + "_ok"));
+        translate.addToOut(formatIndent("if " + t0.type + " goto :" + nullLabel + ""));
         indent();
         translate.addToOut(formatIndent("Error(\"null pointer\")"));
         deIndent();
-        translate.addToOut(formatIndent(nullLabel + "_ok:"));
+        translate.addToOut(formatIndent(nullLabel + ":"));
         String temp = newTemp();
         translate.addToOut(formatIndent(temp + " = [" + t0.type + "]"));
         return new MyType(temp);

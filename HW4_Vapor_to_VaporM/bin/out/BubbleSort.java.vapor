@@ -1,0 +1,21 @@
+const vmt_BBS
+  :BBS.Init
+  :BBS.Print
+  :BBS.Sort
+  :BBS.Start
+
+func Main()
+ret
+
+func BBS.Start(this sz)
+  ret 0
+
+func BBS.Sort(this)
+  ret 0
+
+func BBS.Print(this)
+  ret 0
+
+func BBS.Init(this sz)
+  ret 0
+

@@ -1,0 +1,4 @@
+func Main()
+  i = Add(i 2)
+  ret
+

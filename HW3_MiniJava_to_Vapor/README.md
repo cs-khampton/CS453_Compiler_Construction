@@ -125,7 +125,3 @@ NON-TERMINALS
 
 - [ ] Create test that checks equivalence
 
-Flow of HW4
-- Build the Vapor AST $V_{AST}$ from the input file
-
-53% tests HW2

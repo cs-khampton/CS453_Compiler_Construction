@@ -1,0 +1,18 @@
+const vmt_F
+  :F.test
+
+
+const vmt_G
+  :G.test
+
+
+func Main()
+  i = Add(i 2)
+  ret
+
+func F.test(this)
+  ret 2
+
+func G.test(this)
+  ret 1
+

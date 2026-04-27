@@ -1,0 +1,4 @@
+func Main()
+  i = 1
+  ret
+

@@ -1,0 +1,91 @@
+const vmt_BT
+  :BT.Start
+
+const vmt_Tree
+  :Tree.SetKey
+  :Tree.Insert
+  :Tree.Remove
+  :Tree.RemoveRight
+  :Tree.GetRight
+  :Tree.Search
+  :Tree.SetLeft
+  :Tree.GetHas_Left
+  :Tree.GetKey
+  :Tree.Compare
+  :Tree.SetRight
+  :Tree.Init
+  :Tree.Delete
+  :Tree.GetLeft
+  :Tree.SetHas_Right
+  :Tree.SetHas_Left
+  :Tree.RecPrint
+  :Tree.RemoveLeft
+  :Tree.GetHas_Right
+  :Tree.Print
+
+func Main()
+ret
+
+func BT.Start(this)
+  ret 0
+
+func Tree.Init(this v_key)
+  ret 1
+
+func Tree.SetRight(this rn)
+  ret 1
+
+func Tree.SetLeft(this ln)
+  ret 1
+
+func Tree.GetRight(this)
+  ret right
+
+func Tree.GetLeft(this)
+  ret left
+
+func Tree.GetKey(this)
+  ret key
+
+func Tree.SetKey(this v_key)
+  ret 1
+
+func Tree.GetHas_Right(this)
+  ret has_right
+
+func Tree.GetHas_Left(this)
+  ret has_left
+
+func Tree.SetHas_Left(this val)
+  ret 1
+
+func Tree.SetHas_Right(this val)
+  ret 1
+
+func Tree.Compare(this num1 num2)
+  ret ntb
+
+func Tree.Insert(this v_key)
+  ret 1
+
+func Tree.Delete(this v_key)
+  ret found
+
+func Tree.Remove(this p_node c_node)
+  ret 1
+
+func Tree.RemoveRight(this p_node c_node)
+  ret 1
+
+func Tree.RemoveLeft(this p_node c_node)
+  ret 1
+
+func Tree.Search(this v_key)
+  ret ifound
+
+func Tree.Print(this)
+  ret 1
+
+func Tree.RecPrint(this node)
+  ret 1
+

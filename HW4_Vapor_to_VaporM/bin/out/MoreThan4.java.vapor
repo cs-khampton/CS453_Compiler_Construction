@@ -1,0 +1,13 @@
+const vmt_MT4
+  :MT4.Start
+  :MT4.Change
+
+func Main()
+ret
+
+func MT4.Start(this p1 p2 p3 p4 p5 p6)
+  ret aux
+
+func MT4.Change(this p1 p2 p3 p4 p5 p6)
+  ret 0
+
