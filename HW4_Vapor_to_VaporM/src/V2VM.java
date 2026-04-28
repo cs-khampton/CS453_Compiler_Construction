@@ -1,7 +1,7 @@
-import cs132.util.ProblemException;
-import cs132.vapor.parser.VaporParser;
-import cs132.vapor.ast.VaporProgram;
+import cs132.util.*;
+import cs132.vapor.ast.*;
 import cs132.vapor.ast.VBuiltIn.Op;
+import cs132.vapor.parser.*;
 
 import java.io.InputStreamReader;
 import static java.lang.System.in;
@@ -25,11 +25,22 @@ public class V2VM {
             program = VaporParser.run(new InputStreamReader(in), 1, 1,
                     java.util.Arrays.asList(ops),
                     allowLocals, registers, allowStack);
+            VMTranslator vmt = new VMTranslator();
+            VMVisitor vmv = new VMVisitor(vmt);
+            System.out.println("REGISTER NUMBER: " + program.registers.length);
+            for (VFunction fun : program.functions) {
+                VMSymbolTable symt = new VMSymbolTable(program.registers);
+
+                symt.buildTable(fun);
+                vmv.setSymt(symt);
+
+                System.out.println("func " + fun.ident + " [in " + fun.params.length + ", out" + symt.outCount
+                        + ", local " + symt.locals.size() + "]");
+            }
+
         } catch (ProblemException ex) {
             System.err.println(ex.getMessage());
         }
-        VMTranslator vmt = new VMTranslator();
-        VMVisitor vm = new VMVisitor(vmt);
-    }
 
+    }
 }

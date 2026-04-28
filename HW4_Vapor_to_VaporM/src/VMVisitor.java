@@ -3,28 +3,75 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.Context;
+import cs132.vapor.ast.*;
 
-import cs132.vapor.ast.VInstr;
-
-public class VMVisitor extends VInstr.VisitorP<Context, Throwable> {
-    private VMTranslator translate; // can reuse your existing VTranslator
-
-    public static class Context {
-        public Map<String, String> localHier;
-        public Map<String, String> paramHier;
-        public int localCount;
-        public int outCount;
-
-        public Context() {
-            localHier = new HashMap<>();
-            paramHier = new HashMap<>();
-            localCount = 0;
-            outCount = 0;
-        }
-    }
+public class VMVisitor extends VInstr.Visitor<Throwable> {
+    VMTranslator translate;
+    VMSymbolTable symt;
 
     public VMVisitor(VMTranslator vmt) {
         this.translate = vmt;
+    }
+
+    public void setSymt(VMSymbolTable symt) {
+        this.symt = symt;
+    }
+
+    public void visit(VAssign a) throws Throwable {
+        String d = resolveVar(a.dest);
+        String s = resolveOp(a.source);
+        System.out.println("  " + d + " = " + s);
+    }
+
+    public void visit(VCall c) throws Throwable {
+        // TODO: Implement
+    }
+
+    public void visit(VBuiltIn b) throws Throwable {
+        // TODO: Implement
+    }
+
+    public void visit(VMemWrite w) throws Throwable {
+        // TODO: Implement
+    }
+
+    public void visit(VMemRead r) throws Throwable {
+        // TODO: Implement
+    }
+
+    public void visit(VBranch b) throws Throwable {
+        // TODO: Implement
+    }
+
+    public void visit(VGoto g) throws Throwable {
+        // TODO: Implement
+    }
+
+    public void visit(VReturn r) throws Throwable {
+        // TODO: Implement
+    }
+
+    /******************* HELPER METHODS *******************/
+
+    private String resolveVar(VVarRef v) {
+        if (v instanceof VVarRef.Local) {
+            String varName = v.toString();
+            if (symt.params.containsKey(varName)) {
+                return symt.params.get(varName);
+            }
+            if (symt.locals.containsKey(varName)) {
+                return symt.locals.get(varName);
+            }
+            return varName; // catch all
+        } else {
+            return v.toString();
+        }
+    }
+
+    private String resolveOp(VOperand op) {
+        if (op instanceof VVarRef v) {
+            return resolveVar(v);
+        }
+        return op.toString();
     }
 }

@@ -3,7 +3,7 @@ import java.io.PrintWriter;
 public class VMTranslator {
     private PrintWriter out;
 
-    VMTranslator() {
+    public VMTranslator() {
         this.out = new PrintWriter(System.out);
     }
 
