@@ -1,7 +1,6 @@
 const vmt_Fac
   :Fac.ComputeFac
 
-
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_Fac
@@ -22,8 +21,9 @@ func Fac.ComputeFac(this num)
   if1_else:
     t.1 = [this]
     t.1 = [t.1+0]
-    t.2 = call t.1(this Sub(num 1))
-    num_aux = MulS(num t.2)
+    t.2 = Sub(num 1)
+    t.3 = call t.1(this t.2)
+    num_aux = MulS(num t.3)
   if1_end:
   ret num_aux
 

@@ -1,10 +1,8 @@
 const vmt_Animal
   :Animal.speak
 
-
 const vmt_Dog
   :Dog.speak
-
 
 func Main()
   t.0 = HeapAllocZ(4)

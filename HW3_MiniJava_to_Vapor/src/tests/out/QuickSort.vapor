@@ -4,7 +4,6 @@ const vmt_QS
   :QS.Print
   :QS.Init
 
-
 func Main()
   t.0 = HeapAllocZ(12)
   [t.0] = :vmt_QS
@@ -44,176 +43,196 @@ func QS.Sort(this left right)
       Error("null pointer")
     null2:
     t.2 = [t.1]
-    t.3 = LtS(right t.2)
-    if t.3 goto :bounds3
+    t.2 = Lt(right t.2)
+    if t.2 goto :bounds1
       Error("array index out of bounds")
-    bounds3:
-    t.4 = MulS(right 4)
-    t.4 = Add(t.4 t.1)
-    t.5 = [t.4+4]
-    v = t.5
+    bounds1:
+    t.2 = MulS(right 4)
+    t.2 = Add(t.2 t.1)
+    v = [t.2+4]
     i = Sub(left 1)
     j = right
     cont01 = 1
-    while2_top:
-      if0 cont01 goto :while2_end
+    while1_top:
+    if0 cont01 goto :while1_end
+      cont02 = 1
+      while2_top:
+      if0 cont02 goto :while2_end
+        i = Add(i 1)
+        t.3 = [this+4]
+        if t.3 goto :null3
+          Error("null pointer")
+        null3:
+        t.4 = [t.3]
+        t.4 = Lt(i t.4)
+        if t.4 goto :bounds2
+          Error("array index out of bounds")
+        bounds2:
+        t.4 = MulS(i 4)
+        t.4 = Add(t.4 t.3)
+        aux03 = [t.4+4]
+        t.5 = LtS(aux03 v)
+        t.6 = Sub(1 t.5)
+        if0 t.6 goto :if2_else
+          cont02 = 0
+          goto :if2_end
+        if2_else:
+          cont02 = 1
+        if2_end:
+        goto :while2_top
+      while2_end:
       cont02 = 1
       while3_top:
-        if0 cont02 goto :while3_end
-        i = Add(i 1)
-        t.6 = [this+4]
-        if t.6 goto :null4
+      if0 cont02 goto :while3_end
+        j = Sub(j 1)
+        t.7 = [this+4]
+        if t.7 goto :null4
           Error("null pointer")
         null4:
-        t.7 = [t.6]
-        t.8 = LtS(i t.7)
-        if t.8 goto :bounds5
+        t.8 = [t.7]
+        t.8 = Lt(j t.8)
+        if t.8 goto :bounds3
           Error("array index out of bounds")
-        bounds5:
-        t.9 = MulS(i 4)
-        t.9 = Add(t.9 t.6)
-        t.10 = [t.9+4]
-        aux03 = t.10
-        t.11 = Sub(1 LtS(aux03 v))
-        if0 t.11 goto :if4_else
+        bounds3:
+        t.8 = MulS(j 4)
+        t.8 = Add(t.8 t.7)
+        aux03 = [t.8+4]
+        t.9 = LtS(v aux03)
+        t.10 = Sub(1 t.9)
+        if0 t.10 goto :if3_else
           cont02 = 0
-          goto :if4_end
-        if4_else:
+          goto :if3_end
+        if3_else:
           cont02 = 1
-        if4_end:
+        if3_end:
         goto :while3_top
       while3_end:
-      cont02 = 1
-      while5_top:
-        if0 cont02 goto :while5_end
-        j = Sub(j 1)
-        t.12 = [this+4]
-        if t.12 goto :null6
-          Error("null pointer")
-        null6:
-        t.13 = [t.12]
-        t.14 = LtS(j t.13)
-        if t.14 goto :bounds7
-          Error("array index out of bounds")
-        bounds7:
-        t.15 = MulS(j 4)
-        t.15 = Add(t.15 t.12)
-        t.16 = [t.15+4]
-        aux03 = t.16
-        t.17 = Sub(1 LtS(v aux03))
-        if0 t.17 goto :if6_else
-          cont02 = 0
-          goto :if6_end
-        if6_else:
-          cont02 = 1
-        if6_end:
-        goto :while5_top
-      while5_end:
+      t.11 = [this+4]
+      if t.11 goto :null5
+        Error("null pointer")
+      null5:
+      t.12 = [t.11]
+      t.12 = Lt(i t.12)
+      if t.12 goto :bounds4
+        Error("array index out of bounds")
+      bounds4:
+      t.12 = MulS(i 4)
+      t.12 = Add(t.12 t.11)
+      t = [t.12+4]
+      t.13 = [this+4]
+      if t.13 goto :null6
+        Error("null pointer")
+      null6:
+      t.14 = [t.13]
+      t.14 = Lt(i t.14)
+      if t.14 goto :bounds5
+        Error("array index out of bounds")
+      bounds5:
+      t.14 = MulS(i 4)
+      t.14 = Add(t.14 t.13)
+      t.15 = [this+4]
+      if t.15 goto :null7
+        Error("null pointer")
+      null7:
+      t.16 = [t.15]
+      t.16 = Lt(j t.16)
+      if t.16 goto :bounds6
+        Error("array index out of bounds")
+      bounds6:
+      t.16 = MulS(j 4)
+      t.16 = Add(t.16 t.15)
+      t.17 = [t.16+4]
+      [t.14+4] = t.17
       t.18 = [this+4]
       if t.18 goto :null8
         Error("null pointer")
       null8:
       t.19 = [t.18]
-      t.20 = LtS(i t.19)
-      if t.20 goto :bounds9
+      t.19 = Lt(j t.19)
+      if t.19 goto :bounds7
         Error("array index out of bounds")
-      bounds9:
-      t.21 = MulS(i 4)
-      t.21 = Add(t.21 t.18)
-      t.22 = [t.21+4]
-      t = t.22
-      t.23 = [this+4]
-      if t.23 goto :null10
-        Error("null pointer")
-      null10:
-      t.24 = [t.23]
-      t.25 = LtS(j t.24)
-      if t.25 goto :bounds11
-        Error("array index out of bounds")
-      bounds11:
-      t.26 = MulS(j 4)
-      t.26 = Add(t.26 t.23)
-      t.27 = [t.26+4]
-      t.28 = [number]
-      t.29 = LtS(i t.28)
-      if t.29 goto :bounds12
-        Error("array index out of bounds")
-      bounds12:
-      t.30 = MulS(i 4)
-      t.30 = Add(t.30 number)
-      [t.30+4] = t.27
-      t.31 = [number]
-      t.32 = LtS(j t.31)
-      if t.32 goto :bounds13
-        Error("array index out of bounds")
-      bounds13:
-      t.33 = MulS(j 4)
-      t.33 = Add(t.33 number)
-      [t.33+4] = t
-      t.34 = LtS(j Add(i 1))
-      if0 t.34 goto :if7_else
+      bounds7:
+      t.19 = MulS(j 4)
+      t.19 = Add(t.19 t.18)
+      [t.19+4] = t
+      t.20 = Add(i 1)
+      t.21 = LtS(j t.20)
+      if0 t.21 goto :if4_else
         cont01 = 0
-        goto :if7_end
-      if7_else:
+        goto :if4_end
+      if4_else:
         cont01 = 1
-      if7_end:
-      goto :while2_top
-    while2_end:
-    t.35 = [this+4]
-    if t.35 goto :null14
+      if4_end:
+      goto :while1_top
+    while1_end:
+    t.22 = [this+4]
+    if t.22 goto :null9
       Error("null pointer")
-    null14:
-    t.36 = [t.35]
-    t.37 = LtS(i t.36)
-    if t.37 goto :bounds15
+    null9:
+    t.23 = [t.22]
+    t.23 = Lt(j t.23)
+    if t.23 goto :bounds8
       Error("array index out of bounds")
-    bounds15:
-    t.38 = MulS(i 4)
-    t.38 = Add(t.38 t.35)
-    t.39 = [t.38+4]
-    t.40 = [number]
-    t.41 = LtS(j t.40)
-    if t.41 goto :bounds16
-      Error("array index out of bounds")
-    bounds16:
-    t.42 = MulS(j 4)
-    t.42 = Add(t.42 number)
-    [t.42+4] = t.39
-    t.43 = [this+4]
-    if t.43 goto :null17
+    bounds8:
+    t.23 = MulS(j 4)
+    t.23 = Add(t.23 t.22)
+    t.24 = [this+4]
+    if t.24 goto :null10
       Error("null pointer")
-    null17:
-    t.44 = [t.43]
-    t.45 = LtS(right t.44)
-    if t.45 goto :bounds18
+    null10:
+    t.25 = [t.24]
+    t.25 = Lt(i t.25)
+    if t.25 goto :bounds9
       Error("array index out of bounds")
-    bounds18:
-    t.46 = MulS(right 4)
-    t.46 = Add(t.46 t.43)
-    t.47 = [t.46+4]
-    t.48 = [number]
-    t.49 = LtS(i t.48)
-    if t.49 goto :bounds19
+    bounds9:
+    t.25 = MulS(i 4)
+    t.25 = Add(t.25 t.24)
+    t.26 = [t.25+4]
+    [t.23+4] = t.26
+    t.27 = [this+4]
+    if t.27 goto :null11
+      Error("null pointer")
+    null11:
+    t.28 = [t.27]
+    t.28 = Lt(i t.28)
+    if t.28 goto :bounds10
       Error("array index out of bounds")
-    bounds19:
-    t.50 = MulS(i 4)
-    t.50 = Add(t.50 number)
-    [t.50+4] = t.47
-    t.51 = [number]
-    t.52 = LtS(right t.51)
-    if t.52 goto :bounds20
+    bounds10:
+    t.28 = MulS(i 4)
+    t.28 = Add(t.28 t.27)
+    t.29 = [this+4]
+    if t.29 goto :null12
+      Error("null pointer")
+    null12:
+    t.30 = [t.29]
+    t.30 = Lt(right t.30)
+    if t.30 goto :bounds11
       Error("array index out of bounds")
-    bounds20:
-    t.53 = MulS(right 4)
-    t.53 = Add(t.53 number)
-    [t.53+4] = t
-    t.54 = [this]
-    t.54 = [t.54+4]
-    t.55 = Sub(i 1)
-    nt = call t.54(this left t.55)
-    t.56 = [this]
-    t.56 = [t.56+4]
-    nt = call t.56(this Add(i 1) right)
+    bounds11:
+    t.30 = MulS(right 4)
+    t.30 = Add(t.30 t.29)
+    t.31 = [t.30+4]
+    [t.28+4] = t.31
+    t.32 = [this+4]
+    if t.32 goto :null13
+      Error("null pointer")
+    null13:
+    t.33 = [t.32]
+    t.33 = Lt(right t.33)
+    if t.33 goto :bounds12
+      Error("array index out of bounds")
+    bounds12:
+    t.33 = MulS(right 4)
+    t.33 = Add(t.33 t.32)
+    [t.33+4] = t
+    t.34 = [this]
+    t.34 = [t.34+4]
+    t.35 = Sub(i 1)
+    nt = call t.34(this left t.35)
+    t.36 = [this]
+    t.36 = [t.36+4]
+    t.37 = Add(i 1)
+    nt = call t.36(this t.37 right)
     goto :if1_end
   if1_else:
     nt = 0
@@ -222,114 +241,157 @@ func QS.Sort(this left right)
 
 func QS.Print(this)
   j = 0
-  while8_top:
-    t.0 = [this+8]
-    t.1 = LtS(j t.0)
-    if0 t.1 goto :while8_end
+  while4_top:
+  t.0 = [this+8]
+  t.1 = LtS(j t.0)
+  if0 t.1 goto :while4_end
     t.2 = [this+4]
-    if t.2 goto :null21
+    if t.2 goto :null14
       Error("null pointer")
-    null21:
+    null14:
     t.3 = [t.2]
-    t.4 = LtS(j t.3)
-    if t.4 goto :bounds22
+    t.3 = Lt(j t.3)
+    if t.3 goto :bounds13
       Error("array index out of bounds")
-    bounds22:
-    t.5 = MulS(j 4)
-    t.5 = Add(t.5 t.2)
-    t.6 = [t.5+4]
-    PrintIntS(t.6)
+    bounds13:
+    t.3 = MulS(j 4)
+    t.3 = Add(t.3 t.2)
+    t.4 = [t.3+4]
+    PrintIntS(t.4)
     j = Add(j 1)
-    goto :while8_top
-  while8_end:
+    goto :while4_top
+  while4_end:
   ret 0
 
 func QS.Init(this sz)
   [this+8] = sz
-  t.0 = MulS(sz 4)
-  t.0 = Add(t.0 4)
-  t.1 = HeapAllocZ(t.0)
-  [t.1] = sz
-  [this+4] = t.1
-  t.2 = [number]
-  t.3 = LtS(0 t.2)
-  if t.3 goto :bounds23
+  t.0 = call :AllocArray(sz)
+  [this+4] = t.0
+  t.1 = [this+4]
+  if t.1 goto :null15
+    Error("null pointer")
+  null15:
+  t.2 = [t.1]
+  t.2 = Lt(0 t.2)
+  if t.2 goto :bounds14
+    Error("array index out of bounds")
+  bounds14:
+  t.2 = MulS(0 4)
+  t.2 = Add(t.2 t.1)
+  [t.2+4] = 20
+  t.3 = [this+4]
+  if t.3 goto :null16
+    Error("null pointer")
+  null16:
+  t.4 = [t.3]
+  t.4 = Lt(1 t.4)
+  if t.4 goto :bounds15
+    Error("array index out of bounds")
+  bounds15:
+  t.4 = MulS(1 4)
+  t.4 = Add(t.4 t.3)
+  [t.4+4] = 7
+  t.5 = [this+4]
+  if t.5 goto :null17
+    Error("null pointer")
+  null17:
+  t.6 = [t.5]
+  t.6 = Lt(2 t.6)
+  if t.6 goto :bounds16
+    Error("array index out of bounds")
+  bounds16:
+  t.6 = MulS(2 4)
+  t.6 = Add(t.6 t.5)
+  [t.6+4] = 12
+  t.7 = [this+4]
+  if t.7 goto :null18
+    Error("null pointer")
+  null18:
+  t.8 = [t.7]
+  t.8 = Lt(3 t.8)
+  if t.8 goto :bounds17
+    Error("array index out of bounds")
+  bounds17:
+  t.8 = MulS(3 4)
+  t.8 = Add(t.8 t.7)
+  [t.8+4] = 18
+  t.9 = [this+4]
+  if t.9 goto :null19
+    Error("null pointer")
+  null19:
+  t.10 = [t.9]
+  t.10 = Lt(4 t.10)
+  if t.10 goto :bounds18
+    Error("array index out of bounds")
+  bounds18:
+  t.10 = MulS(4 4)
+  t.10 = Add(t.10 t.9)
+  [t.10+4] = 2
+  t.11 = [this+4]
+  if t.11 goto :null20
+    Error("null pointer")
+  null20:
+  t.12 = [t.11]
+  t.12 = Lt(5 t.12)
+  if t.12 goto :bounds19
+    Error("array index out of bounds")
+  bounds19:
+  t.12 = MulS(5 4)
+  t.12 = Add(t.12 t.11)
+  [t.12+4] = 11
+  t.13 = [this+4]
+  if t.13 goto :null21
+    Error("null pointer")
+  null21:
+  t.14 = [t.13]
+  t.14 = Lt(6 t.14)
+  if t.14 goto :bounds20
+    Error("array index out of bounds")
+  bounds20:
+  t.14 = MulS(6 4)
+  t.14 = Add(t.14 t.13)
+  [t.14+4] = 6
+  t.15 = [this+4]
+  if t.15 goto :null22
+    Error("null pointer")
+  null22:
+  t.16 = [t.15]
+  t.16 = Lt(7 t.16)
+  if t.16 goto :bounds21
+    Error("array index out of bounds")
+  bounds21:
+  t.16 = MulS(7 4)
+  t.16 = Add(t.16 t.15)
+  [t.16+4] = 9
+  t.17 = [this+4]
+  if t.17 goto :null23
+    Error("null pointer")
+  null23:
+  t.18 = [t.17]
+  t.18 = Lt(8 t.18)
+  if t.18 goto :bounds22
+    Error("array index out of bounds")
+  bounds22:
+  t.18 = MulS(8 4)
+  t.18 = Add(t.18 t.17)
+  [t.18+4] = 19
+  t.19 = [this+4]
+  if t.19 goto :null24
+    Error("null pointer")
+  null24:
+  t.20 = [t.19]
+  t.20 = Lt(9 t.20)
+  if t.20 goto :bounds23
     Error("array index out of bounds")
   bounds23:
-  t.4 = MulS(0 4)
-  t.4 = Add(t.4 number)
-  [t.4+4] = 20
-  t.5 = [number]
-  t.6 = LtS(1 t.5)
-  if t.6 goto :bounds24
-    Error("array index out of bounds")
-  bounds24:
-  t.7 = MulS(1 4)
-  t.7 = Add(t.7 number)
-  [t.7+4] = 7
-  t.8 = [number]
-  t.9 = LtS(2 t.8)
-  if t.9 goto :bounds25
-    Error("array index out of bounds")
-  bounds25:
-  t.10 = MulS(2 4)
-  t.10 = Add(t.10 number)
-  [t.10+4] = 12
-  t.11 = [number]
-  t.12 = LtS(3 t.11)
-  if t.12 goto :bounds26
-    Error("array index out of bounds")
-  bounds26:
-  t.13 = MulS(3 4)
-  t.13 = Add(t.13 number)
-  [t.13+4] = 18
-  t.14 = [number]
-  t.15 = LtS(4 t.14)
-  if t.15 goto :bounds27
-    Error("array index out of bounds")
-  bounds27:
-  t.16 = MulS(4 4)
-  t.16 = Add(t.16 number)
-  [t.16+4] = 2
-  t.17 = [number]
-  t.18 = LtS(5 t.17)
-  if t.18 goto :bounds28
-    Error("array index out of bounds")
-  bounds28:
-  t.19 = MulS(5 4)
-  t.19 = Add(t.19 number)
-  [t.19+4] = 11
-  t.20 = [number]
-  t.21 = LtS(6 t.20)
-  if t.21 goto :bounds29
-    Error("array index out of bounds")
-  bounds29:
-  t.22 = MulS(6 4)
-  t.22 = Add(t.22 number)
-  [t.22+4] = 6
-  t.23 = [number]
-  t.24 = LtS(7 t.23)
-  if t.24 goto :bounds30
-    Error("array index out of bounds")
-  bounds30:
-  t.25 = MulS(7 4)
-  t.25 = Add(t.25 number)
-  [t.25+4] = 9
-  t.26 = [number]
-  t.27 = LtS(8 t.26)
-  if t.27 goto :bounds31
-    Error("array index out of bounds")
-  bounds31:
-  t.28 = MulS(8 4)
-  t.28 = Add(t.28 number)
-  [t.28+4] = 19
-  t.29 = [number]
-  t.30 = LtS(9 t.29)
-  if t.30 goto :bounds32
-    Error("array index out of bounds")
-  bounds32:
-  t.31 = MulS(9 4)
-  t.31 = Add(t.31 number)
-  [t.31+4] = 5
+  t.20 = MulS(9 4)
+  t.20 = Add(t.20 t.19)
+  [t.20+4] = 5
   ret 0
 
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v

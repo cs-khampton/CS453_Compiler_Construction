@@ -53,9 +53,13 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
     private String currClass;
     private String currMethod;
     private int tempCount;
-    private int labelCount;
+    private int ifCount;
+    private int whileCount;
+    private int boundCount;
+    private int ssCount;
     private int nullCount;
     private int indent;
+    private boolean needsAlloc = false;
 
     public VVisitor(VTranslator translator) {
         this.translate = translator;
@@ -64,8 +68,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
 
         indent = 0;
         tempCount = 0;
-        labelCount = 1;
+        ifCount = 1;
+        whileCount = 1;
+        ssCount = 1;
         nullCount = 1;
+        boundCount = 1;
     }
 
     /*
@@ -84,7 +91,16 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         }
         n.f0.accept(this, arg); // MainClass()
         n.f1.accept(this, arg); // TypeDeclaration()*
+        if (needsAlloc != false) {
+            translate.addToOut("func AllocArray(size)");
+            translate.addToOut("  bytes = MulS(size 4)");
+            translate.addToOut("  bytes = Add(bytes 4)");
+            translate.addToOut("  v = HeapAllocZ(bytes)");
+            translate.addToOut("  [v] = size");
+            translate.addToOut("  ret v");
+        }
         // <EOF>
+
         return null;
     }
 
@@ -228,7 +244,8 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         md.f8.accept(this, arg);
 
         MyType retVal = md.f10.f0.choice.accept(this, arg);
-        translate.addToOut(formatIndent("ret " + (retVal == null ? "0" : retVal.type)));
+        String retStr = resExpr(retVal);
+        translate.addToOut(formatIndent("ret " + (retVal == null ? "0" : retStr)));
         deIndent();
 
         translate.addToOut("");
@@ -333,8 +350,10 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
 
         // FIXME: check RHS is a message send and pass varName directly (making dup
         // temps)
+
         String id = as.f0.f0.toString();
         Node choice = as.f2.f0.choice;
+
         if (choice instanceof MessageSend ms) {
             String instKey = resiKey(currClass, id, arg);
             if (instKey != null && instKey.contains(":instVariable:")) {
@@ -342,6 +361,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
                 if (expr == null) {
                     return null;
                 }
+                // String exprStr = resExpr(expr);
                 int offset = getiOffset(currClass, id, arg);
                 translate.addToOut(formatIndent("[this+" + offset + "] = " + expr.type));
             } else {
@@ -362,16 +382,20 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         } else {
             translate.addToOut(formatIndent(id + " = " + exprType.type));
         }
+
         return null;
     }
 
     private void visitMessageSend(String id, MessageSend ms, HashMap<String, String> arg) {
         MyType rec = ms.f0.f0.choice.accept(this, arg);
+
         String methodName = ms.f2.f0.toString();
         if (rec == null) {
             return;
         }
+
         if (!rec.type.equals("this")) {
+
             String nullLabel = "null" + nullCount++;
             translate.addToOut(formatIndent("if " + rec.type + " goto :" + nullLabel));
             indent();
@@ -379,17 +403,22 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             deIndent();
             translate.addToOut(formatIndent(nullLabel + ":"));
         }
+
         String recClass = getReceiver(ms.f0, arg);
         int offset = getmOffset(recClass, methodName, arg);
         String vmtStr = newTemp();
+
         translate.addToOut(formatIndent(vmtStr + " = [" + rec.type + "]"));
         translate.addToOut(formatIndent(vmtStr + " = [" + vmtStr + "+" + offset + "]"));
+
         String args = rec.type;
         if (ms.f4.present()) {
+
             ExpressionList el = (ExpressionList) ms.f4.node;
+
             MyType val = el.f0.f0.choice.accept(this, arg);
             if (val != null) {
-                args += " " + val.type;
+                args += " " + resExpr(val);
             }
             for (Node n : el.f1.nodes) {
                 ExpressionRest er = (ExpressionRest) n;
@@ -418,26 +447,47 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         String id = aas.f0.f0.toString();
 
         MyType index = aas.f2.f0.choice.accept(this, arg);
-        MyType exp = aas.f5.f0.choice.accept(this, arg);
-        if (index == null || exp == null) {
+        if (index == null) {
             return null;
         }
-        // check bounds
-        String t0 = newTemp();
-        String t1 = newTemp();
-        String boundLabel = "bounds" + nullCount++;
-        translate.addToOut(formatIndent(t0 + " = [" + id + "]"));
-        translate.addToOut(formatIndent(t1 + " = LtS(" + index.type + " " + t0 + ")"));
-        translate.addToOut(formatIndent("if " + t1 + " goto :" + boundLabel + ""));
+
+        String ref;
+        String instKey = resiKey(currClass, id, arg);
+        if (instKey != null && instKey.contains(":instVariable:")) {
+            int offset = getiOffset(currClass, id, arg);
+            ref = newTemp();
+            translate.addToOut(formatIndent(ref + " = [this+" + offset + "]"));
+        } else {
+            ref = id;
+        }
+
+        String nullLabel = "null" + nullCount++;
+        translate.addToOut(formatIndent("if " + ref + " goto :" + nullLabel));
+        indent();
+        translate.addToOut(formatIndent("Error(\"null pointer\")"));
+        deIndent();
+        translate.addToOut(formatIndent(nullLabel + ":"));
+
+        String b0 = newTemp();
+        String boundsLabel = "bounds" + boundCount++;
+
+        translate.addToOut(formatIndent(b0 + " = [" + ref + "]"));
+        translate.addToOut(formatIndent(b0 + " = Lt(" + index.type + " " + b0 +
+                ")"));
+        translate.addToOut(formatIndent("if " + b0 + " goto :" + boundsLabel + ""));
         indent();
         translate.addToOut(formatIndent("Error(\"array index out of bounds\")"));
         deIndent();
-        translate.addToOut(formatIndent(boundLabel + ":"));
+        translate.addToOut(formatIndent(boundsLabel + ":"));
 
-        String address = newTemp();
-        translate.addToOut(formatIndent(address + " = MulS(" + index.type + " 4)"));
-        translate.addToOut(formatIndent(address + " = Add(" + address + " " + id + ")"));
-        translate.addToOut(formatIndent("[" + address + "+4] = " + exp.type));
+        translate.addToOut(formatIndent(b0 + " = MulS(" + index.type + " 4)"));
+        translate.addToOut(formatIndent(b0 + " = Add(" + b0 + " " + ref + ")"));
+        MyType expr = aas.f5.f0.choice.accept(this, arg);
+        if (expr == null) {
+            return null;
+        }
+        String exprStr = resExpr(expr);
+        translate.addToOut(formatIndent("[" + b0 + "+4] = " + exprStr));
         return null;
     }
 
@@ -452,7 +502,8 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f6: Statement()
      */
     public MyType visit(IfStatement is, HashMap<String, String> arg) {
-        String label = "if" + labelCount++;
+
+        String label = "if" + ifCount++;
         String ieLabel = label + "_else";
         String endLabel = label + "_end";
 
@@ -483,19 +534,23 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f4: Statement()
      */
     public MyType visit(WhileStatement ws, HashMap<String, String> arg) {
-        String label = "while" + labelCount++;
+
+        String label = "while" + whileCount++;
+
         String topLabel = label + "_top";
         String endLabel = label + "_end";
 
         translate.addToOut(formatIndent(topLabel + ":"));
-        indent();
 
         MyType cond = ws.f2.f0.choice.accept(this, arg);
+
         if (cond == null) {
             return null;
         }
         String condStr = resExpr(cond);
         translate.addToOut(formatIndent("if0 " + condStr + " goto :" + endLabel));
+        indent();
+
         ws.f4.f0.choice.accept(this, arg);
         translate.addToOut(formatIndent("goto :" + topLabel));
         deIndent();
@@ -539,30 +594,36 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
      * f2: PrimaryExpression()
      */
     public MyType visit(AndExpression ae, HashMap<String, String> arg) {
+        String temp = newTemp();
+
         MyType t0 = getOp(ae.f0, arg);
-        MyType t2 = getOp(ae.f2, arg);
-        if (t0 == null || t2 == null) {
+        if (t0 == null) {
             return null;
         }
+        String lhs = resExpr(t0);
 
-        String temp = newTemp();
-        String label = "ss" + labelCount++;
+        String label = "ss" + ssCount++;
         String ieLabel = label + "_else";
         String endLabel = label + "_end";
 
-        translate.addToOut(formatIndent("if0 " + t0.type + " goto :" + ieLabel));
+        translate.addToOut(formatIndent("if0 " + lhs + " goto :" + ieLabel));
         indent();
-        translate.addToOut(formatIndent("if0 " + t2.type + " goto :" + ieLabel));
-        indent();
-        translate.addToOut(formatIndent(temp + " = 1"));
+
+        MyType t2 = getOp(ae.f2, arg);
+        if (t2 == null) {
+            return null;
+        }
+
+        translate.addToOut(formatIndent(temp + " = " + t2.type));
         translate.addToOut(formatIndent("goto :" + endLabel));
-        deIndent();
+        // deIndent();
         deIndent();
         translate.addToOut(formatIndent(ieLabel + ":"));
         indent();
         translate.addToOut(formatIndent(temp + " = 0"));
         deIndent();
         translate.addToOut(formatIndent(endLabel + ":"));
+
         return new MyType(temp);
     }
 
@@ -578,7 +639,9 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         if (t0 == null || t2 == null) {
             return null;
         }
-        return new MyType("LtS(" + t0.type + " " + t2.type + ")");
+        String lhs = resExpr(t0);
+        String rhs = resExpr(t2);
+        return new MyType("LtS(" + lhs + " " + rhs + ")");
     }
 
     /*
@@ -638,12 +701,11 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         // FIXME: Working on
         MyType arr = getOp(al.f0, arg);
         MyType index = al.f2.f0.choice.accept(this, arg);
-
-        if (arr == null || index == null) {
+        if (arr == null || index == null)
             return null;
-        }
 
         String nullLabel = "null" + nullCount++;
+        String boundsLabel = "bounds" + boundCount++;
 
         translate.addToOut(formatIndent("if " + arr.type + " goto :" + nullLabel));
         indent();
@@ -651,26 +713,20 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         deIndent();
         translate.addToOut(formatIndent(nullLabel + ":"));
 
-        // Check bounds
         String b0 = newTemp();
-        String b2 = newTemp();
-        String boundsLabel = "bounds" + nullCount++;
         translate.addToOut(formatIndent(b0 + " = [" + arr.type + "]"));
-        translate.addToOut(formatIndent(b2 + " = LtS(" + index.type + " " + b0 + ")"));
-        translate.addToOut(formatIndent("if " + b2 + " goto :" + boundsLabel));
+        translate.addToOut(formatIndent(b0 + " = Lt(" + index.type + " " + b0 + ")"));
+        translate.addToOut(formatIndent("if " + b0 + " goto :" + boundsLabel));
         indent();
         translate.addToOut(formatIndent("Error(\"array index out of bounds\")"));
         deIndent();
         translate.addToOut(formatIndent(boundsLabel + ":"));
 
         // calc address and load the value
-        String address = newTemp();
-        String res = newTemp();
 
-        translate.addToOut(formatIndent(address + " = MulS(" + index.type + " 4)"));
-        translate.addToOut(formatIndent(address + " = Add(" + address + " " + arr.type + ")"));
-        translate.addToOut(formatIndent(res + " = [" + address + "+4]"));
-        return new MyType(res);
+        translate.addToOut(formatIndent(b0 + " = MulS(" + index.type + " 4)"));
+        translate.addToOut(formatIndent(b0 + " = Add(" + b0 + " " + arr.type + ")"));
+        return new MyType("[" + b0 + "+4]");
     }
 
     /*
@@ -733,7 +789,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             ExpressionList el = (ExpressionList) ms.f4.node;
             MyType val = el.f0.f0.choice.accept(this, arg);
             if (val != null) {
-                args += " " + val.type;
+                args += " " + resExpr(val);
             }
             for (Node n : el.f1.nodes) {
                 ExpressionRest er = (ExpressionRest) n;
@@ -813,6 +869,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         String name = id.f0.toString();
         String instKey = resiKey(currClass, name, arg);
         if (instKey != null && instKey.contains(":instVariable:")) {
+
             int offset = getiOffset(currClass, name, arg);
             String temp = newTemp();
             translate.addToOut(formatIndent(temp + " = [this+" + offset + "]"));
@@ -842,12 +899,9 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         if (t3 == null) {
             return null;
         }
-        String bts = newTemp();
+        needsAlloc = true;
         String res = newTemp();
-        translate.addToOut(formatIndent(bts + " = MulS(" + t3.type + " 4)"));
-        translate.addToOut(formatIndent(bts + " = Add(" + bts + " 4)"));
-        translate.addToOut(formatIndent(res + " = HeapAllocZ(" + bts + ")"));
-        translate.addToOut(formatIndent("[" + res + "] = " + t3.type));
+        translate.addToOut(formatIndent(res + " = call :AllocArray(" + t3.type + ")"));
         return new MyType(res);
     }
 
@@ -884,9 +938,9 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         if (exprType == null) {
             return null;
         }
-        String temp = newTemp();
-        translate.addToOut(formatIndent(temp + " = Sub(1 " + exprType.type + ")"));
-        return new MyType(temp);
+        String in = resExpr(exprType);
+        // String temp = newTemp();
+        return new MyType("Sub(1 " + in + ")");
     }
 
     /*
@@ -950,7 +1004,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
             translate.addToOut("  :" + className + "." + mName);
         }
         translate.addToOut("");
-        translate.addToOut("");
+        // translate.addToOut("");
     }
 
     private int getAllocationSize(String name, HashMap<String, String> arg) {
@@ -992,7 +1046,6 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
         while (curr != null && !curr.equals("none")) {
             for (String k : arg.keySet()) {
                 if (k.startsWith("class:[" + curr + "]:instVariable:[")) {
-                    // System.out.println(offset);
                     if (stripKey(k).equals(varName)) {
                         return offset;
                     }
@@ -1065,7 +1118,7 @@ public class VVisitor extends GJDepthFirst<MyType, HashMap<String, String>> {
     }
 
     private String resExpr(MyType expr) {
-        if (expr.type.contains("(")) {
+        if (expr.type.endsWith(")") || expr.type.startsWith("[")) {
             String temp = newTemp();
             translate.addToOut(formatIndent(temp + " = " + expr.type));
             return temp;

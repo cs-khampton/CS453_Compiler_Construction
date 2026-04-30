@@ -1,7 +1,6 @@
 const vmt_Checker
   :Checker.check
 
-
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_Checker
@@ -17,13 +16,12 @@ func Main()
 func Checker.check(this)
   a = 1
   b = 1
-  if0 a goto :ss2_else
-    if0 b goto :ss2_else
-      t.0 = 1
-      goto :ss2_end
-  ss2_else:
+  if0 a goto :ss1_else
+    t.0 = b
+    goto :ss1_end
+  ss1_else:
     t.0 = 0
-  ss2_end:
+  ss1_end:
   if0 t.0 goto :if1_else
     result = 1
     goto :if1_end

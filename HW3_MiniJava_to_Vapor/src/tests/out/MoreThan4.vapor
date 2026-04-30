@@ -2,7 +2,6 @@ const vmt_MT4
   :MT4.Start
   :MT4.Change
 
-
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_MT4
