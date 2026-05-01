@@ -25,6 +25,23 @@ public class VMVisitor extends VInstr.Visitor<Throwable> {
 
     public void visit(VCall c) throws Throwable {
         // TODO: Implement
+        for (int i = 0; i < c.args.length; i++) {
+            String arg = resolveOp(c.args[i]);
+            translate.addToOut("  $a" + i + " = " + arg);
+        }
+        String ad = resolveAddr(c.addr);
+
+        if (c.dest != null) {
+            String dest = resolveVar(c.dest);
+            translate.addToOut("  " + dest + " = $v0");
+        }
+    }
+
+    private String resolveAddr(VAddr ad) {
+        if (ad instanceof VAddr.Label) {
+            return ":" + ((VAddr.Label<?>) ad).label;
+        }
+        return resolveVar(((VAddr.Var<?>) ad).var);
     }
 
     public void visit(VBuiltIn b) throws Throwable {
