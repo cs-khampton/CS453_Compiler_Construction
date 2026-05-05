@@ -2,8 +2,8 @@ import java.io.PrintWriter;
 
 import cs132.vapor.ast.VDataSegment;
 import cs132.vapor.ast.VFunction;
-import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VOperand;
+import cs132.vapor.ast.VaporProgram;
 
 public class VMTranslator {
     private PrintWriter out;

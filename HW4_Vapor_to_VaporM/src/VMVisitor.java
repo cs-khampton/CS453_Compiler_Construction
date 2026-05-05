@@ -1,9 +1,15 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import cs132.vapor.ast.*;
+import cs132.vapor.ast.VAddr;
+import cs132.vapor.ast.VAssign;
+import cs132.vapor.ast.VBranch;
+import cs132.vapor.ast.VBuiltIn;
+import cs132.vapor.ast.VCall;
+import cs132.vapor.ast.VGoto;
+import cs132.vapor.ast.VInstr;
+import cs132.vapor.ast.VMemRead;
+import cs132.vapor.ast.VMemWrite;
+import cs132.vapor.ast.VOperand;
+import cs132.vapor.ast.VReturn;
+import cs132.vapor.ast.VVarRef;
 
 public class VMVisitor extends VInstr.Visitor<Throwable> {
     VMTranslator translate;
