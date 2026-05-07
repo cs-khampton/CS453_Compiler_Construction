@@ -1,9 +1,0 @@
-const vmt_Fac
-  :Fac.ComputeFac
-
-func Main()
-ret
-
-func Fac.ComputeFac(this num)
-  ret num_aux
-

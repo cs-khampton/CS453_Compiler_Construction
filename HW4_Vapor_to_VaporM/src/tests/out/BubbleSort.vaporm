@@ -1,0 +1,637 @@
+const vmt_BBS
+  :BBS.Start
+  :BBS.Sort
+  :BBS.Print
+  :BBS.Init
+
+func Main [in 0, out 0, local 3]
+  $v0 = HeapAllocZ(12)
+  local[0] = $v0
+  $v0 = local[0]
+  [$v0+] = :vmt_BBS
+  $v0 = local[0]
+  if $v0 goto :null1
+  Error("null pointer")
+null1:
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[1] = $v0
+  $v0 = local[1]
+  $v0 = [$v0+]
+  local[1] = $v0
+  $v0 = local[0]
+  $a0 = $v0
+  $a1 = 10
+  $v0 = local[1]
+  call $v0
+  local[2] = $v0
+  $v0 = local[2]
+  PrintIntS($v0)
+  ret
+
+func BBS.Start [in 0, out 0, local 7]
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[2] = $v0
+  $v0 = local[2]
+  $v0 = [$v0+]
+  local[2] = $v0
+  $v0 = local[0]
+  $a0 = $v0
+  $v0 = local[1]
+  $a1 = $v0
+  $v0 = local[2]
+  call $v0
+  local[3] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[4] = $v0
+  $v0 = local[4]
+  $v0 = [$v0+]
+  local[4] = $v0
+  $v0 = local[0]
+  $a0 = $v0
+  $v0 = local[4]
+  call $v0
+  local[3] = $v0
+  PrintIntS(99999)
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[5] = $v0
+  $v0 = local[5]
+  $v0 = [$v0+]
+  local[5] = $v0
+  $v0 = local[0]
+  $a0 = $v0
+  $v0 = local[5]
+  call $v0
+  local[3] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[6] = $v0
+  $v0 = local[6]
+  $v0 = [$v0+]
+  local[6] = $v0
+  $v0 = local[0]
+  $a0 = $v0
+  $v0 = local[6]
+  call $v0
+  local[3] = $v0
+  $v0 = 0
+  ret
+
+func BBS.Sort [in 0, out 0, local 28]
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[1] = $v0
+  $v0 = local[1]
+  $v0 = Sub($v0 1)
+  local[2] = $v0
+  $v0 = Sub(0 1)
+  local[3] = $v0
+while1_top:
+  $v0 = local[3]
+  $v1 = local[2]
+  $v0 = LtS($v0 $v1)
+  local[4] = $v0
+  $v0 = local[4]
+  if0 $v0 goto :while1_end
+  local[5] = 1
+while2_top:
+  $v0 = local[2]
+  $v0 = Add($v0 1)
+  local[6] = $v0
+  $v0 = local[5]
+  $v1 = local[6]
+  $v0 = LtS($v0 $v1)
+  local[7] = $v0
+  $v0 = local[7]
+  if0 $v0 goto :while2_end
+  $v0 = local[5]
+  $v0 = Sub($v0 1)
+  local[8] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[9] = $v0
+  $v0 = local[9]
+  if $v0 goto :null2
+  Error("null pointer")
+null2:
+  $v0 = local[9]
+  $v0 = [$v0+]
+  local[10] = $v0
+  $v0 = local[8]
+  $v1 = local[10]
+  $v0 = Lt($v0 $v1)
+  local[10] = $v0
+  $v0 = local[10]
+  if $v0 goto :bounds1
+  Error("array index out of bounds")
+bounds1:
+  $v0 = local[8]
+  $v0 = MulS($v0 4)
+  local[10] = $v0
+  $v0 = local[10]
+  $v1 = local[9]
+  $v0 = Add($v0 $v1)
+  local[10] = $v0
+  $v0 = local[10]
+  $v0 = [$v0+]
+  local[11] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[12] = $v0
+  $v0 = local[12]
+  if $v0 goto :null3
+  Error("null pointer")
+null3:
+  $v0 = local[12]
+  $v0 = [$v0+]
+  local[13] = $v0
+  $v0 = local[5]
+  $v1 = local[13]
+  $v0 = Lt($v0 $v1)
+  local[13] = $v0
+  $v0 = local[13]
+  if $v0 goto :bounds2
+  Error("array index out of bounds")
+bounds2:
+  $v0 = local[5]
+  $v0 = MulS($v0 4)
+  local[13] = $v0
+  $v0 = local[13]
+  $v1 = local[12]
+  $v0 = Add($v0 $v1)
+  local[13] = $v0
+  $v0 = local[13]
+  $v0 = [$v0+]
+  local[14] = $v0
+  $v0 = local[14]
+  $v1 = local[11]
+  $v0 = LtS($v0 $v1)
+  local[15] = $v0
+  $v0 = local[15]
+  if0 $v0 goto :if1_else
+  $v0 = local[5]
+  $v0 = Sub($v0 1)
+  local[16] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[17] = $v0
+  $v0 = local[17]
+  if $v0 goto :null4
+  Error("null pointer")
+null4:
+  $v0 = local[17]
+  $v0 = [$v0+]
+  local[18] = $v0
+  $v0 = local[16]
+  $v1 = local[18]
+  $v0 = Lt($v0 $v1)
+  local[18] = $v0
+  $v0 = local[18]
+  if $v0 goto :bounds3
+  Error("array index out of bounds")
+bounds3:
+  $v0 = local[16]
+  $v0 = MulS($v0 4)
+  local[18] = $v0
+  $v0 = local[18]
+  $v1 = local[17]
+  $v0 = Add($v0 $v1)
+  local[18] = $v0
+  $v0 = local[18]
+  $v0 = [$v0+]
+  local[19] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[20] = $v0
+  $v0 = local[20]
+  if $v0 goto :null5
+  Error("null pointer")
+null5:
+  $v0 = local[20]
+  $v0 = [$v0+]
+  local[21] = $v0
+  $v0 = local[16]
+  $v1 = local[21]
+  $v0 = Lt($v0 $v1)
+  local[21] = $v0
+  $v0 = local[21]
+  if $v0 goto :bounds4
+  Error("array index out of bounds")
+bounds4:
+  $v0 = local[16]
+  $v0 = MulS($v0 4)
+  local[21] = $v0
+  $v0 = local[21]
+  $v1 = local[20]
+  $v0 = Add($v0 $v1)
+  local[21] = $v0
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[22] = $v0
+  $v0 = local[22]
+  if $v0 goto :null6
+  Error("null pointer")
+null6:
+  $v0 = local[22]
+  $v0 = [$v0+]
+  local[23] = $v0
+  $v0 = local[5]
+  $v1 = local[23]
+  $v0 = Lt($v0 $v1)
+  local[23] = $v0
+  $v0 = local[23]
+  if $v0 goto :bounds5
+  Error("array index out of bounds")
+bounds5:
+  $v0 = local[5]
+  $v0 = MulS($v0 4)
+  local[23] = $v0
+  $v0 = local[23]
+  $v1 = local[22]
+  $v0 = Add($v0 $v1)
+  local[23] = $v0
+  $v0 = local[23]
+  $v0 = [$v0+]
+  local[24] = $v0
+  $v0 = local[21]
+  $v1 = local[24]
+  [$v0+] = $v1
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[25] = $v0
+  $v0 = local[25]
+  if $v0 goto :null7
+  Error("null pointer")
+null7:
+  $v0 = local[25]
+  $v0 = [$v0+]
+  local[26] = $v0
+  $v0 = local[5]
+  $v1 = local[26]
+  $v0 = Lt($v0 $v1)
+  local[26] = $v0
+  $v0 = local[26]
+  if $v0 goto :bounds6
+  Error("array index out of bounds")
+bounds6:
+  $v0 = local[5]
+  $v0 = MulS($v0 4)
+  local[26] = $v0
+  $v0 = local[26]
+  $v1 = local[25]
+  $v0 = Add($v0 $v1)
+  local[26] = $v0
+  $v0 = local[26]
+  $v1 = local[19]
+  [$v0+] = $v1
+  goto ::if1_end
+if1_else:
+  local[27] = 0
+if1_end:
+  $v0 = local[5]
+  $v0 = Add($v0 1)
+  local[5] = $v0
+  goto ::while2_top
+while2_end:
+  $v0 = local[2]
+  $v0 = Sub($v0 1)
+  local[2] = $v0
+  goto ::while1_top
+while1_end:
+  $v0 = 0
+  ret
+
+func BBS.Print [in 0, out 0, local 7]
+  local[1] = 0
+while3_top:
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[2] = $v0
+  $v0 = local[1]
+  $v1 = local[2]
+  $v0 = LtS($v0 $v1)
+  local[3] = $v0
+  $v0 = local[3]
+  if0 $v0 goto :while3_end
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[4] = $v0
+  $v0 = local[4]
+  if $v0 goto :null8
+  Error("null pointer")
+null8:
+  $v0 = local[4]
+  $v0 = [$v0+]
+  local[5] = $v0
+  $v0 = local[1]
+  $v1 = local[5]
+  $v0 = Lt($v0 $v1)
+  local[5] = $v0
+  $v0 = local[5]
+  if $v0 goto :bounds7
+  Error("array index out of bounds")
+bounds7:
+  $v0 = local[1]
+  $v0 = MulS($v0 4)
+  local[5] = $v0
+  $v0 = local[5]
+  $v1 = local[4]
+  $v0 = Add($v0 $v1)
+  local[5] = $v0
+  $v0 = local[5]
+  $v0 = [$v0+]
+  local[6] = $v0
+  $v0 = local[6]
+  PrintIntS($v0)
+  $v0 = local[1]
+  $v0 = Add($v0 1)
+  local[1] = $v0
+  goto ::while3_top
+while3_end:
+  $v0 = 0
+  ret
+
+func BBS.Init [in 0, out 0, local 23]
+  $v0 = local[0]
+  $v1 = local[1]
+  [$v0+] = $v1
+  $v0 = local[1]
+  $a0 = $v0
+  call ::AllocArray
+  local[2] = $v0
+  $v0 = local[0]
+  $v1 = local[2]
+  [$v0+] = $v1
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[3] = $v0
+  $v0 = local[3]
+  if $v0 goto :null9
+  Error("null pointer")
+null9:
+  $v0 = local[3]
+  $v0 = [$v0+]
+  local[4] = $v0
+  $v1 = local[4]
+  $v0 = Lt(0 $v1)
+  local[4] = $v0
+  $v0 = local[4]
+  if $v0 goto :bounds8
+  Error("array index out of bounds")
+bounds8:
+  $v0 = MulS(0 4)
+  local[4] = $v0
+  $v0 = local[4]
+  $v1 = local[3]
+  $v0 = Add($v0 $v1)
+  local[4] = $v0
+  $v0 = local[4]
+  [$v0+] = 20
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[5] = $v0
+  $v0 = local[5]
+  if $v0 goto :null10
+  Error("null pointer")
+null10:
+  $v0 = local[5]
+  $v0 = [$v0+]
+  local[6] = $v0
+  $v1 = local[6]
+  $v0 = Lt(1 $v1)
+  local[6] = $v0
+  $v0 = local[6]
+  if $v0 goto :bounds9
+  Error("array index out of bounds")
+bounds9:
+  $v0 = MulS(1 4)
+  local[6] = $v0
+  $v0 = local[6]
+  $v1 = local[5]
+  $v0 = Add($v0 $v1)
+  local[6] = $v0
+  $v0 = local[6]
+  [$v0+] = 7
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[7] = $v0
+  $v0 = local[7]
+  if $v0 goto :null11
+  Error("null pointer")
+null11:
+  $v0 = local[7]
+  $v0 = [$v0+]
+  local[8] = $v0
+  $v1 = local[8]
+  $v0 = Lt(2 $v1)
+  local[8] = $v0
+  $v0 = local[8]
+  if $v0 goto :bounds10
+  Error("array index out of bounds")
+bounds10:
+  $v0 = MulS(2 4)
+  local[8] = $v0
+  $v0 = local[8]
+  $v1 = local[7]
+  $v0 = Add($v0 $v1)
+  local[8] = $v0
+  $v0 = local[8]
+  [$v0+] = 12
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[9] = $v0
+  $v0 = local[9]
+  if $v0 goto :null12
+  Error("null pointer")
+null12:
+  $v0 = local[9]
+  $v0 = [$v0+]
+  local[10] = $v0
+  $v1 = local[10]
+  $v0 = Lt(3 $v1)
+  local[10] = $v0
+  $v0 = local[10]
+  if $v0 goto :bounds11
+  Error("array index out of bounds")
+bounds11:
+  $v0 = MulS(3 4)
+  local[10] = $v0
+  $v0 = local[10]
+  $v1 = local[9]
+  $v0 = Add($v0 $v1)
+  local[10] = $v0
+  $v0 = local[10]
+  [$v0+] = 18
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[11] = $v0
+  $v0 = local[11]
+  if $v0 goto :null13
+  Error("null pointer")
+null13:
+  $v0 = local[11]
+  $v0 = [$v0+]
+  local[12] = $v0
+  $v1 = local[12]
+  $v0 = Lt(4 $v1)
+  local[12] = $v0
+  $v0 = local[12]
+  if $v0 goto :bounds12
+  Error("array index out of bounds")
+bounds12:
+  $v0 = MulS(4 4)
+  local[12] = $v0
+  $v0 = local[12]
+  $v1 = local[11]
+  $v0 = Add($v0 $v1)
+  local[12] = $v0
+  $v0 = local[12]
+  [$v0+] = 2
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[13] = $v0
+  $v0 = local[13]
+  if $v0 goto :null14
+  Error("null pointer")
+null14:
+  $v0 = local[13]
+  $v0 = [$v0+]
+  local[14] = $v0
+  $v1 = local[14]
+  $v0 = Lt(5 $v1)
+  local[14] = $v0
+  $v0 = local[14]
+  if $v0 goto :bounds13
+  Error("array index out of bounds")
+bounds13:
+  $v0 = MulS(5 4)
+  local[14] = $v0
+  $v0 = local[14]
+  $v1 = local[13]
+  $v0 = Add($v0 $v1)
+  local[14] = $v0
+  $v0 = local[14]
+  [$v0+] = 11
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[15] = $v0
+  $v0 = local[15]
+  if $v0 goto :null15
+  Error("null pointer")
+null15:
+  $v0 = local[15]
+  $v0 = [$v0+]
+  local[16] = $v0
+  $v1 = local[16]
+  $v0 = Lt(6 $v1)
+  local[16] = $v0
+  $v0 = local[16]
+  if $v0 goto :bounds14
+  Error("array index out of bounds")
+bounds14:
+  $v0 = MulS(6 4)
+  local[16] = $v0
+  $v0 = local[16]
+  $v1 = local[15]
+  $v0 = Add($v0 $v1)
+  local[16] = $v0
+  $v0 = local[16]
+  [$v0+] = 6
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[17] = $v0
+  $v0 = local[17]
+  if $v0 goto :null16
+  Error("null pointer")
+null16:
+  $v0 = local[17]
+  $v0 = [$v0+]
+  local[18] = $v0
+  $v1 = local[18]
+  $v0 = Lt(7 $v1)
+  local[18] = $v0
+  $v0 = local[18]
+  if $v0 goto :bounds15
+  Error("array index out of bounds")
+bounds15:
+  $v0 = MulS(7 4)
+  local[18] = $v0
+  $v0 = local[18]
+  $v1 = local[17]
+  $v0 = Add($v0 $v1)
+  local[18] = $v0
+  $v0 = local[18]
+  [$v0+] = 9
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[19] = $v0
+  $v0 = local[19]
+  if $v0 goto :null17
+  Error("null pointer")
+null17:
+  $v0 = local[19]
+  $v0 = [$v0+]
+  local[20] = $v0
+  $v1 = local[20]
+  $v0 = Lt(8 $v1)
+  local[20] = $v0
+  $v0 = local[20]
+  if $v0 goto :bounds16
+  Error("array index out of bounds")
+bounds16:
+  $v0 = MulS(8 4)
+  local[20] = $v0
+  $v0 = local[20]
+  $v1 = local[19]
+  $v0 = Add($v0 $v1)
+  local[20] = $v0
+  $v0 = local[20]
+  [$v0+] = 19
+  $v0 = local[0]
+  $v0 = [$v0+]
+  local[21] = $v0
+  $v0 = local[21]
+  if $v0 goto :null18
+  Error("null pointer")
+null18:
+  $v0 = local[21]
+  $v0 = [$v0+]
+  local[22] = $v0
+  $v1 = local[22]
+  $v0 = Lt(9 $v1)
+  local[22] = $v0
+  $v0 = local[22]
+  if $v0 goto :bounds17
+  Error("array index out of bounds")
+bounds17:
+  $v0 = MulS(9 4)
+  local[22] = $v0
+  $v0 = local[22]
+  $v1 = local[21]
+  $v0 = Add($v0 $v1)
+  local[22] = $v0
+  $v0 = local[22]
+  [$v0+] = 5
+  $v0 = 0
+  ret
+
+func AllocArray [in 0, out 0, local 3]
+  $v0 = local[0]
+  $v0 = MulS($v0 4)
+  local[1] = $v0
+  $v0 = local[1]
+  $v0 = Add($v0 4)
+  local[1] = $v0
+  $v0 = local[1]
+  $v0 = HeapAllocZ($v0)
+  local[2] = $v0
+  $v0 = local[2]
+  $v1 = local[0]
+  [$v0+] = $v1
+  $v0 = local[2]
+  $v0 = $v0
+  ret
+

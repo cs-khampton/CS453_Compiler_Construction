@@ -40,7 +40,7 @@ public class VMTranslator {
     public void getFunctions() throws Throwable {
         for (VFunction fun : program.functions) {
             VMSymbolTable symt = new VMSymbolTable();
-            symt.buildTable(fun);
+            symt.build(fun);
             visitor.setSymt(symt);
             addToOut("func " + fun.ident + " [in 0, out 0, local " + symt.localCount + "]");
             getBody(fun, symt);
@@ -49,6 +49,15 @@ public class VMTranslator {
     }
 
     public void getBody(VFunction fun, VMSymbolTable symt) throws Throwable {
+        // store params
+        for (int i = 0; i < fun.params.length; i++) {
+            String stackIndex = symt.locals.get(fun.params[i].ident);
+            if (stackIndex != null) {
+                addToOut("  " + stackIndex + " = $a" + i);
+            }
+        }
+
+        // emit instructions
         for (int i = 0; i < fun.body.length; i++) {
             if (symt.labels.containsKey(i)) {
                 addToOut(symt.labels.get(i) + ":");
@@ -56,4 +65,5 @@ public class VMTranslator {
             fun.body[i].accept(visitor);
         }
     }
+
 }

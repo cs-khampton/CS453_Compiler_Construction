@@ -1,0 +1,65 @@
+const empty_MT4
+
+func Main [in 0, out 0, local 1]
+  $a0 = :empty_MT4
+  $a1 = 1
+  $a2 = 2
+  $a3 = 3
+  $a4 = 4
+  $a5 = 5
+  $a6 = 6
+  call ::MT4.Start
+  local[0] = $v0
+  $v0 = local[0]
+  PrintIntS($v0)
+  ret
+
+func MT4.Start [in 0, out 0, local 8]
+  $v0 = local[1]
+  PrintIntS($v0)
+  $v0 = local[2]
+  PrintIntS($v0)
+  $v0 = local[3]
+  PrintIntS($v0)
+  $v0 = local[4]
+  PrintIntS($v0)
+  $v0 = local[5]
+  PrintIntS($v0)
+  $v0 = local[6]
+  PrintIntS($v0)
+  $v0 = local[0]
+  $a0 = $v0
+  $v0 = local[6]
+  $a1 = $v0
+  $v0 = local[5]
+  $a2 = $v0
+  $v0 = local[4]
+  $a3 = $v0
+  $v0 = local[3]
+  $a4 = $v0
+  $v0 = local[2]
+  $a5 = $v0
+  $v0 = local[1]
+  $a6 = $v0
+  call ::MT4.Change
+  local[7] = $v0
+  $v0 = local[7]
+  $v0 = $v0
+  ret
+
+func MT4.Change [in 0, out 0, local 7]
+  $v0 = local[1]
+  PrintIntS($v0)
+  $v0 = local[2]
+  PrintIntS($v0)
+  $v0 = local[3]
+  PrintIntS($v0)
+  $v0 = local[4]
+  PrintIntS($v0)
+  $v0 = local[5]
+  PrintIntS($v0)
+  $v0 = local[6]
+  PrintIntS($v0)
+  $v0 = 0
+  ret
+
