@@ -5,75 +5,84 @@ const empty_List
 const empty_LL
 
 func Main [in 0, out 0, local 1]
-  $a0 = :empty_LL
-  call ::LL.Start
+  $v0 = :empty_LL
+  $a0 = $v0
+  call :LL.Start
   local[0] = $v0
   $v0 = local[0]
   PrintIntS($v0)
   ret
 
 func Element.Init [in 0, out 0, local 4]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0] = $v1
   $v0 = local[0]
   $v1 = local[2]
-  [$v0+] = $v1
+  [$v0+4] = $v1
   $v0 = local[0]
   $v1 = local[3]
-  [$v0+] = $v1
+  [$v0+8] = $v1
   $v0 = 1
   ret
 
 func Element.GetAge [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func Element.GetSalary [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func Element.GetMarried [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func Element.Equal [in 0, out 0, local 13]
-  local[2] = 1
+  local[0] = $a0
+  local[1] = $a1
+  $v0 = 1
+  local[2] = $v0
   $v0 = local[1]
   if $v0 goto :null1
   Error("null pointer")
 null1:
   $v0 = local[1]
   $a0 = $v0
-  call ::Element.GetAge
+  call :Element.GetAge
   local[3] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[4] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[3]
-  $a1 = $v0
-  $v0 = local[4]
-  $a2 = $v0
-  call ::Element.Compare
+  $v1 = local[3]
+  $a1 = $v1
+  $t0 = local[4]
+  $a2 = $t0
+  call :Element.Compare
   local[5] = $v0
   $v0 = local[5]
   if $v0 goto :if1_else
-  local[2] = 0
-  goto ::if1_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if1_end
 if1_else:
   $v0 = local[1]
   if $v0 goto :null2
@@ -81,26 +90,27 @@ if1_else:
 null2:
   $v0 = local[1]
   $a0 = $v0
-  call ::Element.GetSalary
+  call :Element.GetSalary
   local[6] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[7] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[6]
-  $a1 = $v0
-  $v0 = local[7]
-  $a2 = $v0
-  call ::Element.Compare
+  $v1 = local[6]
+  $a1 = $v1
+  $t0 = local[7]
+  $a2 = $t0
+  call :Element.Compare
   local[8] = $v0
   $v0 = local[8]
   if $v0 goto :if2_else
-  local[2] = 0
-  goto ::if2_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if2_end
 if2_else:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[9] = $v0
   $v0 = local[9]
   if0 $v0 goto :if3_else
@@ -110,16 +120,18 @@ if2_else:
 null3:
   $v0 = local[1]
   $a0 = $v0
-  call ::Element.GetMarried
+  call :Element.GetMarried
   local[10] = $v0
   $v0 = local[10]
   if $v0 goto :if4_else
-  local[2] = 0
-  goto ::if4_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if4_end
 if4_else:
-  local[11] = 0
+  $v0 = 0
+  local[11] = $v0
 if4_end:
-  goto ::if3_end
+  goto :if3_end
 if3_else:
   $v0 = local[1]
   if $v0 goto :null4
@@ -127,21 +139,26 @@ if3_else:
 null4:
   $v0 = local[1]
   $a0 = $v0
-  call ::Element.GetMarried
+  call :Element.GetMarried
   local[12] = $v0
   $v0 = local[12]
   if0 $v0 goto :if5_else
-  local[2] = 0
-  goto ::if5_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if5_end
 if5_else:
-  local[11] = 0
+  $v0 = 0
+  local[11] = $v0
 if1_end:
   $v0 = local[2]
-  $v0 = $v0
   ret
 
 func Element.Compare [in 0, out 0, local 7]
-  local[3] = 0
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  $v0 = 0
+  local[3] = $v0
   $v0 = local[2]
   $v0 = Add($v0 1)
   local[4] = $v0
@@ -151,8 +168,9 @@ func Element.Compare [in 0, out 0, local 7]
   local[5] = $v0
   $v0 = local[5]
   if0 $v0 goto :if6_else
-  local[3] = 0
-  goto ::if6_end
+  $v0 = 0
+  local[3] = $v0
+  goto :if6_end
 if6_else:
   $v0 = local[1]
   $v1 = local[4]
@@ -160,35 +178,43 @@ if6_else:
   local[6] = $v0
   $v0 = local[6]
   if $v0 goto :if7_else
-  local[3] = 0
-  goto ::if7_end
+  $v0 = 0
+  local[3] = $v0
+  goto :if7_end
 if7_else:
-  local[3] = 1
+  $v0 = 1
+  local[3] = $v0
 if6_end:
   $v0 = local[3]
-  $v0 = $v0
   ret
 
 func List.Init [in 0, out 0, local 1]
+  local[0] = $a0
   $v0 = local[0]
-  [$v0+] = 1
+  [$v0+8] = 1
   $v0 = 1
   ret
 
 func List.InitNew [in 0, out 0, local 4]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[0]
   $v1 = local[3]
-  [$v0+] = $v1
+  [$v0+8] = $v1
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0] = $v1
   $v0 = local[0]
   $v1 = local[2]
-  [$v0+] = $v1
+  [$v0+4] = $v1
   $v0 = 1
   ret
 
 func List.Insert [in 0, out 0, local 5]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   local[2] = $v0
   $v0 = HeapAllocZ(12)
@@ -199,28 +225,33 @@ func List.Insert [in 0, out 0, local 5]
 null5:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[1]
-  $a1 = $v0
-  $v0 = local[2]
-  $a2 = $v0
-  $a3 = 0
-  call ::List.InitNew
+  $v1 = local[1]
+  $a1 = $v1
+  $t0 = local[2]
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
+  call :List.InitNew
   local[4] = $v0
   $v0 = local[3]
-  $v0 = $v0
   ret
 
 func List.SetNext [in 0, out 0, local 2]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0+4] = $v1
   $v0 = 1
   ret
 
 func List.Delete [in 0, out 0, local 17]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   local[2] = $v0
-  local[3] = 0
+  $v0 = 0
+  local[3] = $v0
   $v0 = Sub(0 1)
   local[4] = $v0
   $v0 = local[0]
@@ -228,10 +259,10 @@ func List.Delete [in 0, out 0, local 17]
   $v0 = local[0]
   local[6] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[7] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[8] = $v0
 while1_top:
   $v0 = local[7]
@@ -239,9 +270,10 @@ while1_top:
   $v1 = local[3]
   $v0 = Sub(1 $v1)
   local[9] = $v0
-  goto ::ss1_end
+  goto :ss1_end
 ss1_else:
-  local[9] = 0
+  $v0 = 0
+  local[9] = $v0
 ss1_end:
   $v0 = local[9]
   if0 $v0 goto :while1_end
@@ -251,13 +283,14 @@ ss1_end:
 null6:
   $v0 = local[1]
   $a0 = $v0
-  $v0 = local[8]
-  $a1 = $v0
-  call ::Element.Equal
+  $v1 = local[8]
+  $a1 = $v1
+  call :Element.Equal
   local[10] = $v0
   $v0 = local[10]
   if0 $v0 goto :if8_else
-  local[3] = 1
+  $v0 = 1
+  local[3] = $v0
   $v0 = local[4]
   $v0 = LtS($v0 0)
   local[11] = $v0
@@ -269,9 +302,9 @@ null6:
 null7:
   $v0 = local[5]
   $a0 = $v0
-  call ::List.GetNext
+  call :List.GetNext
   local[2] = $v0
-  goto ::if9_end
+  goto :if9_end
 if9_else:
   $v0 = Sub(0 555)
   local[12] = $v0
@@ -287,22 +320,23 @@ null8:
 null9:
   $v0 = local[5]
   $a0 = $v0
-  call ::List.GetNext
+  call :List.GetNext
   local[13] = $v0
   $v0 = local[6]
   $a0 = $v0
-  $v0 = local[13]
-  $a1 = $v0
-  call ::List.SetNext
+  $v1 = local[13]
+  $a1 = $v1
+  call :List.SetNext
   local[14] = $v0
   $v0 = Sub(0 555)
   local[15] = $v0
   $v0 = local[15]
   PrintIntS($v0)
 if9_end:
-  goto ::if8_end
+  goto :if8_end
 if8_else:
-  local[16] = 0
+  $v0 = 0
+  local[16] = $v0
 if8_end:
   $v0 = local[3]
   if $v0 goto :if10_else
@@ -314,7 +348,7 @@ if8_end:
 null10:
   $v0 = local[5]
   $a0 = $v0
-  call ::List.GetNext
+  call :List.GetNext
   local[5] = $v0
   $v0 = local[5]
   if $v0 goto :null11
@@ -322,7 +356,7 @@ null10:
 null11:
   $v0 = local[5]
   $a0 = $v0
-  call ::List.GetEnd
+  call :List.GetEnd
   local[7] = $v0
   $v0 = local[5]
   if $v0 goto :null12
@@ -330,28 +364,32 @@ null11:
 null12:
   $v0 = local[5]
   $a0 = $v0
-  call ::List.GetElem
+  call :List.GetElem
   local[8] = $v0
-  local[4] = 1
-  goto ::if10_end
+  $v0 = 1
+  local[4] = $v0
+  goto :if10_end
 if10_else:
-  local[16] = 0
+  $v0 = 0
+  local[16] = $v0
 if10_end:
-  goto ::while1_top
+  goto :while1_top
 while1_end:
   $v0 = local[2]
-  $v0 = $v0
   ret
 
 func List.Search [in 0, out 0, local 9]
-  local[2] = 0
+  local[0] = $a0
+  local[1] = $a1
+  $v0 = 0
+  local[2] = $v0
   $v0 = local[0]
   local[3] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[4] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[5] = $v0
 while2_top:
   $v1 = local[4]
@@ -365,16 +403,18 @@ while2_top:
 null13:
   $v0 = local[1]
   $a0 = $v0
-  $v0 = local[5]
-  $a1 = $v0
-  call ::Element.Equal
+  $v1 = local[5]
+  $a1 = $v1
+  call :Element.Equal
   local[7] = $v0
   $v0 = local[7]
   if0 $v0 goto :if11_else
-  local[2] = 1
-  goto ::if11_end
+  $v0 = 1
+  local[2] = $v0
+  goto :if11_end
 if11_else:
-  local[8] = 0
+  $v0 = 0
+  local[8] = $v0
 if11_end:
   $v0 = local[3]
   if $v0 goto :null14
@@ -382,7 +422,7 @@ if11_end:
 null14:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.GetNext
+  call :List.GetNext
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null15
@@ -390,7 +430,7 @@ null14:
 null15:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.GetEnd
+  call :List.GetEnd
   local[4] = $v0
   $v0 = local[3]
   if $v0 goto :null16
@@ -398,46 +438,46 @@ null15:
 null16:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.GetElem
+  call :List.GetElem
   local[5] = $v0
-  goto ::while2_top
+  goto :while2_top
 while2_end:
   $v0 = local[2]
-  $v0 = $v0
   ret
 
 func List.GetEnd [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func List.GetElem [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func List.GetNext [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func List.Print [in 0, out 0, local 6]
+  local[0] = $a0
   $v0 = local[0]
   local[1] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[2] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[3] = $v0
 while3_top:
   $v1 = local[2]
@@ -451,7 +491,7 @@ while3_top:
 null17:
   $v0 = local[3]
   $a0 = $v0
-  call ::Element.GetAge
+  call :Element.GetAge
   local[5] = $v0
   $v0 = local[5]
   PrintIntS($v0)
@@ -461,7 +501,7 @@ null17:
 null18:
   $v0 = local[1]
   $a0 = $v0
-  call ::List.GetNext
+  call :List.GetNext
   local[1] = $v0
   $v0 = local[1]
   if $v0 goto :null19
@@ -469,7 +509,7 @@ null18:
 null19:
   $v0 = local[1]
   $a0 = $v0
-  call ::List.GetEnd
+  call :List.GetEnd
   local[2] = $v0
   $v0 = local[1]
   if $v0 goto :null20
@@ -477,14 +517,15 @@ null19:
 null20:
   $v0 = local[1]
   $a0 = $v0
-  call ::List.GetElem
+  call :List.GetElem
   local[3] = $v0
-  goto ::while3_top
+  goto :while3_top
 while3_end:
   $v0 = 1
   ret
 
 func LL.Start [in 0, out 0, local 9]
+  local[0] = $a0
   $v0 = HeapAllocZ(12)
   local[1] = $v0
   $v0 = local[1]
@@ -493,7 +534,7 @@ func LL.Start [in 0, out 0, local 9]
 null21:
   $v0 = local[1]
   $a0 = $v0
-  call ::List.Init
+  call :List.Init
   local[2] = $v0
   $v0 = local[1]
   local[3] = $v0
@@ -503,7 +544,7 @@ null21:
 null22:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Init
+  call :List.Init
   local[2] = $v0
   $v0 = local[3]
   if $v0 goto :null23
@@ -511,7 +552,7 @@ null22:
 null23:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   $v0 = HeapAllocZ(12)
   local[4] = $v0
@@ -521,10 +562,13 @@ null23:
 null24:
   $v0 = local[4]
   $a0 = $v0
-  $a1 = 25
-  $a2 = 37000
-  $a3 = 0
-  call ::Element.Init
+  $v1 = 25
+  $a1 = $v1
+  $t0 = 37000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
+  call :Element.Init
   local[2] = $v0
   $v0 = local[3]
   if $v0 goto :null25
@@ -532,9 +576,9 @@ null24:
 null25:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  call ::List.Insert
+  $v1 = local[4]
+  $a1 = $v1
+  call :List.Insert
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null26
@@ -542,7 +586,7 @@ null25:
 null26:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   PrintIntS(10000000)
   $v0 = HeapAllocZ(12)
@@ -553,10 +597,13 @@ null26:
 null27:
   $v0 = local[4]
   $a0 = $v0
-  $a1 = 39
-  $a2 = 42000
-  $a3 = 1
-  call ::Element.Init
+  $v1 = 39
+  $a1 = $v1
+  $t0 = 42000
+  $a2 = $t0
+  $v0 = 1
+  $a3 = $v0
+  call :Element.Init
   local[2] = $v0
   $v0 = local[4]
   local[5] = $v0
@@ -566,9 +613,9 @@ null27:
 null28:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  call ::List.Insert
+  $v1 = local[4]
+  $a1 = $v1
+  call :List.Insert
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null29
@@ -576,7 +623,7 @@ null28:
 null29:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   PrintIntS(10000000)
   $v0 = HeapAllocZ(12)
@@ -587,10 +634,13 @@ null29:
 null30:
   $v0 = local[4]
   $a0 = $v0
-  $a1 = 22
-  $a2 = 34000
-  $a3 = 0
-  call ::Element.Init
+  $v1 = 22
+  $a1 = $v1
+  $t0 = 34000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
+  call :Element.Init
   local[2] = $v0
   $v0 = local[3]
   if $v0 goto :null31
@@ -598,9 +648,9 @@ null30:
 null31:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  call ::List.Insert
+  $v1 = local[4]
+  $a1 = $v1
+  call :List.Insert
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null32
@@ -608,7 +658,7 @@ null31:
 null32:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   $v0 = HeapAllocZ(12)
   local[6] = $v0
@@ -618,10 +668,13 @@ null32:
 null33:
   $v0 = local[6]
   $a0 = $v0
-  $a1 = 27
-  $a2 = 34000
-  $a3 = 0
-  call ::Element.Init
+  $v1 = 27
+  $a1 = $v1
+  $t0 = 34000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
+  call :Element.Init
   local[2] = $v0
   $v0 = local[3]
   if $v0 goto :null34
@@ -629,9 +682,9 @@ null33:
 null34:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[5]
-  $a1 = $v0
-  call ::List.Search
+  $v1 = local[5]
+  $a1 = $v1
+  call :List.Search
   local[7] = $v0
   $v0 = local[7]
   PrintIntS($v0)
@@ -641,9 +694,9 @@ null34:
 null35:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[6]
-  $a1 = $v0
-  call ::List.Search
+  $v1 = local[6]
+  $a1 = $v1
+  call :List.Search
   local[8] = $v0
   $v0 = local[8]
   PrintIntS($v0)
@@ -656,10 +709,13 @@ null35:
 null36:
   $v0 = local[4]
   $a0 = $v0
-  $a1 = 28
-  $a2 = 35000
-  $a3 = 0
-  call ::Element.Init
+  $v1 = 28
+  $a1 = $v1
+  $t0 = 35000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
+  call :Element.Init
   local[2] = $v0
   $v0 = local[3]
   if $v0 goto :null37
@@ -667,9 +723,9 @@ null36:
 null37:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  call ::List.Insert
+  $v1 = local[4]
+  $a1 = $v1
+  call :List.Insert
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null38
@@ -677,7 +733,7 @@ null37:
 null38:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   PrintIntS(2220000)
   $v0 = local[3]
@@ -686,9 +742,9 @@ null38:
 null39:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[5]
-  $a1 = $v0
-  call ::List.Delete
+  $v1 = local[5]
+  $a1 = $v1
+  call :List.Delete
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null40
@@ -696,7 +752,7 @@ null39:
 null40:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   PrintIntS(33300000)
   $v0 = local[3]
@@ -705,9 +761,9 @@ null40:
 null41:
   $v0 = local[3]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  call ::List.Delete
+  $v1 = local[4]
+  $a1 = $v1
+  call :List.Delete
   local[3] = $v0
   $v0 = local[3]
   if $v0 goto :null42
@@ -715,7 +771,7 @@ null41:
 null42:
   $v0 = local[3]
   $a0 = $v0
-  call ::List.Print
+  call :List.Print
   local[2] = $v0
   PrintIntS(44440000)
   $v0 = 0

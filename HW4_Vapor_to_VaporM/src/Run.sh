@@ -5,7 +5,7 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-javac -classpath vapor-parser.jar:. V2VM.java || exit 1
+javac -classpath vapor-parser.jar:. V2VM.java VMTranslator.java VMVisitor.java VMSymbolTable.java || exit 1
 
 TEST_DIR="tests"
 
@@ -33,43 +33,28 @@ for file in "$TEST_DIR"/valid/*.vapor; do
 
   echo "Running test: $file"
 
+  # run original vapor
+  vapor_output=$(java -jar vapor.jar run "$file" 2>&1)
+
+  # translate to vaporm
   java -classpath vapor-parser.jar:. V2VM < "$file" > "$outfile"
 
-  givenfile="$TEST_DIR/out_given/$base.vaporm"
-  if [ -f "$givenfile" ]; then
-    if diff <(grep -v '^$' "$outfile") <(grep -v '^$' "$givenfile") > /dev/null 2>&1; then
-      echo -e "${GREEN}PASS: $base matches expected output${NC}"
-      echo "Running vapor program..."
-      actual_output=$(java -jar vapor.jar run "$outfile" 2>/dev/null)
-      expected_output=$(java -jar vapor.jar run "$givenfile" 2>/dev/null)
-      echo "$actual_output"
+  # run vaporm
+  vaporm_output=$(java -jar vapor.jar run -mips "$outfile" 2>&1)
 
-      if [ "$actual_output" = "$expected_output" ]; then
-        echo -e "${GREEN}RUNTIME PASS: output matches expected${NC}"
-      else
-        echo -e "${RED}RUNTIME FAIL: output does not match expected${NC}"
-        echo "--- runtime differences ---"
-        diff <(echo "$actual_output") <(echo "$expected_output") | while IFS= read -r line; do
-          case "$line" in
-            ">"*) echo -e "${YELLOW}$line${NC}" ;;
-            "<"*) echo -e "${RED}$line${NC}" ;;
-            *)    ;;
-          esac
-        done
-      fi
-    else
-      echo -e "${RED}FAIL: $base does not match expected output${NC}"
-      echo "--- differences ---"
-      diff <(grep -v '^$' "$outfile") <(grep -v '^$' "$givenfile") | while IFS= read -r line; do
-        case "$line" in
-          ">"*) echo -e "${YELLOW}$line${NC}" ;;
-          "<"*) echo -e "${RED}$line${NC}" ;;
-          *)    ;;
-        esac
-      done
-    fi
+  # compare outputs
+  if [ "$vapor_output" = "$vaporm_output" ]; then
+    echo -e "${GREEN}PASS: $base outputs match${NC}"
   else
-    echo "No expected output found for $base — skipping comparison"
+    echo -e "${RED}FAIL: $base outputs differ${NC}"
+    echo "--- differences ---"
+    diff <(echo "$vapor_output") <(echo "$vaporm_output") | while read -r line; do
+      case "${line:0:1}" in
+        "<") echo -e "${RED}$line${NC}" ;;
+        ">") echo -e "${YELLOW}$line${NC}" ;;
+        *) ;;
+      esac
+    done
   fi
 
   echo "Finished test: $file"

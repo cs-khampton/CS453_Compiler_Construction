@@ -25,16 +25,16 @@ func Main [in 0, out 0, local 3]
   $v0 = HeapAllocZ(4)
   local[0] = $v0
   $v0 = local[0]
-  [$v0+] = :vmt_LL
+  [$v0] = :vmt_LL
   $v0 = local[0]
   if $v0 goto :null1
   Error("null pointer")
 null1:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[0]
   $a0 = $v0
@@ -46,53 +46,60 @@ null1:
   ret
 
 func Element.Init [in 0, out 0, local 4]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0+4] = $v1
   $v0 = local[0]
   $v1 = local[2]
-  [$v0+] = $v1
+  [$v0+8] = $v1
   $v0 = local[0]
   $v1 = local[3]
-  [$v0+] = $v1
+  [$v0+12] = $v1
   $v0 = 1
   ret
 
 func Element.GetAge [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func Element.GetSalary [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func Element.GetMarried [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func Element.Equal [in 0, out 0, local 22]
-  local[2] = 1
+  local[0] = $a0
+  local[1] = $a1
+  $v0 = 1
+  local[2] = $v0
   $v0 = local[1]
   if $v0 goto :null2
   Error("null pointer")
 null2:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[3] = $v0
   $v0 = local[3]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[3] = $v0
   $v0 = local[1]
   $a0 = $v0
@@ -100,20 +107,20 @@ null2:
   call $v0
   local[4] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[5] = $v0
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0+20]
   local[5] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[6] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  $v0 = local[6]
-  $a2 = $v0
+  $v1 = local[4]
+  $a1 = $v1
+  $t0 = local[6]
+  $a2 = $t0
   $v0 = local[5]
   call $v0
   local[7] = $v0
@@ -122,18 +129,19 @@ null2:
   local[8] = $v0
   $v0 = local[8]
   if0 $v0 goto :if1_else
-  local[2] = 0
-  goto ::if1_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if1_end
 if1_else:
   $v0 = local[1]
   if $v0 goto :null3
   Error("null pointer")
 null3:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[9] = $v0
   $v0 = local[9]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[9] = $v0
   $v0 = local[1]
   $a0 = $v0
@@ -141,20 +149,20 @@ null3:
   call $v0
   local[10] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[11] = $v0
   $v0 = local[11]
-  $v0 = [$v0+]
+  $v0 = [$v0+20]
   local[11] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[12] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[10]
-  $a1 = $v0
-  $v0 = local[12]
-  $a2 = $v0
+  $v1 = local[10]
+  $a1 = $v1
+  $t0 = local[12]
+  $a2 = $t0
   $v0 = local[11]
   call $v0
   local[13] = $v0
@@ -163,11 +171,12 @@ null3:
   local[14] = $v0
   $v0 = local[14]
   if0 $v0 goto :if2_else
-  local[2] = 0
-  goto ::if2_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if2_end
 if2_else:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[15] = $v0
   $v0 = local[15]
   if0 $v0 goto :if3_else
@@ -176,10 +185,10 @@ if2_else:
   Error("null pointer")
 null4:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[16] = $v0
   $v0 = local[16]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[16] = $v0
   $v0 = local[1]
   $a0 = $v0
@@ -191,22 +200,24 @@ null4:
   local[18] = $v0
   $v0 = local[18]
   if0 $v0 goto :if4_else
-  local[2] = 0
-  goto ::if4_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if4_end
 if4_else:
-  local[19] = 0
+  $v0 = 0
+  local[19] = $v0
 if4_end:
-  goto ::if3_end
+  goto :if3_end
 if3_else:
   $v0 = local[1]
   if $v0 goto :null5
   Error("null pointer")
 null5:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[20] = $v0
   $v0 = local[20]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[20] = $v0
   $v0 = local[1]
   $a0 = $v0
@@ -215,17 +226,22 @@ null5:
   local[21] = $v0
   $v0 = local[21]
   if0 $v0 goto :if5_else
-  local[2] = 0
-  goto ::if5_end
+  $v0 = 0
+  local[2] = $v0
+  goto :if5_end
 if5_else:
-  local[19] = 0
+  $v0 = 0
+  local[19] = $v0
 if1_end:
   $v0 = local[2]
-  $v0 = $v0
   ret
 
 func Element.Compare [in 0, out 0, local 8]
-  local[3] = 0
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  $v0 = 0
+  local[3] = $v0
   $v0 = local[2]
   $v0 = Add($v0 1)
   local[4] = $v0
@@ -235,8 +251,9 @@ func Element.Compare [in 0, out 0, local 8]
   local[5] = $v0
   $v0 = local[5]
   if0 $v0 goto :if6_else
-  local[3] = 0
-  goto ::if6_end
+  $v0 = 0
+  local[3] = $v0
+  goto :if6_end
 if6_else:
   $v0 = local[1]
   $v1 = local[4]
@@ -247,41 +264,49 @@ if6_else:
   local[7] = $v0
   $v0 = local[7]
   if0 $v0 goto :if7_else
-  local[3] = 0
-  goto ::if7_end
+  $v0 = 0
+  local[3] = $v0
+  goto :if7_end
 if7_else:
-  local[3] = 1
+  $v0 = 1
+  local[3] = $v0
 if6_end:
   $v0 = local[3]
-  $v0 = $v0
   ret
 
 func List.Init [in 0, out 0, local 1]
+  local[0] = $a0
   $v0 = local[0]
-  [$v0+] = 1
+  [$v0+12] = 1
   $v0 = 1
   ret
 
 func List.InitNew [in 0, out 0, local 4]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[0]
   $v1 = local[3]
-  [$v0+] = $v1
+  [$v0+12] = $v1
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0+4] = $v1
   $v0 = local[0]
   $v1 = local[2]
-  [$v0+] = $v1
+  [$v0+8] = $v1
   $v0 = 1
   ret
 
 func List.Insert [in 0, out 0, local 7]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   local[2] = $v0
   $v0 = HeapAllocZ(16)
   local[3] = $v0
   $v0 = local[3]
-  [$v0+] = :vmt_List
+  [$v0] = :vmt_List
   $v0 = local[3]
   local[4] = $v0
   $v0 = local[4]
@@ -289,36 +314,41 @@ func List.Insert [in 0, out 0, local 7]
   Error("null pointer")
 null6:
   $v0 = local[4]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[5] = $v0
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[5] = $v0
   $v0 = local[4]
   $a0 = $v0
-  $v0 = local[1]
-  $a1 = $v0
-  $v0 = local[2]
-  $a2 = $v0
-  $a3 = 0
+  $v1 = local[1]
+  $a1 = $v1
+  $t0 = local[2]
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
   $v0 = local[5]
   call $v0
   local[6] = $v0
   $v0 = local[4]
-  $v0 = $v0
   ret
 
 func List.SetNext [in 0, out 0, local 2]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0+8] = $v1
   $v0 = 1
   ret
 
 func List.Delete [in 0, out 0, local 26]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   local[2] = $v0
-  local[3] = 0
+  $v0 = 0
+  local[3] = $v0
   $v0 = Sub(0 1)
   local[4] = $v0
   $v0 = local[0]
@@ -326,10 +356,10 @@ func List.Delete [in 0, out 0, local 26]
   $v0 = local[0]
   local[6] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[7] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[8] = $v0
 while1_top:
   $v1 = local[7]
@@ -340,9 +370,10 @@ while1_top:
   $v1 = local[3]
   $v0 = Sub(1 $v1)
   local[10] = $v0
-  goto ::ss1_end
+  goto :ss1_end
 ss1_else:
-  local[10] = 0
+  $v0 = 0
+  local[10] = $v0
 ss1_end:
   $v0 = local[10]
   if0 $v0 goto :while1_end
@@ -351,21 +382,22 @@ ss1_end:
   Error("null pointer")
 null7:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[11] = $v0
   $v0 = local[11]
-  $v0 = [$v0+]
+  $v0 = [$v0+16]
   local[11] = $v0
   $v0 = local[1]
   $a0 = $v0
-  $v0 = local[8]
-  $a1 = $v0
+  $v1 = local[8]
+  $a1 = $v1
   $v0 = local[11]
   call $v0
   local[12] = $v0
   $v0 = local[12]
   if0 $v0 goto :if8_else
-  local[3] = 1
+  $v0 = 1
+  local[3] = $v0
   $v0 = local[4]
   $v0 = LtS($v0 0)
   local[13] = $v0
@@ -376,17 +408,17 @@ null7:
   Error("null pointer")
 null8:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[14] = $v0
   $v0 = local[14]
-  $v0 = [$v0+]
+  $v0 = [$v0+32]
   local[14] = $v0
   $v0 = local[5]
   $a0 = $v0
   $v0 = local[14]
   call $v0
   local[2] = $v0
-  goto ::if9_end
+  goto :if9_end
 if9_else:
   $v0 = Sub(0 555)
   local[15] = $v0
@@ -397,20 +429,20 @@ if9_else:
   Error("null pointer")
 null9:
   $v0 = local[6]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[16] = $v0
   $v0 = local[16]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[16] = $v0
   $v0 = local[5]
   if $v0 goto :null10
   Error("null pointer")
 null10:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[17] = $v0
   $v0 = local[17]
-  $v0 = [$v0+]
+  $v0 = [$v0+32]
   local[17] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -419,8 +451,8 @@ null10:
   local[18] = $v0
   $v0 = local[6]
   $a0 = $v0
-  $v0 = local[18]
-  $a1 = $v0
+  $v1 = local[18]
+  $a1 = $v1
   $v0 = local[16]
   call $v0
   local[19] = $v0
@@ -429,9 +461,10 @@ null10:
   $v0 = local[20]
   PrintIntS($v0)
 if9_end:
-  goto ::if8_end
+  goto :if8_end
 if8_else:
-  local[21] = 0
+  $v0 = 0
+  local[21] = $v0
 if8_end:
   $v1 = local[3]
   $v0 = Sub(1 $v1)
@@ -445,10 +478,10 @@ if8_end:
   Error("null pointer")
 null11:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[23] = $v0
   $v0 = local[23]
-  $v0 = [$v0+]
+  $v0 = [$v0+32]
   local[23] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -460,10 +493,10 @@ null11:
   Error("null pointer")
 null12:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[24] = $v0
   $v0 = local[24]
-  $v0 = [$v0+]
+  $v0 = [$v0+24]
   local[24] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -475,36 +508,40 @@ null12:
   Error("null pointer")
 null13:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[25] = $v0
   $v0 = local[25]
-  $v0 = [$v0+]
+  $v0 = [$v0+28]
   local[25] = $v0
   $v0 = local[5]
   $a0 = $v0
   $v0 = local[25]
   call $v0
   local[8] = $v0
-  local[4] = 1
-  goto ::if10_end
+  $v0 = 1
+  local[4] = $v0
+  goto :if10_end
 if10_else:
-  local[21] = 0
+  $v0 = 0
+  local[21] = $v0
 if10_end:
-  goto ::while1_top
+  goto :while1_top
 while1_end:
   $v0 = local[2]
-  $v0 = $v0
   ret
 
 func List.Search [in 0, out 0, local 13]
-  local[2] = 0
+  local[0] = $a0
+  local[1] = $a1
+  $v0 = 0
+  local[2] = $v0
   $v0 = local[0]
   local[3] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[4] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[5] = $v0
 while2_top:
   $v1 = local[4]
@@ -517,34 +554,36 @@ while2_top:
   Error("null pointer")
 null14:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[7] = $v0
   $v0 = local[7]
-  $v0 = [$v0+]
+  $v0 = [$v0+16]
   local[7] = $v0
   $v0 = local[1]
   $a0 = $v0
-  $v0 = local[5]
-  $a1 = $v0
+  $v1 = local[5]
+  $a1 = $v1
   $v0 = local[7]
   call $v0
   local[8] = $v0
   $v0 = local[8]
   if0 $v0 goto :if11_else
-  local[2] = 1
-  goto ::if11_end
+  $v0 = 1
+  local[2] = $v0
+  goto :if11_end
 if11_else:
-  local[9] = 0
+  $v0 = 0
+  local[9] = $v0
 if11_end:
   $v0 = local[3]
   if $v0 goto :null15
   Error("null pointer")
 null15:
   $v0 = local[3]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[10] = $v0
   $v0 = local[10]
-  $v0 = [$v0+]
+  $v0 = [$v0+32]
   local[10] = $v0
   $v0 = local[3]
   $a0 = $v0
@@ -556,10 +595,10 @@ null15:
   Error("null pointer")
 null16:
   $v0 = local[3]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[11] = $v0
   $v0 = local[11]
-  $v0 = [$v0+]
+  $v0 = [$v0+24]
   local[11] = $v0
   $v0 = local[3]
   $a0 = $v0
@@ -571,54 +610,54 @@ null16:
   Error("null pointer")
 null17:
   $v0 = local[3]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[12] = $v0
   $v0 = local[12]
-  $v0 = [$v0+]
+  $v0 = [$v0+28]
   local[12] = $v0
   $v0 = local[3]
   $a0 = $v0
   $v0 = local[12]
   call $v0
   local[5] = $v0
-  goto ::while2_top
+  goto :while2_top
 while2_end:
   $v0 = local[2]
-  $v0 = $v0
   ret
 
 func List.GetEnd [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func List.GetElem [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func List.GetNext [in 0, out 0, local 2]
+  local[0] = $a0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = $v0
   ret
 
 func List.Print [in 0, out 0, local 10]
+  local[0] = $a0
   $v0 = local[0]
   local[1] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[2] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[3] = $v0
 while3_top:
   $v1 = local[2]
@@ -631,10 +670,10 @@ while3_top:
   Error("null pointer")
 null18:
   $v0 = local[3]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[5] = $v0
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[5] = $v0
   $v0 = local[3]
   $a0 = $v0
@@ -648,10 +687,10 @@ null18:
   Error("null pointer")
 null19:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[7] = $v0
   $v0 = local[7]
-  $v0 = [$v0+]
+  $v0 = [$v0+32]
   local[7] = $v0
   $v0 = local[1]
   $a0 = $v0
@@ -663,10 +702,10 @@ null19:
   Error("null pointer")
 null20:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[8] = $v0
   $v0 = local[8]
-  $v0 = [$v0+]
+  $v0 = [$v0+24]
   local[8] = $v0
   $v0 = local[1]
   $a0 = $v0
@@ -678,26 +717,27 @@ null20:
   Error("null pointer")
 null21:
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[9] = $v0
   $v0 = local[9]
-  $v0 = [$v0+]
+  $v0 = [$v0+28]
   local[9] = $v0
   $v0 = local[1]
   $a0 = $v0
   $v0 = local[9]
   call $v0
   local[3] = $v0
-  goto ::while3_top
+  goto :while3_top
 while3_end:
   $v0 = 1
   ret
 
 func LL.Start [in 0, out 0, local 37]
+  local[0] = $a0
   $v0 = HeapAllocZ(16)
   local[1] = $v0
   $v0 = local[1]
-  [$v0+] = :vmt_List
+  [$v0] = :vmt_List
   $v0 = local[1]
   local[2] = $v0
   $v0 = local[2]
@@ -705,10 +745,10 @@ func LL.Start [in 0, out 0, local 37]
   Error("null pointer")
 null22:
   $v0 = local[2]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[3] = $v0
   $v0 = local[3]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[3] = $v0
   $v0 = local[2]
   $a0 = $v0
@@ -722,10 +762,10 @@ null22:
   Error("null pointer")
 null23:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[6] = $v0
   $v0 = local[6]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[6] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -737,10 +777,10 @@ null23:
   Error("null pointer")
 null24:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[7] = $v0
   $v0 = local[7]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[7] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -750,7 +790,7 @@ null24:
   $v0 = HeapAllocZ(16)
   local[8] = $v0
   $v0 = local[8]
-  [$v0+] = :vmt_Element
+  [$v0] = :vmt_Element
   $v0 = local[8]
   local[9] = $v0
   $v0 = local[9]
@@ -758,16 +798,19 @@ null24:
   Error("null pointer")
 null25:
   $v0 = local[9]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[10] = $v0
   $v0 = local[10]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[10] = $v0
   $v0 = local[9]
   $a0 = $v0
-  $a1 = 25
-  $a2 = 37000
-  $a3 = 0
+  $v1 = 25
+  $a1 = $v1
+  $t0 = 37000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
   $v0 = local[10]
   call $v0
   local[4] = $v0
@@ -776,15 +819,15 @@ null25:
   Error("null pointer")
 null26:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[11] = $v0
   $v0 = local[11]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[11] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[9]
-  $a1 = $v0
+  $v1 = local[9]
+  $a1 = $v1
   $v0 = local[11]
   call $v0
   local[5] = $v0
@@ -793,10 +836,10 @@ null26:
   Error("null pointer")
 null27:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[12] = $v0
   $v0 = local[12]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[12] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -807,7 +850,7 @@ null27:
   $v0 = HeapAllocZ(16)
   local[13] = $v0
   $v0 = local[13]
-  [$v0+] = :vmt_Element
+  [$v0] = :vmt_Element
   $v0 = local[13]
   local[9] = $v0
   $v0 = local[9]
@@ -815,16 +858,19 @@ null27:
   Error("null pointer")
 null28:
   $v0 = local[9]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[14] = $v0
   $v0 = local[14]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[14] = $v0
   $v0 = local[9]
   $a0 = $v0
-  $a1 = 39
-  $a2 = 42000
-  $a3 = 1
+  $v1 = 39
+  $a1 = $v1
+  $t0 = 42000
+  $a2 = $t0
+  $v0 = 1
+  $a3 = $v0
   $v0 = local[14]
   call $v0
   local[4] = $v0
@@ -835,15 +881,15 @@ null28:
   Error("null pointer")
 null29:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[16] = $v0
   $v0 = local[16]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[16] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[9]
-  $a1 = $v0
+  $v1 = local[9]
+  $a1 = $v1
   $v0 = local[16]
   call $v0
   local[5] = $v0
@@ -852,10 +898,10 @@ null29:
   Error("null pointer")
 null30:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[17] = $v0
   $v0 = local[17]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[17] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -866,7 +912,7 @@ null30:
   $v0 = HeapAllocZ(16)
   local[18] = $v0
   $v0 = local[18]
-  [$v0+] = :vmt_Element
+  [$v0] = :vmt_Element
   $v0 = local[18]
   local[9] = $v0
   $v0 = local[9]
@@ -874,16 +920,19 @@ null30:
   Error("null pointer")
 null31:
   $v0 = local[9]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[19] = $v0
   $v0 = local[19]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[19] = $v0
   $v0 = local[9]
   $a0 = $v0
-  $a1 = 22
-  $a2 = 34000
-  $a3 = 0
+  $v1 = 22
+  $a1 = $v1
+  $t0 = 34000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
   $v0 = local[19]
   call $v0
   local[4] = $v0
@@ -892,15 +941,15 @@ null31:
   Error("null pointer")
 null32:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[20] = $v0
   $v0 = local[20]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[20] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[9]
-  $a1 = $v0
+  $v1 = local[9]
+  $a1 = $v1
   $v0 = local[20]
   call $v0
   local[5] = $v0
@@ -909,10 +958,10 @@ null32:
   Error("null pointer")
 null33:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[21] = $v0
   $v0 = local[21]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[21] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -922,7 +971,7 @@ null33:
   $v0 = HeapAllocZ(16)
   local[22] = $v0
   $v0 = local[22]
-  [$v0+] = :vmt_Element
+  [$v0] = :vmt_Element
   $v0 = local[22]
   local[23] = $v0
   $v0 = local[23]
@@ -930,16 +979,19 @@ null33:
   Error("null pointer")
 null34:
   $v0 = local[23]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[24] = $v0
   $v0 = local[24]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[24] = $v0
   $v0 = local[23]
   $a0 = $v0
-  $a1 = 27
-  $a2 = 34000
-  $a3 = 0
+  $v1 = 27
+  $a1 = $v1
+  $t0 = 34000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
   $v0 = local[24]
   call $v0
   local[4] = $v0
@@ -948,15 +1000,15 @@ null34:
   Error("null pointer")
 null35:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[25] = $v0
   $v0 = local[25]
-  $v0 = [$v0+]
+  $v0 = [$v0+20]
   local[25] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[15]
-  $a1 = $v0
+  $v1 = local[15]
+  $a1 = $v1
   $v0 = local[25]
   call $v0
   local[26] = $v0
@@ -967,15 +1019,15 @@ null35:
   Error("null pointer")
 null36:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[27] = $v0
   $v0 = local[27]
-  $v0 = [$v0+]
+  $v0 = [$v0+20]
   local[27] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[23]
-  $a1 = $v0
+  $v1 = local[23]
+  $a1 = $v1
   $v0 = local[27]
   call $v0
   local[28] = $v0
@@ -985,7 +1037,7 @@ null36:
   $v0 = HeapAllocZ(16)
   local[29] = $v0
   $v0 = local[29]
-  [$v0+] = :vmt_Element
+  [$v0] = :vmt_Element
   $v0 = local[29]
   local[9] = $v0
   $v0 = local[9]
@@ -993,16 +1045,19 @@ null36:
   Error("null pointer")
 null37:
   $v0 = local[9]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[30] = $v0
   $v0 = local[30]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[30] = $v0
   $v0 = local[9]
   $a0 = $v0
-  $a1 = 28
-  $a2 = 35000
-  $a3 = 0
+  $v1 = 28
+  $a1 = $v1
+  $t0 = 35000
+  $a2 = $t0
+  $v0 = 0
+  $a3 = $v0
   $v0 = local[30]
   call $v0
   local[4] = $v0
@@ -1011,15 +1066,15 @@ null37:
   Error("null pointer")
 null38:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[31] = $v0
   $v0 = local[31]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[31] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[9]
-  $a1 = $v0
+  $v1 = local[9]
+  $a1 = $v1
   $v0 = local[31]
   call $v0
   local[5] = $v0
@@ -1028,10 +1083,10 @@ null38:
   Error("null pointer")
 null39:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[32] = $v0
   $v0 = local[32]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[32] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -1044,15 +1099,15 @@ null39:
   Error("null pointer")
 null40:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[33] = $v0
   $v0 = local[33]
-  $v0 = [$v0+]
+  $v0 = [$v0+16]
   local[33] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[15]
-  $a1 = $v0
+  $v1 = local[15]
+  $a1 = $v1
   $v0 = local[33]
   call $v0
   local[5] = $v0
@@ -1061,10 +1116,10 @@ null40:
   Error("null pointer")
 null41:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[34] = $v0
   $v0 = local[34]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[34] = $v0
   $v0 = local[5]
   $a0 = $v0
@@ -1077,15 +1132,15 @@ null41:
   Error("null pointer")
 null42:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[35] = $v0
   $v0 = local[35]
-  $v0 = [$v0+]
+  $v0 = [$v0+16]
   local[35] = $v0
   $v0 = local[5]
   $a0 = $v0
-  $v0 = local[9]
-  $a1 = $v0
+  $v1 = local[9]
+  $a1 = $v1
   $v0 = local[35]
   call $v0
   local[5] = $v0
@@ -1094,10 +1149,10 @@ null42:
   Error("null pointer")
 null43:
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[36] = $v0
   $v0 = local[36]
-  $v0 = [$v0+]
+  $v0 = [$v0+36]
   local[36] = $v0
   $v0 = local[5]
   $a0 = $v0

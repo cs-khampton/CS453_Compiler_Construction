@@ -8,20 +8,21 @@ func Main [in 0, out 0, local 3]
   $v0 = HeapAllocZ(12)
   local[0] = $v0
   $v0 = local[0]
-  [$v0+] = :vmt_LS
+  [$v0] = :vmt_LS
   $v0 = local[0]
   if $v0 goto :null1
   Error("null pointer")
 null1:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $a1 = 10
+  $v1 = 10
+  $a1 = $v1
   $v0 = local[1]
   call $v0
   local[2] = $v0
@@ -30,24 +31,26 @@ null1:
   ret
 
 func LS.Start [in 0, out 0, local 14]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[2] = $v0
   $v0 = local[2]
-  $v0 = [$v0+]
+  $v0 = [$v0+12]
   local[2] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[1]
-  $a1 = $v0
+  $v1 = local[1]
+  $a1 = $v1
   $v0 = local[2]
   call $v0
   local[3] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[4] = $v0
   $v0 = local[4]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[4] = $v0
   $v0 = local[0]
   $a0 = $v0
@@ -56,56 +59,60 @@ func LS.Start [in 0, out 0, local 14]
   local[5] = $v0
   PrintIntS(9999)
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[6] = $v0
   $v0 = local[6]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[6] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $a1 = 8
+  $v1 = 8
+  $a1 = $v1
   $v0 = local[6]
   call $v0
   local[7] = $v0
   $v0 = local[7]
   PrintIntS($v0)
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[8] = $v0
   $v0 = local[8]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[8] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $a1 = 12
+  $v1 = 12
+  $a1 = $v1
   $v0 = local[8]
   call $v0
   local[9] = $v0
   $v0 = local[9]
   PrintIntS($v0)
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[10] = $v0
   $v0 = local[10]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[10] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $a1 = 17
+  $v1 = 17
+  $a1 = $v1
   $v0 = local[10]
   call $v0
   local[11] = $v0
   $v0 = local[11]
   PrintIntS($v0)
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[12] = $v0
   $v0 = local[12]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[12] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $a1 = 50
+  $v1 = 50
+  $a1 = $v1
   $v0 = local[12]
   call $v0
   local[13] = $v0
@@ -115,10 +122,12 @@ func LS.Start [in 0, out 0, local 14]
   ret
 
 func LS.Print [in 0, out 0, local 7]
-  local[1] = 1
+  local[0] = $a0
+  $v0 = 1
+  local[1] = $v0
 while1_top:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[2] = $v0
   $v0 = local[1]
   $v1 = local[2]
@@ -127,14 +136,14 @@ while1_top:
   $v0 = local[3]
   if0 $v0 goto :while1_end
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[4] = $v0
   $v0 = local[4]
   if $v0 goto :null2
   Error("null pointer")
 null2:
   $v0 = local[4]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[5] = $v0
   $v0 = local[1]
   $v1 = local[5]
@@ -152,25 +161,30 @@ bounds1:
   $v0 = Add($v0 $v1)
   local[5] = $v0
   $v0 = local[5]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[6] = $v0
   $v0 = local[6]
   PrintIntS($v0)
   $v0 = local[1]
   $v0 = Add($v0 1)
   local[1] = $v0
-  goto ::while1_top
+  goto :while1_top
 while1_end:
   $v0 = 0
   ret
 
 func LS.Search [in 0, out 0, local 15]
-  local[2] = 1
-  local[3] = 0
-  local[4] = 0
+  local[0] = $a0
+  local[1] = $a1
+  $v0 = 1
+  local[2] = $v0
+  $v0 = 0
+  local[3] = $v0
+  $v0 = 0
+  local[4] = $v0
 while2_top:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[5] = $v0
   $v0 = local[2]
   $v1 = local[5]
@@ -179,14 +193,14 @@ while2_top:
   $v0 = local[6]
   if0 $v0 goto :while2_end
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[7] = $v0
   $v0 = local[7]
   if $v0 goto :null3
   Error("null pointer")
 null3:
   $v0 = local[7]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[8] = $v0
   $v0 = local[2]
   $v1 = local[8]
@@ -204,7 +218,7 @@ bounds2:
   $v0 = Add($v0 $v1)
   local[8] = $v0
   $v0 = local[8]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[9] = $v0
   $v0 = local[1]
   $v0 = Add($v0 1)
@@ -215,8 +229,9 @@ bounds2:
   local[11] = $v0
   $v0 = local[11]
   if0 $v0 goto :if1_else
-  local[12] = 0
-  goto ::if1_end
+  $v0 = 0
+  local[12] = $v0
+  goto :if1_end
 if1_else:
   $v0 = local[9]
   $v1 = local[10]
@@ -227,45 +242,50 @@ if1_else:
   local[14] = $v0
   $v0 = local[14]
   if0 $v0 goto :if2_else
-  local[12] = 0
-  goto ::if2_end
+  $v0 = 0
+  local[12] = $v0
+  goto :if2_end
 if2_else:
-  local[3] = 1
-  local[4] = 1
+  $v0 = 1
+  local[3] = $v0
+  $v0 = 1
+  local[4] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[2] = $v0
 if1_end:
   $v0 = local[2]
   $v0 = Add($v0 1)
   local[2] = $v0
-  goto ::while2_top
+  goto :while2_top
 while2_end:
   $v0 = local[4]
-  $v0 = $v0
   ret
 
 func LS.Init [in 0, out 0, local 13]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
-  [$v0+] = $v1
+  [$v0+8] = $v1
   $v0 = local[1]
   $a0 = $v0
-  call ::AllocArray
+  call :AllocArray
   local[2] = $v0
   $v0 = local[0]
   $v1 = local[2]
-  [$v0+] = $v1
-  local[3] = 1
+  [$v0+4] = $v1
+  $v0 = 1
+  local[3] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[4] = $v0
   $v0 = local[4]
   $v0 = Add($v0 1)
   local[5] = $v0
 while3_top:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+8]
   local[6] = $v0
   $v0 = local[3]
   $v1 = local[6]
@@ -280,14 +300,14 @@ while3_top:
   $v0 = Sub($v0 3)
   local[9] = $v0
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[10] = $v0
   $v0 = local[10]
   if $v0 goto :null4
   Error("null pointer")
 null4:
   $v0 = local[10]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[11] = $v0
   $v0 = local[3]
   $v1 = local[11]
@@ -310,19 +330,20 @@ bounds3:
   local[12] = $v0
   $v0 = local[11]
   $v1 = local[12]
-  [$v0+] = $v1
+  [$v0+4] = $v1
   $v0 = local[3]
   $v0 = Add($v0 1)
   local[3] = $v0
   $v0 = local[5]
   $v0 = Sub($v0 1)
   local[5] = $v0
-  goto ::while3_top
+  goto :while3_top
 while3_end:
   $v0 = 0
   ret
 
 func AllocArray [in 0, out 0, local 3]
+  local[0] = $a0
   $v0 = local[0]
   $v0 = MulS($v0 4)
   local[1] = $v0
@@ -334,8 +355,7 @@ func AllocArray [in 0, out 0, local 3]
   local[2] = $v0
   $v0 = local[2]
   $v1 = local[0]
-  [$v0+] = $v1
+  [$v0] = $v1
   $v0 = local[2]
-  $v0 = $v0
   ret
 

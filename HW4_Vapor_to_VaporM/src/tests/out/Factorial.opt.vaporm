@@ -1,31 +1,36 @@
 const empty_Fac
 
 func Main [in 0, out 0, local 1]
-  $a0 = :empty_Fac
-  $a1 = 10
-  call ::Fac.ComputeFac
+  $v0 = :empty_Fac
+  $a0 = $v0
+  $v1 = 10
+  $a1 = $v1
+  call :Fac.ComputeFac
   local[0] = $v0
   $v0 = local[0]
   PrintIntS($v0)
   ret
 
 func Fac.ComputeFac [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
   $v0 = local[1]
   $v0 = LtS($v0 1)
   local[2] = $v0
   $v0 = local[2]
   if0 $v0 goto :if1_else
-  local[3] = 1
-  goto ::if1_end
+  $v0 = 1
+  local[3] = $v0
+  goto :if1_end
 if1_else:
   $v0 = local[1]
   $v0 = Sub($v0 1)
   local[4] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[4]
-  $a1 = $v0
-  call ::Fac.ComputeFac
+  $v1 = local[4]
+  $a1 = $v1
+  call :Fac.ComputeFac
   local[5] = $v0
   $v0 = local[1]
   $v1 = local[5]
@@ -33,6 +38,5 @@ if1_else:
   local[3] = $v0
 if1_end:
   $v0 = local[3]
-  $v0 = $v0
   ret
 

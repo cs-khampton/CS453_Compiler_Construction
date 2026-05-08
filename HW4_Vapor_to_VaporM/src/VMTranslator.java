@@ -38,31 +38,31 @@ public class VMTranslator {
     }
 
     public void getFunctions() throws Throwable {
-        for (VFunction fun : program.functions) {
+        for (VFunction func : program.functions) {
             VMSymbolTable symt = new VMSymbolTable();
-            symt.build(fun);
+            symt.build(func);
             visitor.setSymt(symt);
-            addToOut("func " + fun.ident + " [in 0, out 0, local " + symt.localCount + "]");
-            getBody(fun, symt);
+            addToOut("func " + func.ident + " [in 0, out 0, local " + symt.localCount + "]");
+            getBody(func, symt);
             addToOut("");
         }
     }
 
-    public void getBody(VFunction fun, VMSymbolTable symt) throws Throwable {
+    public void getBody(VFunction func, VMSymbolTable symt) throws Throwable {
         // store params
-        for (int i = 0; i < fun.params.length; i++) {
-            String stackIndex = symt.locals.get(fun.params[i].ident);
+        for (int i = 0; i < func.params.length; i++) {
+            String stackIndex = symt.locals.get(func.params[i].ident);
             if (stackIndex != null) {
                 addToOut("  " + stackIndex + " = $a" + i);
             }
         }
 
         // emit instructions
-        for (int i = 0; i < fun.body.length; i++) {
+        for (int i = 0; i < func.body.length; i++) {
             if (symt.labels.containsKey(i)) {
                 addToOut(symt.labels.get(i) + ":");
             }
-            fun.body[i].accept(visitor);
+            func.body[i].accept(visitor);
         }
     }
 

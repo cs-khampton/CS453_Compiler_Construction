@@ -6,25 +6,31 @@ func Main [in 0, out 0, local 3]
   $v0 = HeapAllocZ(4)
   local[0] = $v0
   $v0 = local[0]
-  [$v0+] = :vmt_MT4
+  [$v0] = :vmt_MT4
   $v0 = local[0]
   if $v0 goto :null1
   Error("null pointer")
 null1:
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[1]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[1] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $a1 = 1
-  $a2 = 2
-  $a3 = 3
-  $a4 = 4
-  $a5 = 5
-  $a6 = 6
+  $v1 = 1
+  $a1 = $v1
+  $t0 = 2
+  $a2 = $t0
+  $v0 = 3
+  $a3 = $v0
+  $v1 = 4
+  $a4 = $v1
+  $t0 = 5
+  $a5 = $t0
+  $v0 = 6
+  $a6 = $v0
   $v0 = local[1]
   call $v0
   local[2] = $v0
@@ -33,6 +39,13 @@ null1:
   ret
 
 func MT4.Start [in 0, out 0, local 9]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
+  local[4] = $a4
+  local[5] = $a5
+  local[6] = $a6
   $v0 = local[1]
   PrintIntS($v0)
   $v0 = local[2]
@@ -46,33 +59,39 @@ func MT4.Start [in 0, out 0, local 9]
   $v0 = local[6]
   PrintIntS($v0)
   $v0 = local[0]
-  $v0 = [$v0+]
+  $v0 = [$v0]
   local[7] = $v0
   $v0 = local[7]
-  $v0 = [$v0+]
+  $v0 = [$v0+4]
   local[7] = $v0
   $v0 = local[0]
   $a0 = $v0
-  $v0 = local[6]
-  $a1 = $v0
-  $v0 = local[5]
-  $a2 = $v0
+  $v1 = local[6]
+  $a1 = $v1
+  $t0 = local[5]
+  $a2 = $t0
   $v0 = local[4]
   $a3 = $v0
-  $v0 = local[3]
-  $a4 = $v0
-  $v0 = local[2]
-  $a5 = $v0
+  $v1 = local[3]
+  $a4 = $v1
+  $t0 = local[2]
+  $a5 = $t0
   $v0 = local[1]
   $a6 = $v0
   $v0 = local[7]
   call $v0
   local[8] = $v0
   $v0 = local[8]
-  $v0 = $v0
   ret
 
 func MT4.Change [in 0, out 0, local 7]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
+  local[4] = $a4
+  local[5] = $a5
+  local[6] = $a6
   $v0 = local[1]
   PrintIntS($v0)
   $v0 = local[2]

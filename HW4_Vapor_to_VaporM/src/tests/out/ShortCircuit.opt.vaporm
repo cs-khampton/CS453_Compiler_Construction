@@ -15,52 +15,67 @@ func Main [in 0, out 0, local 0]
   ret
 
 func Main.run1 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss2_else
   $v0 = local[2]
   local[4] = $v0
-  goto ::ss2_end
+  goto :ss2_end
 ss2_else:
-  local[4] = 0
+  $v0 = 0
+  local[4] = $v0
 ss2_end:
   $v0 = local[4]
   if0 $v0 goto :ss1_else
-  local[5] = 1
-  goto ::ss1_end
+  $v0 = 1
+  local[5] = $v0
+  goto :ss1_end
 ss1_else:
   $v0 = local[3]
   local[5] = $v0
 ss1_end:
   $v0 = local[5]
-  $v0 = $v0
   ret
 
 func Main.run2 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss3_else
   $v0 = local[2]
   if0 $v0 goto :ss4_else
-  local[4] = 1
-  goto ::ss4_end
+  $v0 = 1
+  local[4] = $v0
+  goto :ss4_end
 ss4_else:
   $v0 = local[3]
   local[4] = $v0
 ss4_end:
   $v0 = local[4]
   local[5] = $v0
-  goto ::ss3_end
+  goto :ss3_end
 ss3_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss3_end:
   $v0 = local[5]
-  $v0 = $v0
   ret
 
 func Main.run3 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss6_else
-  local[4] = 1
-  goto ::ss6_end
+  $v0 = 1
+  local[4] = $v0
+  goto :ss6_end
 ss6_else:
   $v0 = local[2]
   local[4] = $v0
@@ -69,48 +84,59 @@ ss6_end:
   if0 $v0 goto :ss5_else
   $v0 = local[3]
   local[5] = $v0
-  goto ::ss5_end
+  goto :ss5_end
 ss5_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss5_end:
   $v0 = local[5]
-  $v0 = $v0
   ret
 
 func Main.run4 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss7_else
-  local[4] = 1
-  goto ::ss7_end
+  $v0 = 1
+  local[4] = $v0
+  goto :ss7_end
 ss7_else:
   $v0 = local[2]
   if0 $v0 goto :ss8_else
   $v0 = local[3]
   local[5] = $v0
-  goto ::ss8_end
+  goto :ss8_end
 ss8_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss8_end:
   $v0 = local[5]
   local[4] = $v0
 ss7_end:
   $v0 = local[4]
-  $v0 = $v0
   ret
 
 func Main.if1 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss10_else
   $v0 = local[2]
   local[4] = $v0
-  goto ::ss10_end
+  goto :ss10_end
 ss10_else:
-  local[4] = 0
+  $v0 = 0
+  local[4] = $v0
 ss10_end:
   $v0 = local[4]
   if0 $v0 goto :ss9_else
-  local[5] = 1
-  goto ::ss9_end
+  $v0 = 1
+  local[5] = $v0
+  goto :ss9_end
 ss9_else:
   $v0 = local[3]
   local[5] = $v0
@@ -119,42 +145,53 @@ ss9_end:
   if0 $v0 goto :if1_else
 if1_then:
   PrintIntS(1)
-  goto ::if1_end
+  goto :if1_end
 if1_end:
   $v0 = 1
   ret
 
 func Main.if2 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss11_else
   $v0 = local[2]
   if0 $v0 goto :ss12_else
-  local[4] = 1
-  goto ::ss12_end
+  $v0 = 1
+  local[4] = $v0
+  goto :ss12_end
 ss12_else:
   $v0 = local[3]
   local[4] = $v0
 ss12_end:
   $v0 = local[4]
   local[5] = $v0
-  goto ::ss11_end
+  goto :ss11_end
 ss11_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss11_end:
   $v0 = local[5]
   if0 $v0 goto :if2_else
 if2_then:
   PrintIntS(2)
-  goto ::if2_end
+  goto :if2_end
 if2_end:
   $v0 = 1
   ret
 
 func Main.if3 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss14_else
-  local[4] = 1
-  goto ::ss14_end
+  $v0 = 1
+  local[4] = $v0
+  goto :ss14_end
 ss14_else:
   $v0 = local[2]
   local[4] = $v0
@@ -163,32 +200,39 @@ ss14_end:
   if0 $v0 goto :ss13_else
   $v0 = local[3]
   local[5] = $v0
-  goto ::ss13_end
+  goto :ss13_end
 ss13_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss13_end:
   $v0 = local[5]
   if0 $v0 goto :if3_else
 if3_then:
   PrintIntS(3)
-  goto ::if3_end
+  goto :if3_end
 if3_end:
   $v0 = 1
   ret
 
 func Main.if4 [in 0, out 0, local 6]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss15_else
-  local[4] = 1
-  goto ::ss15_end
+  $v0 = 1
+  local[4] = $v0
+  goto :ss15_end
 ss15_else:
   $v0 = local[2]
   if0 $v0 goto :ss16_else
   $v0 = local[3]
   local[5] = $v0
-  goto ::ss16_end
+  goto :ss16_end
 ss16_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss16_end:
   $v0 = local[5]
   local[4] = $v0
@@ -197,32 +241,40 @@ ss15_end:
   if0 $v0 goto :if4_else
 if4_then:
   PrintIntS(4)
-  goto ::if4_end
+  goto :if4_end
 if4_end:
   $v0 = 1
   ret
 
 func Main.if5 [in 0, out 0, local 8]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
+  local[4] = $a4
   $v0 = local[1]
   if0 $v0 goto :ss19_else
-  local[5] = 1
-  goto ::ss19_end
+  $v0 = 1
+  local[5] = $v0
+  goto :ss19_end
 ss19_else:
   $v0 = local[2]
   local[5] = $v0
 ss19_end:
   $v0 = local[5]
   if0 $v0 goto :ss18_else
-  local[6] = 1
-  goto ::ss18_end
+  $v0 = 1
+  local[6] = $v0
+  goto :ss18_end
 ss18_else:
   $v0 = local[3]
   local[6] = $v0
 ss18_end:
   $v0 = local[6]
   if0 $v0 goto :ss17_else
-  local[7] = 1
-  goto ::ss17_end
+  $v0 = 1
+  local[7] = $v0
+  goto :ss17_end
 ss17_else:
   $v0 = local[4]
   local[7] = $v0
@@ -231,41 +283,49 @@ ss17_end:
   if0 $v0 goto :if5_else
 if5_then:
   PrintIntS(5)
-  goto ::if5_end
+  goto :if5_end
 if5_end:
   $v0 = 1
   ret
 
 func Main.if6 [in 0, out 0, local 8]
+  local[0] = $a0
+  local[1] = $a1
+  local[2] = $a2
+  local[3] = $a3
+  local[4] = $a4
   $v0 = local[1]
   if0 $v0 goto :ss22_else
   $v0 = local[2]
   local[5] = $v0
-  goto ::ss22_end
+  goto :ss22_end
 ss22_else:
-  local[5] = 0
+  $v0 = 0
+  local[5] = $v0
 ss22_end:
   $v0 = local[5]
   if0 $v0 goto :ss21_else
   $v0 = local[3]
   local[6] = $v0
-  goto ::ss21_end
+  goto :ss21_end
 ss21_else:
-  local[6] = 0
+  $v0 = 0
+  local[6] = $v0
 ss21_end:
   $v0 = local[6]
   if0 $v0 goto :ss20_else
   $v0 = local[4]
   local[7] = $v0
-  goto ::ss20_end
+  goto :ss20_end
 ss20_else:
-  local[7] = 0
+  $v0 = 0
+  local[7] = $v0
 ss20_end:
   $v0 = local[7]
   if0 $v0 goto :if6_else
 if6_then:
   PrintIntS(6)
-  goto ::if6_end
+  goto :if6_end
 if6_end:
   $v0 = 1
   ret
