@@ -122,6 +122,3 @@ NON-TERMINALS
 | 61 | CodeLabel | \<CodeLabelIdent> |
 | 62 | Eol | (\<Eol>)+
 
-
-- [ ] Create test that checks equivalence
-
