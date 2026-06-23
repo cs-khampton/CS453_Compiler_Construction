@@ -1,9 +1,9 @@
+
 const vmt_LS
   :LS.Start
   :LS.Print
   :LS.Search
   :LS.Init
-
 func Main()
   t.0 = HeapAllocZ(12)
   [t.0] = :vmt_LS
@@ -100,8 +100,7 @@ func LS.Search(this num)
       if2_else:
         ls01 = 1
         ifound = 1
-        t.7 = [this+8]
-        j = t.7
+        j = [this+8]
       if2_end:
     if1_end:
     j = Add(j 1)

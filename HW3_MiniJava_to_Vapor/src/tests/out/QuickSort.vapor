@@ -1,9 +1,9 @@
+
 const vmt_QS
   :QS.Start
   :QS.Sort
   :QS.Print
   :QS.Init
-
 func Main()
   t.0 = HeapAllocZ(12)
   [t.0] = :vmt_QS

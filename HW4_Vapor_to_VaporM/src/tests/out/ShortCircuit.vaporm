@@ -5,10 +5,6 @@ func Main [in 0, out 0, local 0]
   ret
 
 func Main.run1 [in 0, out 0, local 5]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss1_else
   $v0 = local[2]
@@ -16,18 +12,14 @@ func Main.run1 [in 0, out 0, local 5]
   $v0 = 1
   local[4] = $v0
   goto :ss1_end
-ss1_else:
+ss1_else
   $v0 = local[3]
   local[4] = $v0
-ss1_end:
+ss1_end
   $v0 = local[4]
   ret
 
 func Main.run2 [in 0, out 0, local 6]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss3_else
   $v0 = local[2]
@@ -35,146 +27,121 @@ func Main.run2 [in 0, out 0, local 6]
   $v0 = 1
   local[4] = $v0
   goto :ss4_end
-ss4_else:
+ss4_else
   $v0 = local[3]
   local[4] = $v0
-ss4_end:
+ss4_end
   $v0 = local[4]
   local[5] = $v0
   goto :ss3_end
-ss3_else:
+ss3_else
   $v0 = 0
   local[5] = $v0
-ss3_end:
+ss3_end
   $v0 = local[5]
   ret
 
 func Main.run3 [in 0, out 0, local 5]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if $v0 goto :ss5_then
   $v0 = local[2]
   if0 $v0 goto :ss5_else
-ss5_then:
+ss5_then
   $v0 = local[3]
   local[4] = $v0
   goto :ss5_end
-ss5_else:
+ss5_else
   $v0 = 0
   local[4] = $v0
-ss5_end:
+ss5_end
   $v0 = local[4]
   ret
 
 func Main.run4 [in 0, out 0, local 6]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss7_else
   $v0 = 1
   local[4] = $v0
   goto :ss7_end
-ss7_else:
+ss7_else
   $v0 = local[2]
   if0 $v0 goto :ss8_else
   $v0 = local[3]
   local[5] = $v0
   goto :ss8_end
-ss8_else:
+ss8_else
   $v0 = 0
   local[5] = $v0
-ss8_end:
+ss8_end
   $v0 = local[5]
   local[4] = $v0
-ss7_end:
+ss7_end
   $v0 = local[4]
   ret
 
 func Main.if1 [in 0, out 0, local 4]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :ss9
   $v0 = local[2]
   if $v0 goto :if1_then
-ss9:
+ss9
   $v0 = local[3]
   if0 $v0 goto :if1_else
-if1_then:
+if1_then
   PrintIntS(1)
   goto :if1_end
-if1_end:
+if1_else
+if1_end
   $v0 = 1
   ret
 
 func Main.if2 [in 0, out 0, local 4]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if0 $v0 goto :if2_else
   $v0 = local[2]
   if $v0 goto :if2_then
   $v0 = local[3]
   if0 $v0 goto :if2_else
-if2_then:
+if2_then
   PrintIntS(2)
   goto :if2_end
-if2_end:
+if2_else
+if2_end
   $v0 = 1
   ret
 
 func Main.if3 [in 0, out 0, local 4]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if $v0 goto :ss13
   $v0 = local[2]
   if0 $v0 goto :if3_else
-ss13:
+ss13
   $v0 = local[3]
   if0 $v0 goto :if3_else
-if3_then:
+if3_then
   PrintIntS(3)
   goto :if3_end
-if3_end:
+if3_else
+if3_end
   $v0 = 1
   ret
 
 func Main.if4 [in 0, out 0, local 4]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
   $v0 = local[1]
   if $v0 goto :if4_then
   $v0 = local[2]
   if0 $v0 goto :if4_else
   $v0 = local[3]
   if0 $v0 goto :if4_else
-if4_then:
+if4_then
   PrintIntS(4)
   goto :if4_end
-if4_end:
+if4_else
+if4_end
   $v0 = 1
   ret
 
 func Main.if5 [in 0, out 0, local 5]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
-  local[4] = $a4
   $v0 = local[1]
   if $v0 goto :if5_then
   $v0 = local[2]
@@ -183,19 +150,15 @@ func Main.if5 [in 0, out 0, local 5]
   if $v0 goto :if5_then
   $v0 = local[4]
   if0 $v0 goto :if5_else
-if5_then:
+if5_then
   PrintIntS(5)
   goto :if5_end
-if5_end:
+if5_else
+if5_end
   $v0 = 1
   ret
 
 func Main.if6 [in 0, out 0, local 5]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-  local[3] = $a3
-  local[4] = $a4
   $v0 = local[1]
   if0 $v0 goto :if6_else
   $v0 = local[2]
@@ -204,10 +167,11 @@ func Main.if6 [in 0, out 0, local 5]
   if0 $v0 goto :if6_else
   $v0 = local[4]
   if0 $v0 goto :if6_else
-if6_then:
+if6_then
   PrintIntS(6)
   goto :if6_end
-if6_end:
+if6_else
+if6_end
   $v0 = 1
   ret
 

@@ -1,4 +1,5 @@
 func Main()
+  i = 0
   i = Add(i 2)
   ret
 

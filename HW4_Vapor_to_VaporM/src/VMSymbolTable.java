@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cs132.vapor.ast.VCodeLabel;
@@ -7,12 +9,12 @@ import cs132.vapor.ast.VFunction;
 public class VMSymbolTable {
 
     public Map<String, String> locals; // varname, local[n]
-    public Map<Integer, String> labels; // instrIndex, labelname
+    public Map<Integer, List<String>> labels; // instrIndex, labelname
     public int localCount;
 
     public VMSymbolTable() {
         locals = new HashMap<>();
-        labels = new HashMap<>();
+        labels = new HashMap<Integer, List<String>>();
         localCount = 0;
     }
 
@@ -29,6 +31,7 @@ public class VMSymbolTable {
                 locals.put(name, "local[" + localCount++ + "]");
             }
         }
+
         for (String var : func.vars) {
             if (!locals.containsKey(var)) {
                 locals.put(var, "local[" + localCount++ + "]");
@@ -38,7 +41,10 @@ public class VMSymbolTable {
 
     private void getLabels(VFunction func) {
         for (VCodeLabel label : func.labels) {
-            labels.put(label.instrIndex, label.ident);
+            if (!labels.containsKey(label.instrIndex)) {
+                labels.put(label.instrIndex, new ArrayList<String>());
+            }
+            labels.get(label.instrIndex).add(label.ident);
         }
     }
 }

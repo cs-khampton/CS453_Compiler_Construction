@@ -1,3 +1,4 @@
+
 const vmt_TV
   :TV.Start
 
@@ -29,7 +30,6 @@ const vmt_Visitor
 
 const vmt_MyVisitor
   :MyVisitor.visit
-
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_TV

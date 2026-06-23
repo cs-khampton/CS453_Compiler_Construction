@@ -18,7 +18,6 @@ public class J2V {
             // set the translator for output
             VVisitor v = new VVisitor(translator);
             root.accept(v, symt);
-            // pv.printSymt();
         } catch (ParseException e) {
             System.out.println(e.toString());
             System.exit(1);

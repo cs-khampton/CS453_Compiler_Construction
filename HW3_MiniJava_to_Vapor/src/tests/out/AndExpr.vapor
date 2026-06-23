@@ -1,6 +1,6 @@
+
 const vmt_Checker
   :Checker.check
-
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_Checker

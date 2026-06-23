@@ -38,7 +38,7 @@ func Main [in 0, out 0, local 3]
   $v0 = local[0]
   if $v0 goto :null1
   Error("null pointer")
-null1:
+null1
   $v0 = local[0]
   $v0 = [$v0]
   local[1] = $v0
@@ -55,7 +55,6 @@ null1:
   ret
 
 func TV.Start [in 0, out 0, local 32]
-  local[0] = $a0
   $v0 = HeapAllocZ(28)
   local[1] = $v0
   $v0 = local[1]
@@ -65,7 +64,7 @@ func TV.Start [in 0, out 0, local 32]
   $v0 = local[2]
   if $v0 goto :null2
   Error("null pointer")
-null2:
+null2
   $v0 = local[2]
   $v0 = [$v0]
   local[3] = $v0
@@ -82,7 +81,7 @@ null2:
   $v0 = local[2]
   if $v0 goto :null3
   Error("null pointer")
-null3:
+null3
   $v0 = local[2]
   $v0 = [$v0]
   local[5] = $v0
@@ -98,7 +97,7 @@ null3:
   $v0 = local[2]
   if $v0 goto :null4
   Error("null pointer")
-null4:
+null4
   $v0 = local[2]
   $v0 = [$v0]
   local[6] = $v0
@@ -115,7 +114,7 @@ null4:
   $v0 = local[2]
   if $v0 goto :null5
   Error("null pointer")
-null5:
+null5
   $v0 = local[2]
   $v0 = [$v0]
   local[7] = $v0
@@ -132,7 +131,7 @@ null5:
   $v0 = local[2]
   if $v0 goto :null6
   Error("null pointer")
-null6:
+null6
   $v0 = local[2]
   $v0 = [$v0]
   local[8] = $v0
@@ -149,7 +148,7 @@ null6:
   $v0 = local[2]
   if $v0 goto :null7
   Error("null pointer")
-null7:
+null7
   $v0 = local[2]
   $v0 = [$v0]
   local[9] = $v0
@@ -166,7 +165,7 @@ null7:
   $v0 = local[2]
   if $v0 goto :null8
   Error("null pointer")
-null8:
+null8
   $v0 = local[2]
   $v0 = [$v0]
   local[10] = $v0
@@ -183,7 +182,7 @@ null8:
   $v0 = local[2]
   if $v0 goto :null9
   Error("null pointer")
-null9:
+null9
   $v0 = local[2]
   $v0 = [$v0]
   local[11] = $v0
@@ -200,7 +199,7 @@ null9:
   $v0 = local[2]
   if $v0 goto :null10
   Error("null pointer")
-null10:
+null10
   $v0 = local[2]
   $v0 = [$v0]
   local[12] = $v0
@@ -217,7 +216,7 @@ null10:
   $v0 = local[2]
   if $v0 goto :null11
   Error("null pointer")
-null11:
+null11
   $v0 = local[2]
   $v0 = [$v0]
   local[13] = $v0
@@ -240,7 +239,7 @@ null11:
   $v0 = local[2]
   if $v0 goto :null12
   Error("null pointer")
-null12:
+null12
   $v0 = local[2]
   $v0 = [$v0]
   local[16] = $v0
@@ -258,7 +257,7 @@ null12:
   $v0 = local[2]
   if $v0 goto :null13
   Error("null pointer")
-null13:
+null13
   $v0 = local[2]
   $v0 = [$v0]
   local[18] = $v0
@@ -277,7 +276,7 @@ null13:
   $v0 = local[2]
   if $v0 goto :null14
   Error("null pointer")
-null14:
+null14
   $v0 = local[2]
   $v0 = [$v0]
   local[20] = $v0
@@ -296,7 +295,7 @@ null14:
   $v0 = local[2]
   if $v0 goto :null15
   Error("null pointer")
-null15:
+null15
   $v0 = local[2]
   $v0 = [$v0]
   local[22] = $v0
@@ -315,7 +314,7 @@ null15:
   $v0 = local[2]
   if $v0 goto :null16
   Error("null pointer")
-null16:
+null16
   $v0 = local[2]
   $v0 = [$v0]
   local[24] = $v0
@@ -334,7 +333,7 @@ null16:
   $v0 = local[2]
   if $v0 goto :null17
   Error("null pointer")
-null17:
+null17
   $v0 = local[2]
   $v0 = [$v0]
   local[26] = $v0
@@ -353,7 +352,7 @@ null17:
   $v0 = local[2]
   if $v0 goto :null18
   Error("null pointer")
-null18:
+null18
   $v0 = local[2]
   $v0 = [$v0]
   local[28] = $v0
@@ -370,7 +369,7 @@ null18:
   $v0 = local[2]
   if $v0 goto :null19
   Error("null pointer")
-null19:
+null19
   $v0 = local[2]
   $v0 = [$v0]
   local[29] = $v0
@@ -385,7 +384,7 @@ null19:
   $v0 = local[2]
   if $v0 goto :null20
   Error("null pointer")
-null20:
+null20
   $v0 = local[2]
   $v0 = [$v0]
   local[30] = $v0
@@ -405,8 +404,6 @@ null20:
   ret
 
 func Tree.Init [in 0, out 0, local 2]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+12] = $v1
@@ -418,8 +415,6 @@ func Tree.Init [in 0, out 0, local 2]
   ret
 
 func Tree.SetRight [in 0, out 0, local 2]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+8] = $v1
@@ -427,8 +422,6 @@ func Tree.SetRight [in 0, out 0, local 2]
   ret
 
 func Tree.SetLeft [in 0, out 0, local 2]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+4] = $v1
@@ -436,7 +429,6 @@ func Tree.SetLeft [in 0, out 0, local 2]
   ret
 
 func Tree.GetRight [in 0, out 0, local 2]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = [$v0+8]
   local[1] = $v0
@@ -444,7 +436,6 @@ func Tree.GetRight [in 0, out 0, local 2]
   ret
 
 func Tree.GetLeft [in 0, out 0, local 2]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = [$v0+4]
   local[1] = $v0
@@ -452,7 +443,6 @@ func Tree.GetLeft [in 0, out 0, local 2]
   ret
 
 func Tree.GetKey [in 0, out 0, local 2]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = [$v0+12]
   local[1] = $v0
@@ -460,8 +450,6 @@ func Tree.GetKey [in 0, out 0, local 2]
   ret
 
 func Tree.SetKey [in 0, out 0, local 2]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+12] = $v1
@@ -469,7 +457,6 @@ func Tree.SetKey [in 0, out 0, local 2]
   ret
 
 func Tree.GetHas_Right [in 0, out 0, local 2]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = [$v0+20]
   local[1] = $v0
@@ -477,7 +464,6 @@ func Tree.GetHas_Right [in 0, out 0, local 2]
   ret
 
 func Tree.GetHas_Left [in 0, out 0, local 2]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = [$v0+16]
   local[1] = $v0
@@ -485,8 +471,6 @@ func Tree.GetHas_Left [in 0, out 0, local 2]
   ret
 
 func Tree.SetHas_Left [in 0, out 0, local 2]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+16] = $v1
@@ -494,8 +478,6 @@ func Tree.SetHas_Left [in 0, out 0, local 2]
   ret
 
 func Tree.SetHas_Right [in 0, out 0, local 2]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+20] = $v1
@@ -503,9 +485,6 @@ func Tree.SetHas_Right [in 0, out 0, local 2]
   ret
 
 func Tree.Compare [in 0, out 0, local 8]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
   $v0 = 0
   local[3] = $v0
   $v0 = local[2]
@@ -520,7 +499,7 @@ func Tree.Compare [in 0, out 0, local 8]
   $v0 = 0
   local[3] = $v0
   goto :if1_end
-if1_else:
+if1_else
   $v0 = local[1]
   $v1 = local[4]
   $v0 = LtS($v0 $v1)
@@ -533,16 +512,15 @@ if1_else:
   $v0 = 0
   local[3] = $v0
   goto :if2_end
-if2_else:
+if2_else
   $v0 = 1
   local[3] = $v0
-if1_end:
+if2_end
+if1_end
   $v0 = local[3]
   ret
 
 func Tree.Insert [in 0, out 0, local 21]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = HeapAllocZ(28)
   local[2] = $v0
   $v0 = local[2]
@@ -552,7 +530,7 @@ func Tree.Insert [in 0, out 0, local 21]
   $v0 = local[3]
   if $v0 goto :null21
   Error("null pointer")
-null21:
+null21
   $v0 = local[3]
   $v0 = [$v0]
   local[4] = $v0
@@ -570,13 +548,13 @@ null21:
   local[6] = $v0
   $v0 = 1
   local[7] = $v0
-while1_top:
+while1_top
   $v0 = local[7]
   if0 $v0 goto :while1_end
   $v0 = local[6]
   if $v0 goto :null22
   Error("null pointer")
-null22:
+null22
   $v0 = local[6]
   $v0 = [$v0]
   local[8] = $v0
@@ -597,7 +575,7 @@ null22:
   $v0 = local[6]
   if $v0 goto :null23
   Error("null pointer")
-null23:
+null23
   $v0 = local[6]
   $v0 = [$v0]
   local[11] = $v0
@@ -614,7 +592,7 @@ null23:
   $v0 = local[6]
   if $v0 goto :null24
   Error("null pointer")
-null24:
+null24
   $v0 = local[6]
   $v0 = [$v0]
   local[13] = $v0
@@ -627,13 +605,13 @@ null24:
   call $v0
   local[6] = $v0
   goto :if4_end
-if4_else:
+if4_else
   $v0 = 0
   local[7] = $v0
   $v0 = local[6]
   if $v0 goto :null25
   Error("null pointer")
-null25:
+null25
   $v0 = local[6]
   $v0 = [$v0]
   local[14] = $v0
@@ -650,7 +628,7 @@ null25:
   $v0 = local[6]
   if $v0 goto :null26
   Error("null pointer")
-null26:
+null26
   $v0 = local[6]
   $v0 = [$v0]
   local[15] = $v0
@@ -664,13 +642,13 @@ null26:
   $v0 = local[15]
   call $v0
   local[5] = $v0
-if4_end:
+if4_end
   goto :if3_end
-if3_else:
+if3_else
   $v0 = local[6]
   if $v0 goto :null27
   Error("null pointer")
-null27:
+null27
   $v0 = local[6]
   $v0 = [$v0]
   local[16] = $v0
@@ -687,7 +665,7 @@ null27:
   $v0 = local[6]
   if $v0 goto :null28
   Error("null pointer")
-null28:
+null28
   $v0 = local[6]
   $v0 = [$v0]
   local[18] = $v0
@@ -700,13 +678,13 @@ null28:
   call $v0
   local[6] = $v0
   goto :if5_end
-if5_else:
+if5_else
   $v0 = 0
   local[7] = $v0
   $v0 = local[6]
   if $v0 goto :null29
   Error("null pointer")
-null29:
+null29
   $v0 = local[6]
   $v0 = [$v0]
   local[19] = $v0
@@ -723,7 +701,7 @@ null29:
   $v0 = local[6]
   if $v0 goto :null30
   Error("null pointer")
-null30:
+null30
   $v0 = local[6]
   $v0 = [$v0]
   local[20] = $v0
@@ -737,15 +715,14 @@ null30:
   $v0 = local[20]
   call $v0
   local[5] = $v0
-if3_end:
+if5_end
+if3_end
   goto :while1_top
-while1_end:
+while1_end
   $v0 = 1
   ret
 
 func Tree.Delete [in 0, out 0, local 26]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   local[2] = $v0
   $v0 = local[0]
@@ -756,13 +733,13 @@ func Tree.Delete [in 0, out 0, local 26]
   local[5] = $v0
   $v0 = 1
   local[6] = $v0
-while2_top:
+while2_top
   $v0 = local[4]
   if0 $v0 goto :while2_end
   $v0 = local[2]
   if $v0 goto :null31
   Error("null pointer")
-null31:
+null31
   $v0 = local[2]
   $v0 = [$v0]
   local[7] = $v0
@@ -783,7 +760,7 @@ null31:
   $v0 = local[2]
   if $v0 goto :null32
   Error("null pointer")
-null32:
+null32
   $v0 = local[2]
   $v0 = [$v0]
   local[10] = $v0
@@ -802,7 +779,7 @@ null32:
   $v0 = local[2]
   if $v0 goto :null33
   Error("null pointer")
-null33:
+null33
   $v0 = local[2]
   $v0 = [$v0]
   local[12] = $v0
@@ -815,12 +792,12 @@ null33:
   call $v0
   local[2] = $v0
   goto :if7_end
-if7_else:
+if7_else
   $v0 = 0
   local[4] = $v0
-if7_end:
+if7_end
   goto :if6_end
-if6_else:
+if6_else
   $v0 = local[8]
   $v1 = local[1]
   $v0 = LtS($v0 $v1)
@@ -830,7 +807,7 @@ if6_else:
   $v0 = local[2]
   if $v0 goto :null34
   Error("null pointer")
-null34:
+null34
   $v0 = local[2]
   $v0 = [$v0]
   local[14] = $v0
@@ -849,7 +826,7 @@ null34:
   $v0 = local[2]
   if $v0 goto :null35
   Error("null pointer")
-null35:
+null35
   $v0 = local[2]
   $v0 = [$v0]
   local[16] = $v0
@@ -862,18 +839,18 @@ null35:
   call $v0
   local[2] = $v0
   goto :if9_end
-if9_else:
+if9_else
   $v0 = 0
   local[4] = $v0
-if9_end:
+if9_end
   goto :if8_end
-if8_else:
+if8_else
   $v0 = local[6]
   if0 $v0 goto :if10_else
   $v0 = local[2]
   if $v0 goto :null36
   Error("null pointer")
-null36:
+null36
   $v0 = local[2]
   $v0 = [$v0]
   local[17] = $v0
@@ -893,7 +870,7 @@ null36:
   $v0 = local[2]
   if $v0 goto :null37
   Error("null pointer")
-null37:
+null37
   $v0 = local[2]
   $v0 = [$v0]
   local[20] = $v0
@@ -909,16 +886,16 @@ null37:
   $v0 = Sub(1 $v1)
   local[22] = $v0
   goto :ss1_end
-ss1_else:
+ss1_else
   $v0 = 0
   local[22] = $v0
-ss1_end:
+ss1_end
   $v0 = local[22]
   if0 $v0 goto :if11_else
   $v0 = 1
   local[23] = $v0
   goto :if11_end
-if11_else:
+if11_else
   $v0 = local[0]
   $v0 = [$v0]
   local[24] = $v0
@@ -934,9 +911,9 @@ if11_else:
   $v0 = local[24]
   call $v0
   local[23] = $v0
-if11_end:
+if11_end
   goto :if10_end
-if10_else:
+if10_else
   $v0 = local[0]
   $v0 = [$v0]
   local[25] = $v0
@@ -952,27 +929,25 @@ if10_else:
   $v0 = local[25]
   call $v0
   local[23] = $v0
-if10_end:
+if10_end
   $v0 = 1
   local[5] = $v0
   $v0 = 0
   local[4] = $v0
-if6_end:
+if8_end
+if6_end
   $v0 = 0
   local[6] = $v0
   goto :while2_top
-while2_end:
+while2_end
   $v0 = local[5]
   ret
 
 func Tree.Remove [in 0, out 0, local 24]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
   $v0 = local[2]
   if $v0 goto :null38
   Error("null pointer")
-null38:
+null38
   $v0 = local[2]
   $v0 = [$v0]
   local[3] = $v0
@@ -1002,11 +977,11 @@ null38:
   call $v0
   local[6] = $v0
   goto :if12_end
-if12_else:
+if12_else
   $v0 = local[2]
   if $v0 goto :null39
   Error("null pointer")
-null39:
+null39
   $v0 = local[2]
   $v0 = [$v0]
   local[7] = $v0
@@ -1036,11 +1011,11 @@ null39:
   call $v0
   local[6] = $v0
   goto :if13_end
-if13_else:
+if13_else
   $v0 = local[2]
   if $v0 goto :null40
   Error("null pointer")
-null40:
+null40
   $v0 = local[2]
   $v0 = [$v0]
   local[10] = $v0
@@ -1055,7 +1030,7 @@ null40:
   $v0 = local[1]
   if $v0 goto :null41
   Error("null pointer")
-null41:
+null41
   $v0 = local[1]
   $v0 = [$v0]
   local[12] = $v0
@@ -1070,7 +1045,7 @@ null41:
   $v0 = local[13]
   if $v0 goto :null42
   Error("null pointer")
-null42:
+null42
   $v0 = local[13]
   $v0 = [$v0]
   local[14] = $v0
@@ -1102,7 +1077,7 @@ null42:
   $v0 = local[1]
   if $v0 goto :null43
   Error("null pointer")
-null43:
+null43
   $v0 = local[1]
   $v0 = [$v0]
   local[18] = $v0
@@ -1122,7 +1097,7 @@ null43:
   $v0 = local[1]
   if $v0 goto :null44
   Error("null pointer")
-null44:
+null44
   $v0 = local[1]
   $v0 = [$v0]
   local[20] = $v0
@@ -1137,11 +1112,11 @@ null44:
   call $v0
   local[6] = $v0
   goto :if14_end
-if14_else:
+if14_else
   $v0 = local[1]
   if $v0 goto :null45
   Error("null pointer")
-null45:
+null45
   $v0 = local[1]
   $v0 = [$v0]
   local[21] = $v0
@@ -1161,7 +1136,7 @@ null45:
   $v0 = local[1]
   if $v0 goto :null46
   Error("null pointer")
-null46:
+null46
   $v0 = local[1]
   $v0 = [$v0]
   local[23] = $v0
@@ -1175,19 +1150,18 @@ null46:
   $v0 = local[23]
   call $v0
   local[6] = $v0
-if12_end:
+if14_end
+if13_end
+if12_end
   $v0 = 1
   ret
 
 func Tree.RemoveRight [in 0, out 0, local 15]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-while3_top:
+while3_top
   $v0 = local[2]
   if $v0 goto :null47
   Error("null pointer")
-null47:
+null47
   $v0 = local[2]
   $v0 = [$v0]
   local[3] = $v0
@@ -1204,7 +1178,7 @@ null47:
   $v0 = local[2]
   if $v0 goto :null48
   Error("null pointer")
-null48:
+null48
   $v0 = local[2]
   $v0 = [$v0]
   local[5] = $v0
@@ -1214,7 +1188,7 @@ null48:
   $v0 = local[2]
   if $v0 goto :null49
   Error("null pointer")
-null49:
+null49
   $v0 = local[2]
   $v0 = [$v0]
   local[6] = $v0
@@ -1229,7 +1203,7 @@ null49:
   $v0 = local[7]
   if $v0 goto :null50
   Error("null pointer")
-null50:
+null50
   $v0 = local[7]
   $v0 = [$v0]
   local[8] = $v0
@@ -1253,7 +1227,7 @@ null50:
   $v0 = local[2]
   if $v0 goto :null51
   Error("null pointer")
-null51:
+null51
   $v0 = local[2]
   $v0 = [$v0]
   local[11] = $v0
@@ -1266,11 +1240,11 @@ null51:
   call $v0
   local[2] = $v0
   goto :while3_top
-while3_end:
+while3_end
   $v0 = local[1]
   if $v0 goto :null52
   Error("null pointer")
-null52:
+null52
   $v0 = local[1]
   $v0 = [$v0]
   local[12] = $v0
@@ -1290,7 +1264,7 @@ null52:
   $v0 = local[1]
   if $v0 goto :null53
   Error("null pointer")
-null53:
+null53
   $v0 = local[1]
   $v0 = [$v0]
   local[14] = $v0
@@ -1308,14 +1282,11 @@ null53:
   ret
 
 func Tree.RemoveLeft [in 0, out 0, local 15]
-  local[0] = $a0
-  local[1] = $a1
-  local[2] = $a2
-while4_top:
+while4_top
   $v0 = local[2]
   if $v0 goto :null54
   Error("null pointer")
-null54:
+null54
   $v0 = local[2]
   $v0 = [$v0]
   local[3] = $v0
@@ -1332,7 +1303,7 @@ null54:
   $v0 = local[2]
   if $v0 goto :null55
   Error("null pointer")
-null55:
+null55
   $v0 = local[2]
   $v0 = [$v0]
   local[5] = $v0
@@ -1342,7 +1313,7 @@ null55:
   $v0 = local[2]
   if $v0 goto :null56
   Error("null pointer")
-null56:
+null56
   $v0 = local[2]
   $v0 = [$v0]
   local[6] = $v0
@@ -1357,7 +1328,7 @@ null56:
   $v0 = local[7]
   if $v0 goto :null57
   Error("null pointer")
-null57:
+null57
   $v0 = local[7]
   $v0 = [$v0]
   local[8] = $v0
@@ -1381,7 +1352,7 @@ null57:
   $v0 = local[2]
   if $v0 goto :null58
   Error("null pointer")
-null58:
+null58
   $v0 = local[2]
   $v0 = [$v0]
   local[11] = $v0
@@ -1394,11 +1365,11 @@ null58:
   call $v0
   local[2] = $v0
   goto :while4_top
-while4_end:
+while4_end
   $v0 = local[1]
   if $v0 goto :null59
   Error("null pointer")
-null59:
+null59
   $v0 = local[1]
   $v0 = [$v0]
   local[12] = $v0
@@ -1418,7 +1389,7 @@ null59:
   $v0 = local[1]
   if $v0 goto :null60
   Error("null pointer")
-null60:
+null60
   $v0 = local[1]
   $v0 = [$v0]
   local[14] = $v0
@@ -1436,21 +1407,19 @@ null60:
   ret
 
 func Tree.Search [in 0, out 0, local 15]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   local[2] = $v0
   $v0 = 1
   local[3] = $v0
   $v0 = 0
   local[4] = $v0
-while5_top:
+while5_top
   $v0 = local[3]
   if0 $v0 goto :while5_end
   $v0 = local[2]
   if $v0 goto :null61
   Error("null pointer")
-null61:
+null61
   $v0 = local[2]
   $v0 = [$v0]
   local[5] = $v0
@@ -1471,7 +1440,7 @@ null61:
   $v0 = local[2]
   if $v0 goto :null62
   Error("null pointer")
-null62:
+null62
   $v0 = local[2]
   $v0 = [$v0]
   local[8] = $v0
@@ -1488,7 +1457,7 @@ null62:
   $v0 = local[2]
   if $v0 goto :null63
   Error("null pointer")
-null63:
+null63
   $v0 = local[2]
   $v0 = [$v0]
   local[10] = $v0
@@ -1501,12 +1470,12 @@ null63:
   call $v0
   local[2] = $v0
   goto :if16_end
-if16_else:
+if16_else
   $v0 = 0
   local[3] = $v0
-if16_end:
+if16_end
   goto :if15_end
-if15_else:
+if15_else
   $v0 = local[6]
   $v1 = local[1]
   $v0 = LtS($v0 $v1)
@@ -1516,7 +1485,7 @@ if15_else:
   $v0 = local[2]
   if $v0 goto :null64
   Error("null pointer")
-null64:
+null64
   $v0 = local[2]
   $v0 = [$v0]
   local[12] = $v0
@@ -1533,7 +1502,7 @@ null64:
   $v0 = local[2]
   if $v0 goto :null65
   Error("null pointer")
-null65:
+null65
   $v0 = local[2]
   $v0 = [$v0]
   local[14] = $v0
@@ -1546,24 +1515,24 @@ null65:
   call $v0
   local[2] = $v0
   goto :if18_end
-if18_else:
+if18_else
   $v0 = 0
   local[3] = $v0
-if18_end:
+if18_end
   goto :if17_end
-if17_else:
+if17_else
   $v0 = 1
   local[4] = $v0
   $v0 = 0
   local[3] = $v0
-if15_end:
+if17_end
+if15_end
   goto :while5_top
-while5_end:
+while5_end
   $v0 = local[4]
   ret
 
 func Tree.Print [in 0, out 0, local 4]
-  local[0] = $a0
   $v0 = local[0]
   local[1] = $v0
   $v0 = local[0]
@@ -1583,12 +1552,10 @@ func Tree.Print [in 0, out 0, local 4]
   ret
 
 func Tree.RecPrint [in 0, out 0, local 15]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[1]
   if $v0 goto :null66
   Error("null pointer")
-null66:
+null66
   $v0 = local[1]
   $v0 = [$v0]
   local[2] = $v0
@@ -1611,7 +1578,7 @@ null66:
   $v0 = local[1]
   if $v0 goto :null67
   Error("null pointer")
-null67:
+null67
   $v0 = local[1]
   $v0 = [$v0]
   local[5] = $v0
@@ -1631,14 +1598,14 @@ null67:
   call $v0
   local[7] = $v0
   goto :if19_end
-if19_else:
+if19_else
   $v0 = 1
   local[7] = $v0
-if19_end:
+if19_end
   $v0 = local[1]
   if $v0 goto :null68
   Error("null pointer")
-null68:
+null68
   $v0 = local[1]
   $v0 = [$v0]
   local[8] = $v0
@@ -1655,7 +1622,7 @@ null68:
   $v0 = local[1]
   if $v0 goto :null69
   Error("null pointer")
-null69:
+null69
   $v0 = local[1]
   $v0 = [$v0]
   local[10] = $v0
@@ -1678,7 +1645,7 @@ null69:
   $v0 = local[1]
   if $v0 goto :null70
   Error("null pointer")
-null70:
+null70
   $v0 = local[1]
   $v0 = [$v0]
   local[13] = $v0
@@ -1698,21 +1665,19 @@ null70:
   call $v0
   local[7] = $v0
   goto :if20_end
-if20_else:
+if20_else
   $v0 = 1
   local[7] = $v0
-if20_end:
+if20_end
   $v0 = 1
   ret
 
 func Tree.accept [in 0, out 0, local 4]
-  local[0] = $a0
-  local[1] = $a1
   PrintIntS(333)
   $v0 = local[1]
   if $v0 goto :null71
   Error("null pointer")
-null71:
+null71
   $v0 = local[1]
   $v0 = [$v0]
   local[2] = $v0
@@ -1730,12 +1695,10 @@ null71:
   ret
 
 func Visitor.visit [in 0, out 0, local 15]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[1]
   if $v0 goto :null72
   Error("null pointer")
-null72:
+null72
   $v0 = local[1]
   $v0 = [$v0]
   local[2] = $v0
@@ -1752,7 +1715,7 @@ null72:
   $v0 = local[1]
   if $v0 goto :null73
   Error("null pointer")
-null73:
+null73
   $v0 = local[1]
   $v0 = [$v0]
   local[4] = $v0
@@ -1773,7 +1736,7 @@ null73:
   $v0 = local[6]
   if $v0 goto :null74
   Error("null pointer")
-null74:
+null74
   $v0 = local[6]
   $v0 = [$v0]
   local[7] = $v0
@@ -1788,14 +1751,14 @@ null74:
   call $v0
   local[8] = $v0
   goto :if21_end
-if21_else:
+if21_else
   $v0 = 0
   local[8] = $v0
-if21_end:
+if21_end
   $v0 = local[1]
   if $v0 goto :null75
   Error("null pointer")
-null75:
+null75
   $v0 = local[1]
   $v0 = [$v0]
   local[9] = $v0
@@ -1812,7 +1775,7 @@ null75:
   $v0 = local[1]
   if $v0 goto :null76
   Error("null pointer")
-null76:
+null76
   $v0 = local[1]
   $v0 = [$v0]
   local[11] = $v0
@@ -1833,7 +1796,7 @@ null76:
   $v0 = local[13]
   if $v0 goto :null77
   Error("null pointer")
-null77:
+null77
   $v0 = local[13]
   $v0 = [$v0]
   local[14] = $v0
@@ -1848,20 +1811,18 @@ null77:
   call $v0
   local[8] = $v0
   goto :if22_end
-if22_else:
+if22_else
   $v0 = 0
   local[8] = $v0
-if22_end:
+if22_end
   $v0 = 0
   ret
 
 func MyVisitor.visit [in 0, out 0, local 17]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[1]
   if $v0 goto :null78
   Error("null pointer")
-null78:
+null78
   $v0 = local[1]
   $v0 = [$v0]
   local[2] = $v0
@@ -1878,7 +1839,7 @@ null78:
   $v0 = local[1]
   if $v0 goto :null79
   Error("null pointer")
-null79:
+null79
   $v0 = local[1]
   $v0 = [$v0]
   local[4] = $v0
@@ -1899,7 +1860,7 @@ null79:
   $v0 = local[6]
   if $v0 goto :null80
   Error("null pointer")
-null80:
+null80
   $v0 = local[6]
   $v0 = [$v0]
   local[7] = $v0
@@ -1914,14 +1875,14 @@ null80:
   call $v0
   local[8] = $v0
   goto :if23_end
-if23_else:
+if23_else
   $v0 = 0
   local[8] = $v0
-if23_end:
+if23_end
   $v0 = local[1]
   if $v0 goto :null81
   Error("null pointer")
-null81:
+null81
   $v0 = local[1]
   $v0 = [$v0]
   local[9] = $v0
@@ -1938,7 +1899,7 @@ null81:
   $v0 = local[1]
   if $v0 goto :null82
   Error("null pointer")
-null82:
+null82
   $v0 = local[1]
   $v0 = [$v0]
   local[11] = $v0
@@ -1955,7 +1916,7 @@ null82:
   $v0 = local[1]
   if $v0 goto :null83
   Error("null pointer")
-null83:
+null83
   $v0 = local[1]
   $v0 = [$v0]
   local[13] = $v0
@@ -1976,7 +1937,7 @@ null83:
   $v0 = local[15]
   if $v0 goto :null84
   Error("null pointer")
-null84:
+null84
   $v0 = local[15]
   $v0 = [$v0]
   local[16] = $v0
@@ -1991,10 +1952,10 @@ null84:
   call $v0
   local[8] = $v0
   goto :if24_end
-if24_else:
+if24_else
   $v0 = 0
   local[8] = $v0
-if24_end:
+if24_end
   $v0 = 0
   ret
 

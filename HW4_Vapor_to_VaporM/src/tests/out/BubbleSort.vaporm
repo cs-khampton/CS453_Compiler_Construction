@@ -12,7 +12,7 @@ func Main [in 0, out 0, local 3]
   $v0 = local[0]
   if $v0 goto :null1
   Error("null pointer")
-null1:
+null1
   $v0 = local[0]
   $v0 = [$v0]
   local[1] = $v0
@@ -31,8 +31,6 @@ null1:
   ret
 
 func BBS.Start [in 0, out 0, local 7]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v0 = [$v0]
   local[2] = $v0
@@ -84,7 +82,6 @@ func BBS.Start [in 0, out 0, local 7]
   ret
 
 func BBS.Sort [in 0, out 0, local 28]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = [$v0+8]
   local[1] = $v0
@@ -93,7 +90,7 @@ func BBS.Sort [in 0, out 0, local 28]
   local[2] = $v0
   $v0 = Sub(0 1)
   local[3] = $v0
-while1_top:
+while1_top
   $v0 = local[3]
   $v1 = local[2]
   $v0 = LtS($v0 $v1)
@@ -102,7 +99,7 @@ while1_top:
   if0 $v0 goto :while1_end
   $v0 = 1
   local[5] = $v0
-while2_top:
+while2_top
   $v0 = local[2]
   $v0 = Add($v0 1)
   local[6] = $v0
@@ -121,7 +118,7 @@ while2_top:
   $v0 = local[9]
   if $v0 goto :null2
   Error("null pointer")
-null2:
+null2
   $v0 = local[9]
   $v0 = [$v0]
   local[10] = $v0
@@ -132,7 +129,7 @@ null2:
   $v0 = local[10]
   if $v0 goto :bounds1
   Error("array index out of bounds")
-bounds1:
+bounds1
   $v0 = local[8]
   $v0 = MulS($v0 4)
   local[10] = $v0
@@ -149,7 +146,7 @@ bounds1:
   $v0 = local[12]
   if $v0 goto :null3
   Error("null pointer")
-null3:
+null3
   $v0 = local[12]
   $v0 = [$v0]
   local[13] = $v0
@@ -160,7 +157,7 @@ null3:
   $v0 = local[13]
   if $v0 goto :bounds2
   Error("array index out of bounds")
-bounds2:
+bounds2
   $v0 = local[5]
   $v0 = MulS($v0 4)
   local[13] = $v0
@@ -186,7 +183,7 @@ bounds2:
   $v0 = local[17]
   if $v0 goto :null4
   Error("null pointer")
-null4:
+null4
   $v0 = local[17]
   $v0 = [$v0]
   local[18] = $v0
@@ -197,7 +194,7 @@ null4:
   $v0 = local[18]
   if $v0 goto :bounds3
   Error("array index out of bounds")
-bounds3:
+bounds3
   $v0 = local[16]
   $v0 = MulS($v0 4)
   local[18] = $v0
@@ -214,7 +211,7 @@ bounds3:
   $v0 = local[20]
   if $v0 goto :null5
   Error("null pointer")
-null5:
+null5
   $v0 = local[20]
   $v0 = [$v0]
   local[21] = $v0
@@ -225,7 +222,7 @@ null5:
   $v0 = local[21]
   if $v0 goto :bounds4
   Error("array index out of bounds")
-bounds4:
+bounds4
   $v0 = local[16]
   $v0 = MulS($v0 4)
   local[21] = $v0
@@ -239,7 +236,7 @@ bounds4:
   $v0 = local[22]
   if $v0 goto :null6
   Error("null pointer")
-null6:
+null6
   $v0 = local[22]
   $v0 = [$v0]
   local[23] = $v0
@@ -250,7 +247,7 @@ null6:
   $v0 = local[23]
   if $v0 goto :bounds5
   Error("array index out of bounds")
-bounds5:
+bounds5
   $v0 = local[5]
   $v0 = MulS($v0 4)
   local[23] = $v0
@@ -270,7 +267,7 @@ bounds5:
   $v0 = local[25]
   if $v0 goto :null7
   Error("null pointer")
-null7:
+null7
   $v0 = local[25]
   $v0 = [$v0]
   local[26] = $v0
@@ -281,7 +278,7 @@ null7:
   $v0 = local[26]
   if $v0 goto :bounds6
   Error("array index out of bounds")
-bounds6:
+bounds6
   $v0 = local[5]
   $v0 = MulS($v0 4)
   local[26] = $v0
@@ -293,28 +290,27 @@ bounds6:
   $v1 = local[19]
   [$v0+4] = $v1
   goto :if1_end
-if1_else:
+if1_else
   $v0 = 0
   local[27] = $v0
-if1_end:
+if1_end
   $v0 = local[5]
   $v0 = Add($v0 1)
   local[5] = $v0
   goto :while2_top
-while2_end:
+while2_end
   $v0 = local[2]
   $v0 = Sub($v0 1)
   local[2] = $v0
   goto :while1_top
-while1_end:
+while1_end
   $v0 = 0
   ret
 
 func BBS.Print [in 0, out 0, local 7]
-  local[0] = $a0
   $v0 = 0
   local[1] = $v0
-while3_top:
+while3_top
   $v0 = local[0]
   $v0 = [$v0+8]
   local[2] = $v0
@@ -330,7 +326,7 @@ while3_top:
   $v0 = local[4]
   if $v0 goto :null8
   Error("null pointer")
-null8:
+null8
   $v0 = local[4]
   $v0 = [$v0]
   local[5] = $v0
@@ -341,7 +337,7 @@ null8:
   $v0 = local[5]
   if $v0 goto :bounds7
   Error("array index out of bounds")
-bounds7:
+bounds7
   $v0 = local[1]
   $v0 = MulS($v0 4)
   local[5] = $v0
@@ -358,13 +354,11 @@ bounds7:
   $v0 = Add($v0 1)
   local[1] = $v0
   goto :while3_top
-while3_end:
+while3_end
   $v0 = 0
   ret
 
 func BBS.Init [in 0, out 0, local 23]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[0]
   $v1 = local[1]
   [$v0+8] = $v1
@@ -381,7 +375,7 @@ func BBS.Init [in 0, out 0, local 23]
   $v0 = local[3]
   if $v0 goto :null9
   Error("null pointer")
-null9:
+null9
   $v0 = local[3]
   $v0 = [$v0]
   local[4] = $v0
@@ -391,7 +385,7 @@ null9:
   $v0 = local[4]
   if $v0 goto :bounds8
   Error("array index out of bounds")
-bounds8:
+bounds8
   $v0 = MulS(0 4)
   local[4] = $v0
   $v0 = local[4]
@@ -406,7 +400,7 @@ bounds8:
   $v0 = local[5]
   if $v0 goto :null10
   Error("null pointer")
-null10:
+null10
   $v0 = local[5]
   $v0 = [$v0]
   local[6] = $v0
@@ -416,7 +410,7 @@ null10:
   $v0 = local[6]
   if $v0 goto :bounds9
   Error("array index out of bounds")
-bounds9:
+bounds9
   $v0 = MulS(1 4)
   local[6] = $v0
   $v0 = local[6]
@@ -431,7 +425,7 @@ bounds9:
   $v0 = local[7]
   if $v0 goto :null11
   Error("null pointer")
-null11:
+null11
   $v0 = local[7]
   $v0 = [$v0]
   local[8] = $v0
@@ -441,7 +435,7 @@ null11:
   $v0 = local[8]
   if $v0 goto :bounds10
   Error("array index out of bounds")
-bounds10:
+bounds10
   $v0 = MulS(2 4)
   local[8] = $v0
   $v0 = local[8]
@@ -456,7 +450,7 @@ bounds10:
   $v0 = local[9]
   if $v0 goto :null12
   Error("null pointer")
-null12:
+null12
   $v0 = local[9]
   $v0 = [$v0]
   local[10] = $v0
@@ -466,7 +460,7 @@ null12:
   $v0 = local[10]
   if $v0 goto :bounds11
   Error("array index out of bounds")
-bounds11:
+bounds11
   $v0 = MulS(3 4)
   local[10] = $v0
   $v0 = local[10]
@@ -481,7 +475,7 @@ bounds11:
   $v0 = local[11]
   if $v0 goto :null13
   Error("null pointer")
-null13:
+null13
   $v0 = local[11]
   $v0 = [$v0]
   local[12] = $v0
@@ -491,7 +485,7 @@ null13:
   $v0 = local[12]
   if $v0 goto :bounds12
   Error("array index out of bounds")
-bounds12:
+bounds12
   $v0 = MulS(4 4)
   local[12] = $v0
   $v0 = local[12]
@@ -506,7 +500,7 @@ bounds12:
   $v0 = local[13]
   if $v0 goto :null14
   Error("null pointer")
-null14:
+null14
   $v0 = local[13]
   $v0 = [$v0]
   local[14] = $v0
@@ -516,7 +510,7 @@ null14:
   $v0 = local[14]
   if $v0 goto :bounds13
   Error("array index out of bounds")
-bounds13:
+bounds13
   $v0 = MulS(5 4)
   local[14] = $v0
   $v0 = local[14]
@@ -531,7 +525,7 @@ bounds13:
   $v0 = local[15]
   if $v0 goto :null15
   Error("null pointer")
-null15:
+null15
   $v0 = local[15]
   $v0 = [$v0]
   local[16] = $v0
@@ -541,7 +535,7 @@ null15:
   $v0 = local[16]
   if $v0 goto :bounds14
   Error("array index out of bounds")
-bounds14:
+bounds14
   $v0 = MulS(6 4)
   local[16] = $v0
   $v0 = local[16]
@@ -556,7 +550,7 @@ bounds14:
   $v0 = local[17]
   if $v0 goto :null16
   Error("null pointer")
-null16:
+null16
   $v0 = local[17]
   $v0 = [$v0]
   local[18] = $v0
@@ -566,7 +560,7 @@ null16:
   $v0 = local[18]
   if $v0 goto :bounds15
   Error("array index out of bounds")
-bounds15:
+bounds15
   $v0 = MulS(7 4)
   local[18] = $v0
   $v0 = local[18]
@@ -581,7 +575,7 @@ bounds15:
   $v0 = local[19]
   if $v0 goto :null17
   Error("null pointer")
-null17:
+null17
   $v0 = local[19]
   $v0 = [$v0]
   local[20] = $v0
@@ -591,7 +585,7 @@ null17:
   $v0 = local[20]
   if $v0 goto :bounds16
   Error("array index out of bounds")
-bounds16:
+bounds16
   $v0 = MulS(8 4)
   local[20] = $v0
   $v0 = local[20]
@@ -606,7 +600,7 @@ bounds16:
   $v0 = local[21]
   if $v0 goto :null18
   Error("null pointer")
-null18:
+null18
   $v0 = local[21]
   $v0 = [$v0]
   local[22] = $v0
@@ -616,7 +610,7 @@ null18:
   $v0 = local[22]
   if $v0 goto :bounds17
   Error("array index out of bounds")
-bounds17:
+bounds17
   $v0 = MulS(9 4)
   local[22] = $v0
   $v0 = local[22]
@@ -629,7 +623,6 @@ bounds17:
   ret
 
 func AllocArray [in 0, out 0, local 3]
-  local[0] = $a0
   $v0 = local[0]
   $v0 = MulS($v0 4)
   local[1] = $v0

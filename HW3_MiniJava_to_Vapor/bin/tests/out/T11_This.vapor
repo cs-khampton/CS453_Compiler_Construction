@@ -1,8 +1,7 @@
+
 const vmt_Count
   :Count.getDoubleVal
   :Count.doubled
-
-
 func Main()
   t.0 = HeapAllocZ(8)
   [t.0] = :vmt_Count
@@ -24,5 +23,6 @@ func Count.getDoubleVal(this)
 
 func Count.doubled(this)
   t.0 = [this+4]
-  ret MulS(t.0 2)
+  t.1 = MulS(t.0 2)
+  ret t.1
 

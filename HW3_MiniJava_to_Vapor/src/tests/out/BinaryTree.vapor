@@ -1,3 +1,4 @@
+
 const vmt_BT
   :BT.Start
 
@@ -22,7 +23,6 @@ const vmt_Tree
   :Tree.Search
   :Tree.Print
   :Tree.RecPrint
-
 func Main()
   t.0 = HeapAllocZ(4)
   [t.0] = :vmt_BT

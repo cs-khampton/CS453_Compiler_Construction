@@ -1,33 +1,39 @@
 func Main()
-  t.0 = MulS(10 4)
-  t.0 = Add(t.0 4)
-  t.1 = HeapAllocZ(t.0)
-  [t.1] = 10
-  arr = t.1
-  t.2 = [arr]
-  t.3 = LtS(3 t.2)
-  if t.3 goto :bounds1
+  t.0 = call :AllocArray(10)
+  arr = t.0
+  if arr goto :null1
+    Error("null pointer")
+  null1:
+  t.1 = [arr]
+  t.1 = Lt(3 t.1)
+  if t.1 goto :bounds1
     Error("array index out of bounds")
   bounds1:
-  t.4 = MulS(3 4)
-  t.4 = Add(t.4 arr)
-  [t.4+4] = 7
+  t.1 = MulS(3 4)
+  t.1 = Add(t.1 arr)
+  [t.1+4] = 7
   if arr goto :null2
     Error("null pointer")
   null2:
-  t.5 = [arr]
-  t.6 = LtS(3 t.5)
-  if t.6 goto :bounds3
+  t.2 = [arr]
+  t.2 = Lt(3 t.2)
+  if t.2 goto :bounds2
     Error("array index out of bounds")
-  bounds3:
-  t.7 = MulS(3 4)
-  t.7 = Add(t.7 arr)
-  t.8 = [t.7+4]
-  if arr goto :null4
+  bounds2:
+  t.2 = MulS(3 4)
+  t.2 = Add(t.2 arr)
+  if arr goto :null3
     Error("null pointer")
-  null4:
-  t.9 = [arr]
-  x = Add(t.8 t.9)
+  null3:
+  t.3 = [arr]
+  t.4 = [t.2+4]
+  x = Add(t.4 t.3)
   PrintIntS(x)
   ret
 
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v

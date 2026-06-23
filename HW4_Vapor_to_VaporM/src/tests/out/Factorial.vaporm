@@ -9,7 +9,7 @@ func Main [in 0, out 0, local 3]
   $v0 = local[0]
   if $v0 goto :null1
   Error("null pointer")
-null1:
+null1
   $v0 = local[0]
   $v0 = [$v0]
   local[1] = $v0
@@ -28,8 +28,6 @@ null1:
   ret
 
 func Fac.ComputeFac [in 0, out 0, local 7]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[1]
   $v0 = LtS($v0 1)
   local[2] = $v0
@@ -38,7 +36,7 @@ func Fac.ComputeFac [in 0, out 0, local 7]
   $v0 = 1
   local[3] = $v0
   goto :if1_end
-if1_else:
+if1_else
   $v0 = local[0]
   $v0 = [$v0]
   local[4] = $v0
@@ -59,7 +57,7 @@ if1_else:
   $v1 = local[6]
   $v0 = MulS($v0 $v1)
   local[3] = $v0
-if1_end:
+if1_end
   $v0 = local[3]
   ret
 

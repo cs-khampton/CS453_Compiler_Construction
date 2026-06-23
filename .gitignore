@@ -1,0 +1,8 @@
+*/src/*.class
+*/src/*.sh
+*/*.sh
+*/*.zip
+*/src/*.zip
+cs453.code-workspace
+*/.vscode/*
+.DS_Store

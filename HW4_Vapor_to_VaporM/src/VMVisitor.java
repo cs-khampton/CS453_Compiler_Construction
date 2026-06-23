@@ -40,7 +40,11 @@ public class VMVisitor extends VInstr.Visitor<Throwable> {
         String[] reg = { "$v0", "$v1", "$t0" };
         for (int i = 0; i < c.args.length; i++) {
             String arg = forceLoad(c.args[i], reg[i % reg.length]);
-            translate.addToOut("  $a" + i + " = " + arg);
+            if (i < 4) {
+                translate.addToOut("  $a" + i + " = " + arg);
+            } else {
+                translate.addToOut("  out[" + (i - 4) + "] = " + arg);
+            }
         }
         String ad = load(c.addr);
         translate.addToOut("  call " + ad);
@@ -93,11 +97,11 @@ public class VMVisitor extends VInstr.Visitor<Throwable> {
 
     public void visit(VBranch b) throws Throwable {
         String cond = load(b.value, "$v0");
-        String label = b.target.toString();
+        String label = b.target.ident;
         if (b.positive) {
-            translate.addToOut("  if " + cond + " goto " + label);
+            translate.addToOut("  if " + cond + " goto :" + label);
         } else {
-            translate.addToOut("  if0 " + cond + " goto " + label);
+            translate.addToOut("  if0 " + cond + " goto :" + label);
         }
     }
 

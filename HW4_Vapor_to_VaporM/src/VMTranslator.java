@@ -50,20 +50,19 @@ public class VMTranslator {
 
     public void getBody(VFunction func, VMSymbolTable symt) throws Throwable {
         // store params
-        for (int i = 0; i < func.params.length; i++) {
-            String stackIndex = symt.locals.get(func.params[i].ident);
-            if (stackIndex != null) {
-                addToOut("  " + stackIndex + " = $a" + i);
-            }
-        }
-
-        // emit instructions
         for (int i = 0; i < func.body.length; i++) {
+            // String stackIndex = func.params[i].ident;
             if (symt.labels.containsKey(i)) {
-                addToOut(symt.labels.get(i) + ":");
+                for (String label : symt.labels.get(i)) {
+                    addToOut(label);
+                }
             }
             func.body[i].accept(visitor);
         }
+        if (symt.labels.containsKey(func.body.length)) {
+            for (String label : symt.labels.get(func.body.length)) {
+                addToOut(label);
+            }
+        }
     }
-
 }

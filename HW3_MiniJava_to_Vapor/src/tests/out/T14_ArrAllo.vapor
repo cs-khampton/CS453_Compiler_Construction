@@ -26,7 +26,8 @@ func Main()
     Error("null pointer")
   null3:
   t.3 = [arr]
-  x = Add([t.2+4] t.3)
+  t.4 = [t.2+4]
+  x = Add(t.4 t.3)
   PrintIntS(x)
   ret
 

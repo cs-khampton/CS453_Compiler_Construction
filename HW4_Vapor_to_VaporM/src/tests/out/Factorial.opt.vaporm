@@ -12,8 +12,6 @@ func Main [in 0, out 0, local 1]
   ret
 
 func Fac.ComputeFac [in 0, out 0, local 6]
-  local[0] = $a0
-  local[1] = $a1
   $v0 = local[1]
   $v0 = LtS($v0 1)
   local[2] = $v0
@@ -22,7 +20,7 @@ func Fac.ComputeFac [in 0, out 0, local 6]
   $v0 = 1
   local[3] = $v0
   goto :if1_end
-if1_else:
+if1_else
   $v0 = local[1]
   $v0 = Sub($v0 1)
   local[4] = $v0
@@ -36,7 +34,7 @@ if1_else:
   $v1 = local[5]
   $v0 = MulS($v0 $v1)
   local[3] = $v0
-if1_end:
+if1_end
   $v0 = local[3]
   ret
 
